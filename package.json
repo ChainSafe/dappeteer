@@ -9,7 +9,7 @@
   "keywords": [],
   "author": "Juan Cazala <juan@decentraland.org>",
   "license": "ISC",
-  "dependencies": {
+  "devDependencies": {
     "puppeteer": "^1.5.0"
   }
 }
