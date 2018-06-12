@@ -1,0 +1,15 @@
+{
+  "name": "dappeteer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test"
+  },
+  "keywords": [],
+  "author": "Juan Cazala <juan@decentraland.org>",
+  "license": "ISC",
+  "dependencies": {
+    "puppeteer": "^1.5.0"
+  }
+}
