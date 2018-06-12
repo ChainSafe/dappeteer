@@ -7,7 +7,7 @@ async function main() {
 
   // import MetaMask account
   await metamask.importAccount(
-    'myth like bonus scare over problem client lizard pioneer submit female collect'
+    'already turtle birth enroll since owner keep patch skirt drift any dinner'
   )
 
   // switch to Ropsten
