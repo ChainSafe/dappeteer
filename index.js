@@ -52,6 +52,7 @@ module.exports = {
             "You can't create a new account because you have already signed in to MetaMask"
           )
         }
+        await metamaskPage.bringToFront()
         const passwordBox = await metamaskPage.$('#password-box')
         await passwordBox.type(password)
         const passwordConfirm = await metamaskPage.$('#password-box-confirm')
@@ -76,6 +77,7 @@ module.exports = {
             "You can't import a new account because you have already signed in to MetaMask"
           )
         }
+        await metamaskPage.bringToFront()
         const importButton = await metamaskPage.$('p.pointer')
         await importButton.click()
         const textarea = await metamaskPage.$('textarea')
@@ -96,6 +98,7 @@ module.exports = {
             "You can't sign out because you haven't signed in yet"
           )
         }
+        await metamaskPage.bringToFront()
         const hamburger = await metamaskPage.$('.sandwich-expando')
         await hamburger.click()
         await timeout(0.5)
@@ -107,6 +110,7 @@ module.exports = {
       },
 
       unlock: async (password = 'password1234') => {
+        await metamaskPage.bringToFront()
         const passwordBox = await metamaskPage.$('#password-box')
         await passwordBox.type(password)
         const createButton = await metamaskPage.$('button')
@@ -115,6 +119,7 @@ module.exports = {
       },
 
       switchNetwork: async (network = 'main') => {
+        await metamaskPage.bringToFront()
         const networkSwitcher = await metamaskPage.$('.network-indicator')
         await networkSwitcher.click()
         await timeout(0.5)
@@ -137,7 +142,8 @@ module.exports = {
         await waitForEthereum(metamaskPage)
       },
 
-      submitTransaction: async (options = {}) => {
+      confirmTransaction: async (options = {}) => {
+        await metamaskPage.bringToFront()
         if (!signedIn) {
           throw new Error("You haven't signed in yet")
         }
@@ -167,7 +173,7 @@ module.exports = {
               '')
         )
         await inputs[1].type(gas.toString())
-        await timeout(2)
+
         await metamaskPage.waitFor(
           () => !document.querySelector('input[type="submit"].confirm').disabled
         )
@@ -236,7 +242,7 @@ async function waitForGasEstimation(metamaskPage) {
   await Promise.race([waitUntilGasEstimated(metamaskPage), timeout(10)])
 }
 
-async function waitForGasEstimation(metamaskPage) {
+async function waitUntilStartEstimatingGas(metamaskPage) {
   await metamaskPage.waitFor(() => {
     return !!document.querySelector('img[src="images/loading.svg"]')
   })
