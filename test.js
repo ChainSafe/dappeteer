@@ -28,7 +28,22 @@ async function main() {
   await checkbox.click()
 
   // submit tx
-  await metamask.submitTransaction()
+  await metamask.confirmTransaction()
+
+  // wait for tx to start
+  await marketplace.bringToFront()
+  await marketplace.waitForSelector('.TxStatusText')
+
+  // wait for tx to be mined
+  await marketplace.waitFor(
+    () => document.querySelector('.TxStatusText') == null,
+    {
+      timeout: 180000
+    }
+  )
+
+  // close browser
+  await browser.close()
 }
 
 main() // 🏌🏼‍
