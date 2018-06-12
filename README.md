@@ -16,7 +16,7 @@ import dappeteer from 'dappeteer'
 
 async function main() {
   const browser = dappeteer.launch(puppeteer)
-  const metamask = await dappeteer.getMetamask()
+  const metamask = await dappeteer.getMetamask(browser)
 
   const page = await browser.newPage()
   await page.goto('http://my-dapp.com')
