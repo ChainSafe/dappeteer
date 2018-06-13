@@ -6,6 +6,10 @@
   "scripts": {
     "test": "node test"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/decentraland/dappeteer.git"
+  },
   "keywords": [
     "e2e",
     "testing",
