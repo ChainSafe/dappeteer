@@ -43,7 +43,7 @@ main()
 
   - `metamaskPath`: Path to the MetaMask extension (by default it uses the one bundled)
 
-  - `extensionUrl`: URL of the MetaMask extension, by default it is `chrome-extension://lplkikplmecagihcgjcjpnmndcjgkihb/popup.html` but if you use a different version you might need to change use the right extension id.
+  - `extensionUrl`: URL of the MetaMask extension, by default it is `chrome-extension://lplkikplmecagihcgjcjpnmndcjgkihb/popup.html` but if you use a different version you might need to change it use the right extension id.
 
 - `dappeteer.getMetaMask(browser)`: returns a promise that resolves to an object that allows you to interact with MetaMask by using the following methods:
 
@@ -53,7 +53,7 @@ main()
 
   - `metamask.lock()`: signs out from MetaMask. It can only be used if you arelady signed it, otherwise it throws.
 
-  - `metamask.unlock([password])`: it unlocks the MetaMask extension. It can only be used it you locked/signed out before, otherwise it throws. The password is optional, it defaults to `password1234`.
+  - `metamask.unlock([password])`: it unlocks the MetaMask extension. It can only be used in you locked/signed out before, otherwise it throws. The password is optional, it defaults to `password1234`.
 
   - `metamask.switchNetwork(networkName)`: it changes the current selected network. `networkName` can take the following values: `"main"`, `"ropsten"`, `"rinkeby"`, `"kovan"`, `"localhost"`.
 
