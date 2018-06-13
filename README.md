@@ -49,7 +49,7 @@ main()
 
   - `metamask.createAccount([password])`: it commands MetaMask to create a new account, it resolves when it's done. It can only be used while you haven't signed in yet, otherwise it throws. The password is optional, it defaults to `password1234`.
 
-  - `metamask.importAccount(seed[, password])`: it commands MetaMask to import an account, you need to provide the twelve words seed, it resolves when it's done. It can only be used while you haven't signed in yet, otherwise it throws. The password is optional, it defaults to `password1234`.
+  - `metamask.importAccount(seed[, password])`: it commands MetaMask to import an account, you need to provide the twelve words seed. It can only be used while you haven't signed in yet, otherwise it throws. The password is optional, it defaults to `password1234`.
 
   - `metamask.lock()`: signs out from MetaMask. It can only be used if you arelady signed it, otherwise it throws.
 
