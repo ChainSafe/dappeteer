@@ -15,7 +15,7 @@ import puppeteer from 'puppeteer'
 import dappeteer from 'dappeteer'
 
 async function main() {
-  const browser = dappeteer.launch(puppeteer)
+  const browser = await dappeteer.launch(puppeteer)
   const metamask = await dappeteer.getMetamask(browser)
   
   // create or import an account
@@ -28,7 +28,8 @@ async function main() {
   // go to a dapp and do something that prompts MetaMask to confirm a transaction
   const page = await browser.newPage()
   await page.goto('http://my-dapp.com')
-  await page.$('#pay-with-eth').click()
+  const payButton = await page.$('#pay-with-eth')
+  await payButton.click()
   
   // 🏌
   await metamask.confirmTransaction()
