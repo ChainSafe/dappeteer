@@ -6,9 +6,16 @@
   "scripts": {
     "test": "node test"
   },
-  "keywords": [],
+  "keywords": [
+    "e2e",
+    "testing",
+    "metamask",
+    "puppeteer",
+    "dapp",
+    "ethereum"
+  ],
   "author": "Juan Cazala <juan@decentraland.org>",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "puppeteer": "^1.5.0"
   }
