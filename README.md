@@ -43,7 +43,7 @@ main()
 
   - `metamaskPath`: Path to the MetaMask extension (by default it uses the one bundled)
 
-  - `extensionUrl`: URL of the MetaMask extension, by default it is `chrome-extension://lplkikplmecagihcgjcjpnmndcjgkihb/popup.html` but if you use a different version you might need to change it use the right extension id.
+  - `extensionUrl`: URL of the MetaMask extension, by default it is `chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/popup.html` but if you use a different version you might need to change it use the right extension id.
 
 - `dappeteer.getMetaMask(browser)`: returns a promise that resolves to an object that allows you to interact with MetaMask by using the following methods:
 

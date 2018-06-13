@@ -35,7 +35,7 @@ module.exports = {
     })
 
     const EXTENSION_ID =
-      options.extensionId || 'lplkikplmecagihcgjcjpnmndcjgkihb'
+      options.extensionId || 'nkbihfbeogaeaoehlefnkodbefgpgknn'
     const EXTENSION_URL =
       options.extensionUrl || `chrome-extension://${EXTENSION_ID}/popup.html`
 
