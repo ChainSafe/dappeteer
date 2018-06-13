@@ -17,12 +17,21 @@ import dappeteer from 'dappeteer'
 async function main() {
   const browser = dappeteer.launch(puppeteer)
   const metamask = await dappeteer.getMetamask(browser)
-
+  
+  // create or import an account
+  // await metamask.createAccount()
+  await metamask.importAccount('already turtle birth enroll since...')
+  
+  // you can change the network if you want
+  await metamask.switchNetwork('ropsten')
+  
+  // go to a dapp and do something that prompts MetaMask to confirm a transaction
   const page = await browser.newPage()
   await page.goto('http://my-dapp.com')
-
   await page.$('#pay-with-eth').click()
-  await metamask.confirmTransaction() // 🏌🏼‍
+  
+  // 🏌
+  await metamask.confirmTransaction()
 }
 
 main()
