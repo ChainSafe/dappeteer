@@ -151,6 +151,25 @@ module.exports = {
         await waitForEthereum(metamaskPage)
       },
 
+      importPK: async (pk) => {
+        await metamaskPage.bringToFront()
+        const accountSwitcher = await metamaskPage.$('.accounts-selector')
+        await accountSwitcher.click()
+        await timeout(0.5)
+        const addAccount = await metamaskPage.$('.menu-droppo .dropdown-menu-item:last-child')
+        await addAccount.click()
+        await timeout(0.5)
+        const PKInput = await metamaskPage.$('input#private-key-box')
+        await PKInput.type(pk)
+        const importButton = await metamaskPage.$('input#private-key-box+button')
+        await importButton.click()
+        await timeout(0.5)
+        const prevButton = await metamaskPage.$('i.fa-arrow-left')
+        await prevButton.click()
+        await timeout(0.5)
+        await waitForEthereum(metamaskPage)
+      },
+
       switchNetwork: async (network = 'main') => {
         await metamaskPage.bringToFront()
         const networkSwitcher = await metamaskPage.$('.network-indicator')
