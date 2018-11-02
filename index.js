@@ -118,6 +118,39 @@ module.exports = {
         await waitForUnlockedScreen(metamaskPage)
       },
 
+      addNetwork: async (url) => {
+        await metamaskPage.bringToFront()
+        const networkSwitcher = await metamaskPage.$('.network-indicator')
+        await networkSwitcher.click()
+        await timeout(0.5)
+        const networkIndex = await metamaskPage.evaluate(network => {
+          const elements = document.querySelectorAll('li.dropdown-menu-item')
+          for (let i = 0; i < elements.length; i++) {
+            const element = elements[i]
+            if (
+              element.innerText.toLowerCase().includes(network.toLowerCase())
+            ) {
+              return i
+            }
+          }
+          return 0
+        }, 'Custom RPC')
+        const networkButton = (await metamaskPage.$$('li.dropdown-menu-item'))[
+          networkIndex
+        ]
+        await networkButton.click()
+        await timeout(0.5)
+        const newRPCInput = await metamaskPage.$('input#new_rpc')
+        await newRPCInput.type(url)
+        const saveButton = await metamaskPage.$('input#new_rpc+button')
+        await saveButton.click()
+        await timeout(0.5)
+        const prevButton = await metamaskPage.$('i.fa-arrow-left')
+        await prevButton.click()
+        await timeout(0.5)
+        await waitForEthereum(metamaskPage)
+      },
+
       switchNetwork: async (network = 'main') => {
         await metamaskPage.bringToFront()
         const networkSwitcher = await metamaskPage.$('.network-indicator')
