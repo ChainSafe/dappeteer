@@ -164,9 +164,6 @@ module.exports = {
         const importButton = await metamaskPage.$('input#private-key-box+button')
         await importButton.click()
         await timeout(0.5)
-        const prevButton = await metamaskPage.$('i.fa-arrow-left')
-        await prevButton.click()
-        await timeout(0.5)
         await waitForEthereum(metamaskPage)
       },
 
