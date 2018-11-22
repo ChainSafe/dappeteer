@@ -118,6 +118,55 @@ module.exports = {
         await waitForUnlockedScreen(metamaskPage)
       },
 
+      addNetwork: async (url) => {
+        await metamaskPage.bringToFront()
+        const networkSwitcher = await metamaskPage.$('.network-indicator')
+        await networkSwitcher.click()
+        await timeout(0.5)
+        const networkIndex = await metamaskPage.evaluate(network => {
+          const elements = document.querySelectorAll('li.dropdown-menu-item')
+          for (let i = 0; i < elements.length; i++) {
+            const element = elements[i]
+            if (
+              element.innerText.toLowerCase().includes(network.toLowerCase())
+            ) {
+              return i
+            }
+          }
+          return 0
+        }, 'Custom RPC')
+        const networkButton = (await metamaskPage.$$('li.dropdown-menu-item'))[
+          networkIndex
+        ]
+        await networkButton.click()
+        await timeout(0.5)
+        const newRPCInput = await metamaskPage.$('input#new_rpc')
+        await newRPCInput.type(url)
+        const saveButton = await metamaskPage.$('input#new_rpc+button')
+        await saveButton.click()
+        await timeout(0.5)
+        const prevButton = await metamaskPage.$('i.fa-arrow-left')
+        await prevButton.click()
+        await timeout(0.5)
+        await waitForEthereum(metamaskPage)
+      },
+
+      importPK: async (pk) => {
+        await metamaskPage.bringToFront()
+        const accountSwitcher = await metamaskPage.$('.accounts-selector')
+        await accountSwitcher.click()
+        await timeout(0.5)
+        const addAccount = await metamaskPage.$('.menu-droppo .dropdown-menu-item:last-child')
+        await addAccount.click()
+        await timeout(0.5)
+        const PKInput = await metamaskPage.$('input#private-key-box')
+        await PKInput.type(pk)
+        const importButton = await metamaskPage.$('input#private-key-box+button')
+        await importButton.click()
+        await timeout(0.5)
+        await waitForEthereum(metamaskPage)
+      },
+
       switchNetwork: async (network = 'main') => {
         await metamaskPage.bringToFront()
         const networkSwitcher = await metamaskPage.$('.network-indicator')
