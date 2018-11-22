@@ -182,6 +182,24 @@ module.exports = {
         )
         await confirmButton.click()
         await waitForUnlockedScreen(metamaskPage)
+      },
+
+      sign: async (options = {}) => {
+        await metamaskPage.bringToFront()
+        if (!signedIn) {
+          throw new Error("You haven't signed in yet")
+        }
+        await metamaskPage.reload()
+        await waitForConfirmationPromt(metamaskPage)
+
+        const data = await metamaskPage.$$('.flex-row.flex-space-around');
+
+        const buttons = await data[0].$$('button');
+
+        await buttons[1].click()
+
+        await waitForUnlockedScreen(metamaskPage);
+
       }
     }
   }
