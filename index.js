@@ -31,7 +31,7 @@ module.exports = {
     extensionId: undefined,
     extensionUrl: undefined
   }) => {
-    const metamaskPage= await closeHomeScreen(browser);
+    const metamaskPage = await closeHomeScreen(browser);
 
     // const metamaskPage = await getMetamaskPage(browser, options.extensionId, options.extensionUrl)
 
@@ -46,6 +46,8 @@ module.exports = {
     await acceptTermsOfUse(metamaskPage);
 
     let signedIn = true
+
+    closeNotificationPage(browser);
 
     return {
       lock: async () => {
@@ -78,7 +80,7 @@ module.exports = {
         await metamaskPage.bringToFront()
         const networkSwitcher = await metamaskPage.$('.network-indicator')
         await networkSwitcher.click()
-        await timeout(0.5)
+        await timeout(0.1)
         const networkIndex = await metamaskPage.evaluate(network => {
           const elements = document.querySelectorAll('li.dropdown-menu-item')
           for (let i = 0; i < elements.length; i++) {
@@ -89,22 +91,21 @@ module.exports = {
               return i
             }
           }
-          return 0
+          return elements.length - 1
         }, 'Custom RPC')
         const networkButton = (await metamaskPage.$$('li.dropdown-menu-item'))[
           networkIndex
         ]
         await networkButton.click()
-        await timeout(0.5)
-        const newRPCInput = await metamaskPage.$('input#new_rpc')
+        await timeout(0.1)
+        const newRPCInput = await metamaskPage.$('input#new-rpc')
         await newRPCInput.type(url)
-        const saveButton = await metamaskPage.$('input#new_rpc+button')
+        const saveButton = await metamaskPage.$('button.settings-tab__rpc-save-button')
         await saveButton.click()
         await timeout(0.5)
-        const prevButton = await metamaskPage.$('i.fa-arrow-left')
+        const prevButton = await metamaskPage.$('img.app-header__metafox-logo')
         await prevButton.click()
-        await timeout(0.5)
-        await waitForEthereum(metamaskPage)
+        await waitForUnlockedScreen(metamaskPage)
       },
 
       importPK: async (pk) => {
@@ -128,7 +129,7 @@ module.exports = {
         await metamaskPage.waitFor('.network-indicator')
         const networkSwitcher = await metamaskPage.$('.network-indicator')
         await networkSwitcher.click()
-        await timeout(0.5)
+        await timeout(0.1)
         const networkIndex = await metamaskPage.evaluate(network => {
           const elements = document.querySelectorAll('li.dropdown-menu-item')
           for (let i = 0; i < elements.length; i++) {
@@ -148,44 +149,20 @@ module.exports = {
         await waitForEthereum(metamaskPage)
       },
 
-      confirmTransaction: async (options = {}) => {
+      confirmTransaction: async (options) => {
         await metamaskPage.bringToFront()
         if (!signedIn) {
           throw new Error("You haven't signed in yet")
         }
         await metamaskPage.reload()
-        await waitForConfirmationPromt(metamaskPage)
-        await waitForGasEstimation(metamaskPage)
+        
+        if (options) {
+          // FIX: custom gas and limit
+        }
 
-        const inputs = await metamaskPage.$$('input[type="number"].hex-input')
-
-        const gasLimit = options.gasLimit || 100000
-        const gas = options.gas || 20
-
-        await metamaskPage.evaluate(
-          () =>
-          (document.querySelectorAll(
-              'input[type="number"].hex-input'
-            )[0].value =
-            '')
-        )
-        await inputs[0].type(gasLimit.toString())
-
-        await metamaskPage.evaluate(
-          () =>
-          (document.querySelectorAll(
-              'input[type="number"].hex-input'
-            )[1].value =
-            '')
-        )
-        await inputs[1].type(gas.toString())
-
-        await metamaskPage.waitFor(
-          () => !document.querySelector('input[type="submit"].confirm').disabled
-        )
-        const confirmButton = await metamaskPage.$(
-          'input[type="submit"].confirm'
-        )
+        const confirmButtonSelector = 'button.button.btn-confirm.btn--large.page-container__footer-button'
+        await metamaskPage.waitFor(confirmButtonSelector)
+        const confirmButton = await metamaskPage.$(confirmButtonSelector)
         await confirmButton.click()
         await waitForUnlockedScreen(metamaskPage)
       },
@@ -223,6 +200,17 @@ async function closeHomeScreen(browser) {
         }
       }
     })
+  })
+}
+
+async function closeNotificationPage(browser) {
+  browser.on('targetcreated', async target => {
+    if (target.url() === 'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/notification.html') {
+      try {
+        const page = await target.page()
+        await page.close();
+      } catch {}
+    }
   })
 }
 
@@ -284,7 +272,7 @@ async function waitForOneTermOfUse(metamaskPage) {
 }
 
 async function waitForUnlockedScreen(metamaskPage) {
-  await metamaskPage.waitForSelector('.identicon-wrapper')
+  await metamaskPage.waitForSelector('.main-container-wrapper')
 }
 
 async function waitForSignInScreen(metamaskPage) {
@@ -310,23 +298,6 @@ async function waitUntilStartConnectingToEthereum(metamaskPage) {
 }
 
 async function waitUntilConnectedToEthereum(metamaskPage) {
-  await metamaskPage.waitFor(() => {
-    return document.querySelector('img[src="images/loading.svg"]') == null
-  })
-}
-
-async function waitForGasEstimation(metamaskPage) {
-  await Promise.race([waitUntilStartEstimatingGas(metamaskPage), timeout(1)])
-  await Promise.race([waitUntilGasEstimated(metamaskPage), timeout(10)])
-}
-
-async function waitUntilStartEstimatingGas(metamaskPage) {
-  await metamaskPage.waitFor(() => {
-    return !!document.querySelector('img[src="images/loading.svg"]')
-  })
-}
-
-async function waitUntilGasEstimated(metamaskPage) {
   await metamaskPage.waitFor(() => {
     return document.querySelector('img[src="images/loading.svg"]') == null
   })
