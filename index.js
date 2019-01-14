@@ -167,22 +167,22 @@ module.exports = {
         await waitForUnlockedScreen(metamaskPage)
       },
 
-      sign: async (options = {}) => {
+      sign: async () => {
         await metamaskPage.bringToFront()
         if (!signedIn) {
           throw new Error("You haven't signed in yet")
         }
         await metamaskPage.reload()
-        await waitForConfirmationPromt(metamaskPage)
+        // await waitForConfirmationPromt(metamaskPage)
 
-        const data = await metamaskPage.$$('.flex-row.flex-space-around');
+        const confirmButtonSelector = '.request-signature__footer button.btn-primary'
 
-        const buttons = await data[0].$$('button');
+        await metamaskPage.waitFor(confirmButtonSelector);
 
-        await buttons[1].click()
+        const button = await metamaskPage.$(confirmButtonSelector);
+        await button.click()
 
         await waitForUnlockedScreen(metamaskPage);
-
       }
     }
   }
