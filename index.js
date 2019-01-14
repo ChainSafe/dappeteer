@@ -5,9 +5,12 @@ const timeout = seconds =>
 
 module.exports = {
   launch: async (puppeteer, options = {}) => {
-    const { args, ...rest } = options
+    const {
+      args,
+      ...rest
+    } = options
 
-    const METAMASK_VERSION = options.metamaskVersion || '4.7.4'
+    const METAMASK_VERSION = options.metamaskVersion || '5.3.0'
     const METAMASK_PATH =
       options.metamaskPath ||
       path.join(__dirname, `metamask/${METAMASK_VERSION}`)
@@ -22,76 +25,29 @@ module.exports = {
       ...rest
     })
   },
-  getMetamask: async (browser, options = {}) => {
-    // close annoying popup
-    browser.on('targetcreated', async target => {
-      if (target.url() === 'https://metamask.io/#how-it-works') {
-        try {
-          const page = await target.page()
-          await page.close()
-        } catch (e) {}
-        return
-      }
-    })
+  getMetamask: async (browser, options = {
+    seed: undefined,
+    password: undefined,
+    extensionId: undefined,
+    extensionUrl: undefined
+  }) => {
+    const metamaskPage= await closeHomeScreen(browser);
 
-    const EXTENSION_ID =
-      options.extensionId || 'nkbihfbeogaeaoehlefnkodbefgpgknn'
-    const EXTENSION_URL =
-      options.extensionUrl || `chrome-extension://${EXTENSION_ID}/popup.html`
+    // const metamaskPage = await getMetamaskPage(browser, options.extensionId, options.extensionUrl)
 
-    const metamaskPage = await browser.newPage()
-    await metamaskPage.goto(EXTENSION_URL)
-    await acceptTerms(metamaskPage)
+    await confirmWelcomeScreen(metamaskPage);
 
-    let signedIn = false
+    await importAccount(
+      metamaskPage,
+      options.seed || 'already turtle birth enroll since owner keep patch skirt drift any dinner',
+      options.password || 'password1234'
+    );
+
+    await acceptTermsOfUse(metamaskPage);
+
+    let signedIn = true
 
     return {
-      createAccount: async (password = 'password1234') => {
-        if (signedIn) {
-          throw new Error(
-            "You can't create a new account because you have already signed in to MetaMask"
-          )
-        }
-        await metamaskPage.bringToFront()
-        const passwordBox = await metamaskPage.$('#password-box')
-        await passwordBox.type(password)
-        const passwordConfirm = await metamaskPage.$('#password-box-confirm')
-        await passwordConfirm.type(password)
-        const createButton = await metamaskPage.$('button')
-        await createButton.click()
-        await metamaskPage.waitFor(
-          () =>
-            document
-              .querySelector('button.primary')
-              .innerHTML.indexOf("I've copied it somewhere safe") != -1
-        )
-        const acknowledgeButton = (await metamaskPage.$$('button.primary'))[0]
-        await acknowledgeButton.click()
-        await waitForUnlockedScreen(metamaskPage)
-        signedIn = true
-      },
-
-      importAccount: async (seed, password = 'password1234') => {
-        if (signedIn) {
-          throw new Error(
-            "You can't import a new account because you have already signed in to MetaMask"
-          )
-        }
-        await metamaskPage.bringToFront()
-        const importButton = await metamaskPage.$('p.pointer')
-        await importButton.click()
-        const textarea = await metamaskPage.$('textarea')
-        await textarea.type(seed)
-        const passwordBox = await metamaskPage.$('#password-box')
-        await passwordBox.type(password)
-        const passwordConfirm = await metamaskPage.$('#password-box-confirm')
-        await passwordConfirm.type(password)
-        const acceptButton = (await metamaskPage.$$('button'))[1]
-        await acceptButton.click()
-        signedIn = true
-        await waitForUnlockedScreen(metamaskPage)
-      },
-
       lock: async () => {
         if (!signedIn) {
           throw new Error(
@@ -169,6 +125,7 @@ module.exports = {
 
       switchNetwork: async (network = 'main') => {
         await metamaskPage.bringToFront()
+        await metamaskPage.waitFor('.network-indicator')
         const networkSwitcher = await metamaskPage.$('.network-indicator')
         await networkSwitcher.click()
         await timeout(0.5)
@@ -207,19 +164,19 @@ module.exports = {
 
         await metamaskPage.evaluate(
           () =>
-            (document.querySelectorAll(
+          (document.querySelectorAll(
               'input[type="number"].hex-input'
             )[0].value =
-              '')
+            '')
         )
         await inputs[0].type(gasLimit.toString())
 
         await metamaskPage.evaluate(
           () =>
-            (document.querySelectorAll(
+          (document.querySelectorAll(
               'input[type="number"].hex-input'
             )[1].value =
-              '')
+            '')
         )
         await inputs[1].type(gas.toString())
 
@@ -254,22 +211,76 @@ module.exports = {
   }
 }
 
-async function acceptTerms(metamaskPage) {
-  await waitForEthereum(metamaskPage)
-  const acceptButton = await metamaskPage.$('button')
-  await acceptButton.click()
-  await metamaskPage.waitForSelector('div.markdown')
-  const termsOfUse = await metamaskPage.$('div.markdown')
+async function closeHomeScreen(browser) {
+  return new Promise((resolve, reject) => {
+    browser.on('targetcreated', async target => {
+      if (target.url() === 'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html') {
+        try {
+          const page = await target.page()
+          resolve(page);
+        } catch (e) {
+          reject(e);
+        }
+      }
+    })
+  })
+}
+
+async function getMetamaskPage(browser, extensionId, extensionUrl) {
+  const EXTENSION_ID = extensionId || 'nkbihfbeogaeaoehlefnkodbefgpgknn'
+  const EXTENSION_URL = extensionUrl || `chrome-extension://${EXTENSION_ID}/popup.html`
+
+  const metamaskPage = await browser.newPage()
+  await metamaskPage.goto(EXTENSION_URL)
+}
+
+async function confirmWelcomeScreen(metamaskPage) {
+  await metamaskPage.waitFor('.welcome-screen button');
+  const continueButton = await metamaskPage.$('.welcome-screen button');
+  await continueButton.click();
+}
+
+async function importAccount(metamaskPage, seed, password) {
+  await metamaskPage.waitFor('.first-time-flow a');
+  const importLink = await metamaskPage.$('.first-time-flow a');
+  await importLink.click();
+
+  await metamaskPage.waitFor('.import-account textarea');
+  const seedPhraseInput = await metamaskPage.$('.import-account textarea');
+  await seedPhraseInput.type(seed);
+
+  await metamaskPage.waitFor('#password');
+  const passwordInput = await metamaskPage.$('#password');
+  await passwordInput.type(password);
+
+  await metamaskPage.waitFor('#confirm-password');
+  const passwordConfirmInput = await metamaskPage.$('#confirm-password');
+  await passwordConfirmInput.type(password);
+
+  await metamaskPage.waitFor('.import-account button');
+  const restoreButton = await metamaskPage.$('.import-account button');
+  await restoreButton.click();
+}
+
+async function acceptTermsOfUse(metamaskPage) {
+  for (let i = 0; i < 3; i++) {
+    await waitForOneTermOfUse(metamaskPage);
+  }
+}
+
+async function waitForOneTermOfUse(metamaskPage) {
+  await metamaskPage.waitFor('.tou .tou__body');
+  const termsOfUse = await metamaskPage.$('.tou .tou__body');
   await metamaskPage.evaluate(termsOfUse => {
-    termsOfUse.scrollTo(0, termsOfUse.scrollHeight)
-    return termsOfUse.scrollHeight
+    termsOfUse.scrollTo(0, termsOfUse.scrollHeight);
+    return termsOfUse.scrollHeight;
   }, termsOfUse)
+
   await metamaskPage.waitFor(
-    () => document.querySelector('button:disabled') == null
+    () => document.querySelector('.tou button:disabled') == null
   )
-  const acceptButton2 = await metamaskPage.$('button')
-  await acceptButton2.click()
-  await waitForSignInScreen(metamaskPage)
+  const touButton = await metamaskPage.$('.tou button');
+  await touButton.click();
 }
 
 async function waitForUnlockedScreen(metamaskPage) {
