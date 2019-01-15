@@ -124,6 +124,17 @@ module.exports = {
         await waitForUnlockedScreen(metamaskPage);
       },
 
+      switchAccount: async (accountNumber) => {
+        await metamaskPage.bringToFront()
+        const accountSwitcher = await metamaskPage.$('.identicon')
+        await accountSwitcher.click()
+        await timeout(0.1)
+        const account = await metamaskPage.$(`.account-menu__accounts > div:nth-child(${accountNumber})`)
+        await account.click()
+        await timeout(0.1)
+        await waitForUnlockedScreen(metamaskPage);
+      },
+
       switchNetwork: async (network = 'main') => {
         await metamaskPage.bringToFront()
         await metamaskPage.waitFor('.network-indicator')
