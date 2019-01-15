@@ -57,23 +57,28 @@ module.exports = {
           )
         }
         await metamaskPage.bringToFront()
-        const hamburger = await metamaskPage.$('.sandwich-expando')
-        await hamburger.click()
-        await timeout(0.5)
-        const signoutButton = (await metamaskPage.$$(
-          '.menu-droppo .dropdown-menu-item'
-        ))[1]
+        const accountSwitcher = await metamaskPage.$('.identicon')
+        await accountSwitcher.click()
+        await timeout(0.1)
+        const signoutButton = await metamaskPage.$('.account-menu__logout-button')
         await signoutButton.click()
         await waitForSignInScreen(metamaskPage)
+        signedIn = false;
       },
 
       unlock: async (password = 'password1234') => {
+        if(signedIn){
+          throw new Error(
+            "You can't sign in because you are already signed in"
+          )
+        }
         await metamaskPage.bringToFront()
-        const passwordBox = await metamaskPage.$('#password-box')
+        const passwordBox = await metamaskPage.$('#password')
         await passwordBox.type(password)
-        const createButton = await metamaskPage.$('button')
-        await createButton.click()
+        const login = await metamaskPage.$('.unlock-page button')
+        await login.click()
         await waitForUnlockedScreen(metamaskPage)
+        signedIn = true;
       },
 
       addNetwork: async (url) => {
