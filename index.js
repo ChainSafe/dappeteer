@@ -110,18 +110,18 @@ module.exports = {
 
       importPK: async (pk) => {
         await metamaskPage.bringToFront()
-        const accountSwitcher = await metamaskPage.$('.accounts-selector')
+        const accountSwitcher = await metamaskPage.$('.identicon')
         await accountSwitcher.click()
-        await timeout(0.5)
-        const addAccount = await metamaskPage.$('.menu-droppo .dropdown-menu-item:last-child')
+        await timeout(0.1)
+        const addAccount = await metamaskPage.$('.account-menu > div:nth-child(7)')
         await addAccount.click()
-        await timeout(0.5)
+        await timeout(0.1)
         const PKInput = await metamaskPage.$('input#private-key-box')
         await PKInput.type(pk)
-        const importButton = await metamaskPage.$('input#private-key-box+button')
+        const importButton = await metamaskPage.$('button.btn-primary')
         await importButton.click()
-        await timeout(0.5)
-        await waitForEthereum(metamaskPage)
+        await timeout(0.1)
+        await waitForUnlockedScreen(metamaskPage);
       },
 
       switchNetwork: async (network = 'main') => {
@@ -173,7 +173,6 @@ module.exports = {
           throw new Error("You haven't signed in yet")
         }
         await metamaskPage.reload()
-        // await waitForConfirmationPromt(metamaskPage)
 
         const confirmButtonSelector = '.request-signature__footer button.btn-primary'
 
@@ -277,10 +276,6 @@ async function waitForUnlockedScreen(metamaskPage) {
 
 async function waitForSignInScreen(metamaskPage) {
   await metamaskPage.waitForSelector('#metamask-mascot-container')
-}
-
-async function waitForConfirmationPromt(metamaskPage) {
-  return metamaskPage.waitForSelector('.page-subtitle')
 }
 
 async function waitForEthereum(metamaskPage) {
