@@ -52,6 +52,8 @@ main()
 
   - `metamask.importAccount(seed[, password])`: it commands MetaMask to import an account, you need to provide the twelve words seed. It can only be used while you haven't signed in yet, otherwise it throws. The password is optional, it defaults to `password1234`.
 
+  - `metamask.switchAccount(accountIndex)`: it commands MetaMask to switch to a different account, by passing the index/position of the account in the accounts list.
+
   - `metamask.importPK(privateKey)`: it commands MetaMask to import an private key. It can only be used while you haven't signed in yet, otherwise it throws.
 
   - `metamask.lock()`: signs out from MetaMask. It can only be used if you arelady signed it, otherwise it throws.
