@@ -13,6 +13,13 @@ function getCounterNumber(contract) {
   })
 }
 
+async function clickElement(page, selector) {
+  await page.bringToFront();
+  await page.waitForSelector(selector)
+  const element = await page.$(selector)
+  await element.click()
+}
+
 let testContract, browser, metamask, testPage;
 
 before(async () => {
@@ -58,9 +65,7 @@ describe('dappeteer', () => {
 
     it('should confirm transaction', async () => {
       // click increase button
-      await testPage.waitForSelector('.increase-button')
-      const increaseButton = await testPage.$('.increase-button')
-      await increaseButton.click()
+      await clickElement(testPage, '.increase-button')
 
       // submit tx
       await metamask.confirmTransaction()
@@ -73,6 +78,17 @@ describe('dappeteer', () => {
       const counterAfter = await getCounterNumber(testContract)
 
       assert.equal(counterAfter, counterBefore + 1, `Counter does not match BEFORE: ${counterBefore} AFTER: ${counterAfter}`)
+    })
+  })
+
+  it('should change gas values', async () => {
+    // click increase button
+    await clickElement(testPage, '.increase-button')
+
+    // submit tx
+    await metamask.confirmTransaction({
+      gas: 20,
+      gasLimit: 400000
     })
   })
 

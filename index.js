@@ -67,7 +67,7 @@ module.exports = {
       },
 
       unlock: async (password = 'password1234') => {
-        if(signedIn){
+        if (signedIn) {
           throw new Error(
             "You can't sign in because you are already signed in"
           )
@@ -171,9 +171,44 @@ module.exports = {
           throw new Error("You haven't signed in yet")
         }
         await metamaskPage.reload()
-        
+
         if (options) {
-          // FIX: custom gas and limit
+          const editButtonSelector = 'div.confirm-detail-row__header-text--edit'
+          await metamaskPage.waitFor(editButtonSelector);
+          const editButton = await metamaskPage.$(editButtonSelector);
+          await editButton.click();
+          await timeout(0.1)
+
+          const tabSelector = 'li.page-container__tab:nth-child(2)'
+          await metamaskPage.waitFor(tabSelector);
+          const tab = await metamaskPage.$(tabSelector)
+          await tab.click();
+          await timeout(0.1)
+
+          if (options.gas) {
+            const gasSelector = 'div.advanced-tab__gas-edit-row:nth-child(1) input'
+            await metamaskPage.waitFor(gasSelector);
+            const gas = await metamaskPage.$(gasSelector)
+
+            await metamaskPage.evaluate(() => (document.querySelectorAll('div.advanced-tab__gas-edit-row:nth-child(1) input')[0].value = ''))
+            await gas.type(options.gas.toString());
+          }
+
+          if (options.gasLimit) {
+            const gasLimitSelector = 'div.advanced-tab__gas-edit-row:nth-child(2) input'
+            await metamaskPage.waitFor(gasLimitSelector);
+            const gasLimit = await metamaskPage.$(gasLimitSelector)
+
+            await metamaskPage.evaluate(() => (document.querySelectorAll('div.advanced-tab__gas-edit-row:nth-child(2) input')[0].value = ''))
+            await gasLimit.type(options.gasLimit.toString());
+          }
+          await timeout(0.1)
+
+          const saveSelector = '#app-content > div > span > div.modal > div > div > div > div.page-container__bottom > div.page-container__footer > header > button'
+          await metamaskPage.waitFor(saveSelector);
+          const saveButton = await metamaskPage.$(saveSelector)
+          await saveButton.click();
+          await timeout(0.1)
         }
 
         const confirmButtonSelector = 'button.button.btn-confirm.btn--large.page-container__footer-button'
@@ -224,7 +259,7 @@ async function closeNotificationPage(browser) {
       try {
         const page = await target.page()
         await page.close();
-      } catch {}
+      } catch { }
     }
   })
 }
