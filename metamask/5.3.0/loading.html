@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>MetaMask Loading</title>
+  <style>
+    #div-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 256px;
+    }
+    #logo {
+      width: 100%;
+      animation: pulse 1s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.5;
+        transform: scale(0.95, 0.95);
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="div-logo">
+    <img id="logo" src="./images/loginglogo.svg">
+  </div>
+  <script type="text/javascript">
+    // redirect to 404 after one minute
+    setTimeout(() => {
+      location.href = './404.html'
+    }, 60000)
+  </script>
+</body>
+</html>
