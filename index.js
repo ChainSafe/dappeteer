@@ -233,7 +233,20 @@ module.exports = {
         await button.click()
 
         await waitForUnlockedScreen(metamaskPage);
-      }
+      },
+
+      approve: async () => {
+        await metamaskPage.bringToFront()
+
+        const confirmButtonSelector = 'button.button.btn-confirm.btn--large.page-container__footer-button'
+
+        await metamaskPage.waitFor(confirmButtonSelector);
+
+        const button = await metamaskPage.$(confirmButtonSelector);
+        await button.click()
+
+        await waitForUnlockedScreen(metamaskPage);
+      },
     }
   }
 }
