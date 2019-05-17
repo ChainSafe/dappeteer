@@ -21,12 +21,15 @@
   "author": "Juan Cazala <juan@decentraland.org>",
   "license": "MIT",
   "devDependencies": {
-    "ganache-core": "2.4.0",
+    "ganache-core": "^2.5.5",
     "mocha": "5.2.0",
-    "puppeteer": "^1.5.0",
+    "puppeteer": "^1.16.0",
     "rocketh": "https://github.com/wighawag/rocketh.git#3bcfdb3b7d38ac98449b3d5075e12868b32d5a0c",
     "serve-handler": "5.0.8",
     "solc": "0.5.2",
     "web3": "1.0.0-beta.34"
+  },
+  "peerDependencies": {
+    "puppeteer": "^1.16.0"
   }
 }
