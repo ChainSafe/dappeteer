@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "postinstall": "rm -rf node_modules/**/.git",
-    "build": "ncc build index.ts -o dist -e puppeteer && rm -rf dist/dappeteer dist/test",
+    "build": "tsc",
     "test": "mocha -r ts-node/register test/test.ts --timeout=200000 --exit"
   },
   "repository": {
@@ -30,7 +30,6 @@
   "devDependencies": {
     "@types/mocha": "^5.2.7",
     "@types/puppeteer": "^1.12.4",
-    "@zeit/ncc": "^0.18.5",
     "ganache-core": "^2.5.5",
     "mocha": "5.2.0",
     "puppeteer": "^1.16.0",

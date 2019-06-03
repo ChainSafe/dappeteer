@@ -1,7 +1,7 @@
 import * as puppeteer from 'puppeteer'
 import * as assert from 'assert'
 
-import * as dappeteer from '../index'
+import * as dappeteer from '../src/index'
 import deploy from './deploy'
 
 function pause(seconds: number): Promise<void> {
