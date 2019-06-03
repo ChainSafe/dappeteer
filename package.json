@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "rm -rf node_modules/**/.git",
-    "test": "mocha test/test.js --timeout=200000 --exit"
+    "build": "ncc build src/robot/index.ts -o dist -e puppeteer",
+    "test": "mocha -r ts-node/register test/test.ts --timeout=200000 --exit"
   },
   "repository": {
     "type": "git",
@@ -22,12 +23,17 @@
   "author": "Juan Cazala <juan@decentraland.org>",
   "license": "MIT",
   "devDependencies": {
+    "@types/mocha": "^5.2.7",
+    "@types/puppeteer": "^1.12.4",
+    "@zeit/ncc": "^0.18.5",
     "ganache-core": "^2.5.5",
     "mocha": "5.2.0",
     "puppeteer": "^1.16.0",
     "rocketh": "https://github.com/wighawag/rocketh.git#3bcfdb3b7d38ac98449b3d5075e12868b32d5a0c",
     "serve-handler": "5.0.8",
     "solc": "0.5.2",
+    "ts-node": "^8.2.0",
+    "typescript": "^3.5.1",
     "web3": "1.0.0-beta.34"
   },
   "peerDependencies": {
