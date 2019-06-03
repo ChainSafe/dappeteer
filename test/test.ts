@@ -1,9 +1,10 @@
-const puppeteer = require('puppeteer')
-const dappeteer = require('../index')
-const assert = require('assert')
+import * as puppeteer from 'puppeteer'
+import * as assert from 'assert'
+
+import * as dappeteer from '../index'
 import deploy from './deploy'
 
-function pause(seconds) {
+function pause(seconds: number): Promise<void> {
   return new Promise(res => setTimeout(res, 1000 * seconds))
 }
 
