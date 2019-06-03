@@ -11,6 +11,7 @@
   "scripts": {
     "postinstall": "npx rimraf node_modules/**/**/.git",
     "build": "tsc",
+    "prepublish": "npm run build",
     "test": "mocha -r ts-node/register test/test.ts --timeout=200000 --exit"
   },
   "repository": {
