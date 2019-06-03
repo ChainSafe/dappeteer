@@ -1,26 +1,30 @@
-const puppeteer = require('puppeteer')
-const dappeteer = require('../index')
-const assert = require('assert')
-const deploy = require('./deploy');
+import * as puppeteer from 'puppeteer'
+import * as assert from 'assert'
 
-function pause(seconds) {
+import * as dappeteer from '../src/index'
+import deploy from './deploy'
+
+function pause(seconds: number): Promise<void> {
   return new Promise(res => setTimeout(res, 1000 * seconds))
 }
 
 function getCounterNumber(contract) {
-  return contract.methods.count().call().then(res => {
-    return Number(res);
-  })
+  return contract.methods
+    .count()
+    .call()
+    .then(res => {
+      return Number(res)
+    })
 }
 
 async function clickElement(page, selector) {
-  await page.bringToFront();
+  await page.bringToFront()
   await page.waitForSelector(selector)
   const element = await page.$(selector)
   await element.click()
 }
 
-let testContract, browser, metamask, testPage;
+let testContract, browser, metamask, testPage
 
 before(async () => {
   testContract = await deploy()
@@ -35,20 +39,20 @@ before(async () => {
 
 describe('dappeteer', () => {
   it('should be deployed, contract', async () => {
-    assert.ok(testContract);
-    assert.ok(testContract.options.address);
+    assert.ok(testContract)
+    assert.ok(testContract.options.address)
   })
 
   it('should running, puppeteer', async () => {
-    assert.ok(browser);
+    assert.ok(browser)
   })
 
   it('should open, metamask', async () => {
-    assert.ok(metamask);
+    assert.ok(metamask)
   })
 
   it('should open, test page', async () => {
-    assert.ok(testPage);
+    assert.ok(testPage)
     assert.equal(await testPage.title(), 'Local metamask test')
   })
 
@@ -77,7 +81,11 @@ describe('dappeteer', () => {
 
       const counterAfter = await getCounterNumber(testContract)
 
-      assert.equal(counterAfter, counterBefore + 1, `Counter does not match BEFORE: ${counterBefore} AFTER: ${counterAfter}`)
+      assert.equal(
+        counterAfter,
+        counterBefore + 1,
+        `Counter does not match BEFORE: ${counterBefore} AFTER: ${counterAfter}`
+      )
     })
   })
 
