@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "postinstall": "rm -rf node_modules/**/.git",
+    "postinstall": "rm -rf node_modules/**/**/.git",
     "build": "tsc",
     "test": "mocha -r ts-node/register test/test.ts --timeout=200000 --exit"
   },
@@ -30,6 +30,7 @@
   "devDependencies": {
     "@types/mocha": "^5.2.7",
     "@types/puppeteer": "^1.12.4",
+    "dcl-tslint-config-standard": "^1.1.0",
     "ganache-core": "^2.5.5",
     "mocha": "5.2.0",
     "puppeteer": "^1.16.0",
