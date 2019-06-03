@@ -9,7 +9,7 @@
     "dist"
   ],
   "scripts": {
-    "postinstall": "rm -rf node_modules/**/**/.git",
+    "postinstall": "npx rimraf node_modules/**/**/.git",
     "build": "tsc",
     "test": "mocha -r ts-node/register test/test.ts --timeout=200000 --exit"
   },
