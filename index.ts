@@ -1,6 +1,5 @@
+import * as path from 'path'
 import * as puppeteer from 'Puppeteer'
-
-const path = require('path')
 
 const timeout = seconds => new Promise(resolve => setTimeout(resolve, seconds * 1000))
 
@@ -38,7 +37,7 @@ export async function launch(puppeteer, options: LaunchOptions = {}): Promise<pu
 
   const { metamaskVersion, metamaskPath } = options
   const METAMASK_VERSION = metamaskVersion || '5.3.0'
-  const METAMASK_PATH = metamaskPath || path.join(__dirname, `metamask/${METAMASK_VERSION}`)
+  const METAMASK_PATH = metamaskPath || path.resolve(__dirname, `metamask/${METAMASK_VERSION}`)
 
   return puppeteer.launch({
     headless: false,
