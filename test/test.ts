@@ -31,7 +31,8 @@ before(async () => {
   browser = await dappeteer.launch(puppeteer)
   metamask = await dappeteer.getMetamask(browser, {
     // optional, else it will use a default seed
-    seed: 'pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog'
+    seed: 'pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog',
+    password: 'password1234'
   })
   testPage = await browser.newPage()
   await testPage.goto('localhost:8080')
@@ -60,6 +61,35 @@ describe('dappeteer', () => {
     await metamask.switchNetwork('localhost')
   })
 
+  it('should import private key', async () => {
+    await metamask.importPK('4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b10')
+  })
+
+  it('should switch accounts', async () => {
+    await metamask.switchAccount(1)
+  })
+
+  it('should lock and unlock', async () => {
+    await metamask.lock()
+    await metamask.unlock('password1234')
+  })
+
+  it("should connect to ethereum", async () => {
+    await clickElement(testPage, ".connect-button");
+    await metamask.approve();
+
+    // For some reason initial approve does not resolve nor fail promise
+    await clickElement(testPage, ".connect-button");
+    await testPage.waitForSelector("#connected");
+  });
+
+  it("should be able to sign", async () => {
+    await clickElement(testPage, ".sign-button");
+    await metamask.sign();
+
+    await testPage.waitForSelector("#signed");
+  });
+
   describe('test contract', async () => {
     let counterBefore
 
@@ -73,6 +103,7 @@ describe('dappeteer', () => {
 
       // submit tx
       await metamask.confirmTransaction()
+      await testPage.waitForSelector("#txSent");
     })
 
     it('should have increased count', async () => {
