@@ -3,3 +3,5 @@ node_modules
 test/server/data.js
 build
 dist
+yarn.lock
+.vscode/
