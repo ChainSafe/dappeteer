@@ -129,6 +129,7 @@ describe('dappeteer', () => {
       gas: 20,
       gasLimit: 400000
     })
+    await testPage.waitForSelector("#txSent");
   })
 
   after(async () => {
