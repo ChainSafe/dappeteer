@@ -1,11 +1,10 @@
-import * as path from 'path'
 import * as puppeteer from 'puppeteer';
+import downloader from './metamaskDownloader';
 
 const timeout = seconds => new Promise(resolve => setTimeout(resolve, seconds * 1000))
 
 export type LaunchOptions = Parameters<typeof puppeteer["launch"]>[0] & {
   metamaskVersion?: string
-  metamaskPath?: string
 }
 
 export type MetamaskOptions = {
@@ -32,13 +31,8 @@ export type TransactionOptions = {
   gasLimit: number
 }
 
-export async function launch(puppeteer, options: LaunchOptions = {}): Promise<puppeteer.Browser> {
-  const { args, ...rest } = options
-
-  const { metamaskVersion, metamaskPath } = options
-  const METAMASK_VERSION = metamaskVersion || '7.7.1'
-  console['log'](path.join(__dirname, `metamask/${METAMASK_VERSION}`))
-  const METAMASK_PATH = metamaskPath || path.resolve(__dirname, '..', 'metamask', METAMASK_VERSION)
+export async function launch(puppeteer, { args, metamaskVersion, ...rest }: LaunchOptions = {}): Promise<puppeteer.Browser> {
+  const METAMASK_PATH = await downloader(metamaskVersion);
 
   return puppeteer.launch({
     headless: false,
