@@ -31,11 +31,9 @@
   "devDependencies": {
     "@types/mocha": "^7.0.2",
     "@types/puppeteer": "^5.4.3",
-    "dcl-tslint-config-standard": "^1.1.0",
     "ganache-core": "^2.13.2",
     "mocha": "7.2.0",
     "puppeteer": "5.5.0",
-    "rocketh": "https://github.com/wighawag/rocketh.git#9b8df334ac508631d5ce0106e2b52c9d7d739233",
     "serve-handler": "5.0.8",
     "solc": "0.5.2",
     "ts-node": "9.1.1",
