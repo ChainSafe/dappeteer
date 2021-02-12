@@ -4,9 +4,11 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["es2017", "dom"],
+    "typeRoots": ["./node_modules/@types", "./types"],
     "declaration": true,
+    "esModuleInterop": true,
     "outDir": "dist"
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "test/**/*"]
+  "include": ["src/**/*", "test/**/*"],
+  "exclude": ["node_modules"]
 }

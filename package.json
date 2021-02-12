@@ -9,10 +9,10 @@
     "dist"
   ],
   "scripts": {
-    "postinstall": "npx rimraf node_modules/**/**/.git",
-    "build": "tsc",
-    "prepublish": "npm run build",
-    "test": "mocha -r ts-node/register test/test.ts --timeout=200000 --exit"
+    "prebuild": "rimraf dist",
+    "build": "tsc -p tsconfig.build.json",
+    "prepublish": "yarn run build",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -29,20 +29,20 @@
   "author": "Juan Cazala <juan@decentraland.org>",
   "license": "MIT",
   "devDependencies": {
-    "@types/mocha": "^5.2.7",
-    "@types/puppeteer": "^1.12.4",
+    "@types/mocha": "^7.0.2",
+    "@types/puppeteer": "^5.4.3",
     "dcl-tslint-config-standard": "^1.1.0",
-    "ganache-core": "^2.5.5",
-    "mocha": "5.2.0",
-    "puppeteer": "^1.16.0",
-    "rocketh": "https://github.com/wighawag/rocketh.git#3bcfdb3b7d38ac98449b3d5075e12868b32d5a0c",
+    "ganache-core": "^2.13.2",
+    "mocha": "7.2.0",
+    "puppeteer": "5.5.0",
+    "rocketh": "https://github.com/wighawag/rocketh.git#9b8df334ac508631d5ce0106e2b52c9d7d739233",
     "serve-handler": "5.0.8",
     "solc": "0.5.2",
-    "ts-node": "^8.2.0",
-    "typescript": "^3.5.1",
-    "web3": "1.0.0-beta.34"
+    "ts-node": "9.1.1",
+    "typescript": "^3.8",
+    "web3": "1.3.4"
   },
   "peerDependencies": {
-    "puppeteer": "^1.16.0"
+    "puppeteer": ">5"
   }
 }
