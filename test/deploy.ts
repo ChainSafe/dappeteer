@@ -1,29 +1,30 @@
-declare var ethereum: any
+import ganache from "ganache-core";
+import Web3 from "web3";
+import * as http from "http";
+import * as path from "path";
+import handler from "serve-handler";
+import { compileContracts } from './contract';
 
-const ganache = require('ganache-core')
 
-const rocketh = require('rocketh')
-const Web3 = require('web3')
-const fs = require('fs')
+let CounterContract: {address: string} | null = null;
+let provider = null; 
 
-const handler = require('serve-handler')
-const http = require('http')
-const path = require('path')
+export function getCounterContract(): {address: string} | null {
+  return CounterContract;
+}
 
-let counterContract = null
-
-async function deploy() {
+async function deploy(): Promise<string> {
   await waitForGanache()
   await startTestServer()
-  await deployContract()
-
-  return counterContract
+  CounterContract = await deployContract();
+  return CounterContract.address;
 }
 
 async function waitForGanache() {
   console.log('Starting ganache...')
   const server = ganache.server({ seed: 'asd123' })
-  await new Promise(res => {
+  provider = server.provider;
+  await new Promise<void>(res => {
     server.listen(8545, () => {
       console.log('Ganache running at http://localhost:8545')
       res()
@@ -31,26 +32,16 @@ async function waitForGanache() {
   })
 }
 
-async function deployContract() {
+async function deployContract(): Promise<{address: string} | null> {
   console.log('Deploying test contract...')
-  const result = await rocketh.launch({
-    nodeUrl: 'http://localhost:8545',
-    silent: true,
-    rootPath: 'test'
-  })
-  const web3 = new Web3(ethereum)
-  const deploymentInfo = result.deployments.Counter
-  const ContractInfo = deploymentInfo.contractInfo
-  const address = deploymentInfo.networks[result.networkId]
-  counterContract = new web3.eth.Contract(ContractInfo.abi, address)
-  fs.writeFileSync(
-    path.join(__dirname, 'server/data.js'),
-    `var ContractInfo = ${JSON.stringify({
-      abi: ContractInfo.abi,
-      address
-    })}`
-  )
-  console.log('Contract deployed at', address)
+  const web3 = new Web3(provider);
+  const compiledContracts = compileContracts();
+  const CounterContractInfo = compiledContracts["Counter.sol"]["Counter"];
+  const CounterContract = new web3.eth.Contract(CounterContractInfo.abi);
+  const accounts = await web3.eth.getAccounts();
+  const counterContract = await CounterContract.deploy({ data: CounterContractInfo.evm.bytecode.object }).send({ from: accounts[0], gas: 4000000 });
+  console.log('Contract deployed at', counterContract.options.address);
+  return {address: counterContract.options.address};
 }
 
 async function startTestServer() {
@@ -62,7 +53,7 @@ async function startTestServer() {
     })
   })
 
-  await new Promise(res => {
+  await new Promise<void>(res => {
     server.listen(8080, () => {
       console.log('Server running at http://localhost:8080')
       res()

@@ -1,4 +1,4 @@
-import * as puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer'
 import * as assert from 'assert'
 
 import * as dappeteer from '../src/index'
@@ -26,19 +26,20 @@ async function clickElement(page, selector) {
 
 let testContract, browser, metamask, testPage
 
-before(async () => {
-  testContract = await deploy()
-  browser = await dappeteer.launch(puppeteer)
-  metamask = await dappeteer.getMetamask(browser, {
-    // optional, else it will use a default seed
-    seed: 'pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog',
-    password: 'password1234'
-  })
-  testPage = await browser.newPage()
-  await testPage.goto('localhost:8080')
-})
-
 describe('dappeteer', () => {
+
+  before(async () => {
+    testContract = await deploy()
+    browser = await dappeteer.launch(puppeteer)
+    metamask = await dappeteer.getMetamask(browser, {
+      // optional, else it will use a default seed
+      seed: 'pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog',
+      password: 'password1234'
+    })
+    testPage = await browser.newPage()
+    await testPage.goto('localhost:8080')
+  })
+
   it('should be deployed, contract', async () => {
     assert.ok(testContract)
     assert.ok(testContract.options.address)
