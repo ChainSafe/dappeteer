@@ -7,3 +7,4 @@ dist
 *metamask
 .idea
 yarn-error.log
+test/dapp/data.js

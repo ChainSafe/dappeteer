@@ -4,59 +4,63 @@ import * as http from "http";
 import * as path from "path";
 import handler from "serve-handler";
 import { compileContracts } from './contract';
+import fs from "fs";
 
 
 let CounterContract: {address: string} | null = null;
-let provider = null; 
 
 export function getCounterContract(): {address: string} | null {
   return CounterContract;
 }
 
-async function deploy(): Promise<string> {
-  await waitForGanache()
+async function deploy(): Promise<{address: string}> {
+  const provider = await waitForGanache()
   await startTestServer()
-  CounterContract = await deployContract();
-  return CounterContract.address;
+  return await deployContract(provider);
 }
 
-async function waitForGanache() {
+async function waitForGanache(): Promise<ganache.Provider> {
   console.log('Starting ganache...')
   const server = ganache.server({ seed: 'asd123' })
-  provider = server.provider;
-  await new Promise<void>(res => {
+  return await new Promise<ganache.Provider>(resolve => {
     server.listen(8545, () => {
       console.log('Ganache running at http://localhost:8545')
-      res()
+      resolve(server.provider);
     })
   })
 }
 
-async function deployContract(): Promise<{address: string} | null> {
+async function deployContract(provider: ganache.Provider): Promise<{address: string} | null> {
   console.log('Deploying test contract...')
-  const web3 = new Web3(provider);
+  const web3 = new Web3(provider as unknown as Web3["currentProvider"]);
   const compiledContracts = compileContracts();
   const CounterContractInfo = compiledContracts["Counter.sol"]["Counter"];
   const CounterContract = new web3.eth.Contract(CounterContractInfo.abi);
   const accounts = await web3.eth.getAccounts();
   const counterContract = await CounterContract.deploy({ data: CounterContractInfo.evm.bytecode.object }).send({ from: accounts[0], gas: 4000000 });
   console.log('Contract deployed at', counterContract.options.address);
-  return {address: counterContract.options.address};
+
+  // create file data for dapp
+  const dataJsPath = path.join(__dirname, 'dapp', 'data.js');
+  const data = `const ContractInfo = ${JSON.stringify({...CounterContractInfo, ...counterContract.options}, null, 2)}`;
+  fs.writeFileSync(dataJsPath, data);
+
+  return {...CounterContract, ...counterContract, ...counterContract.options};
 }
 
 async function startTestServer() {
   console.log('Starting test server...')
   const server = http.createServer((request, response) => {
     return handler(request, response, {
-      public: path.join(__dirname, 'server'),
+      public: path.join(__dirname, 'dapp'),
       cleanUrls: true
     })
   })
 
-  await new Promise<void>(res => {
+  await new Promise<void>(resolve => {
     server.listen(8080, () => {
       console.log('Server running at http://localhost:8080')
-      res()
+      resolve();
     })
   })
 }
