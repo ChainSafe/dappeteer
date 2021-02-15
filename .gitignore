@@ -6,5 +6,5 @@ dist
 .vscode/
 *metamask
 .idea
-yarn-error.log
+*.log
 test/dapp/data.js
