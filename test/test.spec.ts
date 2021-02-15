@@ -1,14 +1,16 @@
-import puppeteer from 'puppeteer'
 import * as assert from 'assert'
 
+import puppeteer from 'puppeteer'
+
 import * as dappeteer from '../src/index'
+
 import deploy from './deploy'
 
 function pause(seconds: number): Promise<void> {
   return new Promise(res => setTimeout(res, 1000 * seconds))
 }
 
-function getCounterNumber(contract) {
+function getCounterNumber(contract): Promise<number> {
   return contract.methods
     .count()
     .call()
@@ -17,102 +19,102 @@ function getCounterNumber(contract) {
     })
 }
 
-async function clickElement(page, selector) {
+async function clickElement(page, selector): Promise<void> {
   await page.bringToFront()
   await page.waitForSelector(selector)
   const element = await page.$(selector)
   await element.click()
 }
 
-let testContract, browser, metamask, testPage
+let TestContract, Browser, Metamask, TestPage
 
 describe('dappeteer', () => {
 
   before(async () => {
-    testContract = await deploy()
-    browser = await dappeteer.launch(puppeteer)
-    metamask = await dappeteer.getMetamask(browser, {
+    TestContract = await deploy()
+    Browser = await dappeteer.launch(puppeteer)
+    Metamask = await dappeteer.getMetamask(Browser, {
       // optional, else it will use a default seed
       seed: 'pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog',
       password: 'password1234'
     })
-    testPage = await browser.newPage()
-    await testPage.goto('localhost:8080')
+    TestPage = await Browser.newPage()
+    await TestPage.goto('localhost:8080')
   })
 
   it('should be deployed, contract', async () => {
-    assert.ok(testContract)
-    assert.ok(testContract.address)
-    assert.ok(testContract.options.address)
+    assert.ok(TestContract)
+    assert.ok(TestContract.address)
+    assert.ok(TestContract.options.address)
   })
 
   it('should running, puppeteer', async () => {
-    assert.ok(browser)
+    assert.ok(Browser)
   })
 
   it('should open, metamask', async () => {
-    assert.ok(metamask)
+    assert.ok(Metamask)
   })
 
   it('should open, test page', async () => {
-    assert.ok(testPage)
-    assert.equal(await testPage.title(), 'Local metamask test')
+    assert.ok(TestPage)
+    assert.equal(await TestPage.title(), 'Local metamask test')
   })
 
   it('should switch network, localhost', async () => {
-    await metamask.switchNetwork('localhost')
+    await Metamask.switchNetwork('localhost')
   })
 
   it('should import private key', async () => {
-    await metamask.importPK('4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b10')
+    await Metamask.importPK('4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b10')
   })
 
   it('should switch accounts', async () => {
-    await metamask.switchAccount(1)
+    await Metamask.switchAccount(1)
   })
 
   it('should lock and unlock', async () => {
-    await metamask.lock()
-    await metamask.unlock('password1234')
+    await Metamask.lock()
+    await Metamask.unlock('password1234')
   })
 
   it("should connect to ethereum", async () => {
-    await clickElement(testPage, ".connect-button");
-    await metamask.approve();
+    await clickElement(TestPage, ".connect-button");
+    await Metamask.approve();
 
     // For some reason initial approve does not resolve nor fail promise
-    await clickElement(testPage, ".connect-button");
-    await testPage.waitForSelector("#connected");
+    await clickElement(TestPage, ".connect-button");
+    await TestPage.waitForSelector("#connected");
   });
 
   it("should be able to sign", async () => {
-    await clickElement(testPage, ".sign-button");
-    await metamask.sign();
+    await clickElement(TestPage, ".sign-button");
+    await Metamask.sign();
 
-    await testPage.waitForSelector("#signed");
+    await TestPage.waitForSelector("#signed");
   });
 
   describe('test contract', async () => {
     let counterBefore
 
     before(async () => {
-      counterBefore = await getCounterNumber(testContract)
+      counterBefore = await getCounterNumber(TestContract)
     })
 
     it('should confirm transaction', async () => {
       // click increase button
-      await clickElement(testPage, '.increase-button')
+      await clickElement(TestPage, '.increase-button')
 
       // submit tx
-      await metamask.confirmTransaction()
-      await testPage.waitForSelector("#txSent");
+      await Metamask.confirmTransaction()
+      await TestPage.waitForSelector("#txSent");
     })
 
     it('should have increased count', async () => {
       // wait half a seconds just in case
-      await pause(0.5)
+      await pause(1)
 
-      const counterAfter = await getCounterNumber(testContract)
+      const counterAfter = await getCounterNumber(TestContract)
 
       assert.equal(
         counterAfter,
@@ -124,18 +126,20 @@ describe('dappeteer', () => {
 
   it('should change gas values', async () => {
     // click increase button
-    await clickElement(testPage, '.increase-button')
+    await clickElement(TestPage, '.increase-button')
 
     // submit tx
-    await metamask.confirmTransaction({
-      gas: 20,
-      gasLimit: 400000
-    })
-    await testPage.waitForSelector("#txSent");
+    await Promise.all([
+      TestPage.waitForSelector("#txSent"),
+      Metamask.confirmTransaction({
+        gas: 20,
+        gasLimit: 400000
+      }),
+    ])
   })
 
   after(async () => {
     // close browser
-    await browser.close()
+    await Browser.close()
   })
 })

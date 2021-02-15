@@ -1,14 +1,16 @@
-import * as path from "path";
 import * as fs from "fs";
-import StreamZip from "node-stream-zip";
-import {get} from "https";
 import {IncomingMessage} from "http";
+import {get} from "https";
+import * as path from "path";
 
-const metamaskDirectory = path.resolve(__dirname, "metamask");
+import StreamZip from "node-stream-zip";
+
+
+const MetamaskDirectory = path.resolve(__dirname, "metamask");
 
 export default async (version?: string): Promise<string> => {
   const {filename, downloadUrl, tag} = await getMetamaskReleases(version);
-  const extractDestination = path.resolve(metamaskDirectory, tag.replace(/\./g, "_"));
+  const extractDestination = path.resolve(MetamaskDirectory, tag.replace(/\./g, "_"));
   if (!fs.existsSync(extractDestination)) {
     const downloadedFile = await downloadMetamaskReleases(filename, downloadUrl);
     const zip = new StreamZip.async({ file: downloadedFile });
@@ -18,6 +20,7 @@ export default async (version?: string): Promise<string> => {
   return extractDestination;
 }
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const request = (url: string): Promise<IncomingMessage> => new Promise((resolve) => {
   get(url, (response) => {
     if(response.statusCode == 302) {
@@ -28,8 +31,9 @@ const request = (url: string): Promise<IncomingMessage> => new Promise((resolve)
   });
 });
 
+// eslint-disable-next-line no-async-promise-executor, @typescript-eslint/naming-convention
 const downloadMetamaskReleases = (name: string, url: string): Promise<string> => new Promise(async (resolve) => {
-  const downloadsDirectory = path.resolve(metamaskDirectory, "download");
+  const downloadsDirectory = path.resolve(MetamaskDirectory, "download");
   if (!fs.existsSync(downloadsDirectory)) {
     fs.mkdirSync(downloadsDirectory, { recursive: true });
   }
@@ -41,9 +45,11 @@ const downloadMetamaskReleases = (name: string, url: string): Promise<string> =>
 });
 
 type MetamaskReleases = {downloadUrl: string, filename: string, tag: string};
-const metamaskReleasesUrl = 'https://api.github.com/repos/metamask/metamask-extension/releases';
+const MetamaskReleasesUrl = 'https://api.github.com/repos/metamask/metamask-extension/releases';
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const getMetamaskReleases = (version?: string): Promise<MetamaskReleases> => new Promise((resolve, reject) => {
-  get(metamaskReleasesUrl, {headers: { 'User-Agent': 'Mozilla/5.0' }},(response) => {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  get(MetamaskReleasesUrl, {headers: { 'User-Agent': 'Mozilla/5.0' }},(response) => {
     let body = "";
     response.on("data", (chunk) => {
       body += chunk;

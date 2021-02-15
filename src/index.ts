@@ -1,7 +1,6 @@
 import * as puppeteer from 'puppeteer';
-import downloader from './metamaskDownloader';
 
-const timeout = seconds => new Promise(resolve => setTimeout(resolve, seconds * 1000))
+import downloader from './metamaskDownloader';
 
 export type LaunchOptions = Parameters<typeof puppeteer["launch"]>[0] & {
   metamaskVersion?: string
@@ -31,10 +30,11 @@ export type TransactionOptions = {
   gasLimit: number
 }
 
-export async function launch(puppeteer, { args, ...rest }: LaunchOptions = {}): Promise<puppeteer.Browser> {
+export async function launch(pupeteerLib: typeof puppeteer, { args, ...rest }: LaunchOptions = {}): Promise<puppeteer.Browser> {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const METAMASK_PATH = await downloader(rest.metamaskVersion);
 
-  return puppeteer.launch({
+  return pupeteerLib.launch({
     headless: false,
     args: [
       `--disable-extensions-except=${METAMASK_PATH}`,
@@ -119,6 +119,7 @@ export async function getMetamask(
       await accountSwitcher.click()
       const addAccount = await metamaskPage.waitForSelector('.account-menu > div:nth-child(7)')
       await addAccount.click()
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const PKInput = await metamaskPage.waitForSelector('input#private-key-box')
       await PKInput.type(pk)
       const importButton = await metamaskPage.waitForSelector('button.btn-secondary')
@@ -230,31 +231,36 @@ async function closeHomeScreen(browser: puppeteer.Browser): Promise<puppeteer.Pa
   })
 }
 
-async function closeNotificationPage(browser: puppeteer.Browser) {
+async function closeNotificationPage(browser: puppeteer.Browser): Promise<void> {
   browser.on('targetcreated', async target => {
     if (target.url() === 'chrome-extension://plkiloelkgnphnmaonlbbjbiphdalblo/notification.html') {
       try {
         const page = await target.page()
         await page.close()
-      } catch {}
+      } catch {
+        return;
+      }
     }
   })
 }
 
-async function getMetamaskPage(browser, extensionId, extensionUrl) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function getMetamaskPage(browser, extensionId, extensionUrl): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const EXTENSION_ID = extensionId || 'nkbihfbeogaeaoehlefnkodbefgpgknn'
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const EXTENSION_URL = extensionUrl || `chrome-extension://${EXTENSION_ID}/popup.html`
 
   const metamaskPage = await browser.newPage()
   await metamaskPage.goto(EXTENSION_URL)
 }
 
-async function confirmWelcomeScreen(metamaskPage: puppeteer.Page) {
+async function confirmWelcomeScreen(metamaskPage: puppeteer.Page): Promise<void>  {
   const continueButton = await metamaskPage.waitForSelector('.welcome-page button')
   await continueButton.click()
 }
 
-async function importAccount(metamaskPage: puppeteer.Page, seed: string, password: string) {
+async function importAccount(metamaskPage: puppeteer.Page, seed: string, password: string): Promise<void>  {
   const importLink = await metamaskPage.waitForSelector('.first-time-flow button')
   await importLink.click()
 

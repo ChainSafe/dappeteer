@@ -1,13 +1,17 @@
-import ganache from "ganache-core";
-import Web3 from "web3";
+import fs from "fs";
 import * as http from "http";
 import * as path from "path";
+
+import ganache from "ganache-core";
 import handler from "serve-handler";
+import Web3 from "web3";
+
+
 import { compileContracts } from './contract';
-import fs from "fs";
 
 
-let CounterContract: {address: string} | null = null;
+
+const CounterContract: {address: string} | null = null;
 
 export function getCounterContract(): {address: string} | null {
   return CounterContract;
@@ -34,21 +38,21 @@ async function deployContract(provider: ganache.Provider): Promise<{address: str
   console.log('Deploying test contract...')
   const web3 = new Web3(provider as unknown as Web3["currentProvider"]);
   const compiledContracts = compileContracts();
-  const CounterContractInfo = compiledContracts["Counter.sol"]["Counter"];
-  const CounterContract = new web3.eth.Contract(CounterContractInfo.abi);
+  const counterContractInfo = compiledContracts["Counter.sol"]["Counter"];
+  const counterContractDef = new web3.eth.Contract(counterContractInfo.abi);
   const accounts = await web3.eth.getAccounts();
-  const counterContract = await CounterContract.deploy({ data: CounterContractInfo.evm.bytecode.object }).send({ from: accounts[0], gas: 4000000 });
+  const counterContract = await counterContractDef.deploy({ data: counterContractInfo.evm.bytecode.object }).send({ from: accounts[0], gas: 4000000 });
   console.log('Contract deployed at', counterContract.options.address);
 
   // create file data for dapp
   const dataJsPath = path.join(__dirname, 'dapp', 'data.js');
-  const data = `const ContractInfo = ${JSON.stringify({...CounterContractInfo, ...counterContract.options}, null, 2)}`;
+  const data = `const ContractInfo = ${JSON.stringify({...counterContractInfo, ...counterContract.options}, null, 2)}`;
   fs.writeFileSync(dataJsPath, data);
 
   return {...CounterContract, ...counterContract, ...counterContract.options};
 }
 
-async function startTestServer() {
+async function startTestServer(): Promise<void> {
   console.log('Starting test server...')
   const server = http.createServer((request, response) => {
     return handler(request, response, {
