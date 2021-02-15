@@ -3,5 +3,8 @@ node_modules
 test/server/data.js
 build
 dist
-yarn.lock
 .vscode/
+*metamask
+.idea
+yarn-error.log
+test/dapp/data.js

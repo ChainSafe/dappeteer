@@ -42,6 +42,7 @@ describe('dappeteer', () => {
 
   it('should be deployed, contract', async () => {
     assert.ok(testContract)
+    assert.ok(testContract.address)
     assert.ok(testContract.options.address)
   })
 

@@ -28,6 +28,9 @@
   ],
   "author": "Juan Cazala <juan@decentraland.org>",
   "license": "MIT",
+  "dependencies": {
+    "node-stream-zip": "^1.13.0"
+  },
   "devDependencies": {
     "@types/mocha": "^7.0.2",
     "@types/puppeteer": "^5.4.3",
