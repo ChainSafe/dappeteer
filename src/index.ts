@@ -1,7 +1,5 @@
 import * as puppeteer from 'puppeteer';
 
-import _default from '../dist/metamaskDownloader';
-
 import downloader from './metamaskDownloader';
 
 export type LaunchOptions = Parameters<typeof puppeteer["launch"]>[0] & {
