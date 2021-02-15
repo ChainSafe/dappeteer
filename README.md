@@ -5,7 +5,8 @@ E2E testing for dApps using Puppeteer + MetaMask
 ## Installation
 
 ```
-$ npm install -s dappeteer
+$ npm install -s @nodefactory/dappeteer
+$ yarn add @nodefactory/dappeteer
 ```
 
 ## Usage
