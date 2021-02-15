@@ -1,5 +1,6 @@
-import * as path from 'path';
 import * as fs from "fs";
+import * as path from 'path';
+
 import * as solc from "solc";
 
 type ContractSources = Record<string, {content: string}>;
@@ -21,7 +22,7 @@ function buildSources():ContractSources  {
     return sources;
 }
 
-const input = {
+const INPUT = {
 	language: 'Solidity',
 	sources: buildSources(),
 	settings: {
@@ -33,6 +34,7 @@ const input = {
 	}
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function compileContracts(): any {
-	return JSON.parse(solc.compile(JSON.stringify(input))).contracts;
+	return JSON.parse(solc.compile(JSON.stringify(INPUT))).contracts;
 }

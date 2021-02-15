@@ -11,6 +11,8 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc -p tsconfig.build.json",
+    "lint": "eslint --color --ext .ts src/ test/",
+    "lint:fix": "yarn run lint --fix",
     "prepublish": "yarn run build",
     "test": "mocha"
   },
@@ -34,8 +36,15 @@
   "devDependencies": {
     "@types/mocha": "^7.0.2",
     "@types/puppeteer": "^5.4.3",
+    "@typescript-eslint/eslint-plugin": "^4.15.0",
+    "@typescript-eslint/parser": "^4.15.0",
+    "eslint": "^7.20.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.3.1",
     "ganache-core": "^2.13.2",
     "mocha": "7.2.0",
+    "prettier": "^2.2.1",
     "puppeteer": "5.5.0",
     "serve-handler": "5.0.8",
     "solc": "0.5.2",
