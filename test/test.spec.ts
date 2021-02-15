@@ -112,7 +112,7 @@ describe('dappeteer', () => {
 
     it('should have increased count', async () => {
       // wait half a seconds just in case
-      await pause(0.5)
+      await pause(1)
 
       const counterAfter = await getCounterNumber(TestContract)
 
