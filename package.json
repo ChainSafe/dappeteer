@@ -28,12 +28,14 @@
   ],
   "author": "Juan Cazala <juan@decentraland.org>",
   "license": "MIT",
+  "dependencies": {
+    "node-stream-zip": "^1.13.0"
+  },
   "devDependencies": {
     "@types/mocha": "^7.0.2",
     "@types/puppeteer": "^5.4.3",
     "ganache-core": "^2.13.2",
     "mocha": "7.2.0",
-    "node-stream-zip": "^1.13.0",
     "puppeteer": "5.5.0",
     "serve-handler": "5.0.8",
     "solc": "0.5.2",
@@ -42,7 +44,6 @@
     "web3": "1.3.4"
   },
   "peerDependencies": {
-    "puppeteer": ">5",
-    "node-stream-zip": ">1.12.0"
+    "puppeteer": ">5"
   }
 }
