@@ -129,11 +129,13 @@ describe('dappeteer', () => {
     await clickElement(TestPage, '.increase-button')
 
     // submit tx
-    await Metamask.confirmTransaction({
-      gas: 20,
-      gasLimit: 400000
-    })
-    await TestPage.waitForSelector("#txSent");
+    await Promise.all([
+      TestPage.waitForSelector("#txSent"),
+      Metamask.confirmTransaction({
+        gas: 20,
+        gasLimit: 400000
+      }),
+    ])
   })
 
   after(async () => {
