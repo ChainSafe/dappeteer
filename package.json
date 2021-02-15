@@ -43,6 +43,6 @@
   },
   "peerDependencies": {
     "puppeteer": ">7",
-    "node-stream-zip": "^1.13.0"
+    "node-stream-zip": ">1.12.0"
   }
 }
