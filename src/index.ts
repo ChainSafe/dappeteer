@@ -199,7 +199,7 @@ export async function getMetamask(
       }
       await metamaskPage.reload()
 
-      const button = await metamaskPage.waitForSelector('.request-signature__footer__sign-button')
+      const button = await metamaskPage.waitForSelector('.button:nth-child(2)')
       await button.click()
     },
 
