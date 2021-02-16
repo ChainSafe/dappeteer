@@ -47,7 +47,7 @@ async function deployContract(provider: ganache.Provider): Promise<{address: str
   // create file data for dapp
   const dataJsPath = path.join(__dirname, 'dapp', 'data.js');
   const data = `const ContractInfo = ${JSON.stringify({...counterContractInfo, ...counterContract.options}, null, 2)}`;
-  fs.writeFileSync(dataJsPath, data);
+  await new Promise(resolve => {fs.writeFile(dataJsPath, data, resolve)});
 
   return {...CounterContract, ...counterContract, ...counterContract.options};
 }
