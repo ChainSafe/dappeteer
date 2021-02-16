@@ -159,7 +159,7 @@ export async function getMetamask(
       if (!signedIn) {
         throw new Error("You haven't signed in yet")
       }
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await metamaskPage.waitForTimeout(500);
       await metamaskPage.reload()
       if (options) {
         if (options.gas) {
