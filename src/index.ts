@@ -58,9 +58,9 @@ export async function getMetamask(
     options.password || 'password1234'
   )
 
-  let signedIn = true
+  let signedIn = true;
 
-  await closeNotificationPage(browser)
+  await closeNotificationPage(browser);
 
   return {
     lock: async () => {
@@ -159,6 +159,7 @@ export async function getMetamask(
       if (!signedIn) {
         throw new Error("You haven't signed in yet")
       }
+      await new Promise(resolve => setTimeout(resolve, 10));
       await metamaskPage.reload()
       if (options) {
         if (options.gas) {
