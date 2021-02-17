@@ -31,14 +31,15 @@ let TestContract, Browser, Metamask, TestPage
 describe('dappeteer', () => {
 
   before(async () => {
-    TestContract = await deploy()
-    Browser = await dappeteer.launch(puppeteer)
-    Metamask = await dappeteer.getMetamask(Browser, {
+    TestContract = await deploy();
+    Browser = await dappeteer.launch(puppeteer);
+    await dappeteer.prepareMetamask(Browser, {
       // optional, else it will use a default seed
       seed: 'pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog',
       password: 'password1234'
-    })
-    TestPage = await Browser.newPage()
+    });
+    Metamask = await dappeteer.getMetamask(Browser);
+    TestPage = await Browser.newPage();
     await TestPage.goto('localhost:8080')
   })
 

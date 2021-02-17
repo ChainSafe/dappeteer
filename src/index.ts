@@ -1,5 +1,4 @@
 import * as puppeteer from 'puppeteer';
-
 import downloader from './metamaskDownloader';
 
 export type LaunchOptions = Parameters<typeof puppeteer["launch"]>[0] & {
@@ -45,152 +44,31 @@ export async function launch(pupeteerLib: typeof puppeteer, { args, ...rest }: L
   })
 }
 
-export async function getMetamask(
-  browser: puppeteer.Browser,
-  options: MetamaskOptions = {}
-): Promise<Dappeteer> {
-  const metamaskPage = await closeHomeScreen(browser)
-  await confirmWelcomeScreen(metamaskPage)
+export async function prepareMetamask(browser: puppeteer.Browser, options: MetamaskOptions = {}): Promise<boolean> {
+  try {
+    const metamaskPage = await closeHomeScreen(browser);
+    await confirmWelcomeScreen(metamaskPage);
 
-  await importAccount(
-    metamaskPage,
-    options.seed || 'already turtle birth enroll since owner keep patch skirt drift any dinner',
-    options.password || 'password1234'
-  )
+    await importAccount(
+      metamaskPage,
+      options.seed || 'already turtle birth enroll since owner keep patch skirt drift any dinner',
+      options.password || 'password1234'
+    );
 
-  let signedIn = true;
+    await closeNotificationPage(browser);
+  } catch {
+    return false;
+  }
+}
 
-  await closeNotificationPage(browser);
-
-  return {
-    lock: async () => {
-      if (!signedIn) {
-        throw new Error("You can't sign out because you haven't signed in yet")
+export async function getMetamask(browser: puppeteer.Browser, version?: string): Promise<Dappeteer> {
+  const metamaskPage = await new Promise<puppeteer.Page>(resolve => {
+    browser.pages().then(pages => {
+      for (const page of pages) {
+        if (page.url().includes('chrome-extension')) resolve(page);
       }
-      await metamaskPage.bringToFront()
-      const accountSwitcher = await metamaskPage.waitForSelector('.identicon')
-      await accountSwitcher.click()
-      const lockButton = await metamaskPage.waitForSelector('.account-menu__lock-button')
-      await lockButton.click()
-      signedIn = false
-    },
-
-    unlock: async (password = 'password1234') => {
-      if (signedIn) {
-        throw new Error("You can't sign in because you are already signed in")
-      }
-      await metamaskPage.bringToFront()
-      const passwordBox = await metamaskPage.waitForSelector('#password')
-      await passwordBox.type(password)
-      const unlockButton = await metamaskPage.waitForSelector('.unlock-page button')
-      await unlockButton.click()
-      signedIn = true
-    },
-
-    addNetwork: async url => {
-      await metamaskPage.bringToFront()
-      const networkSwitcher = await metamaskPage.waitForSelector('.network-indicator')
-      await networkSwitcher.click()
-      await metamaskPage.waitForSelector('li.dropdown-menu-item')
-      const networkIndex = await metamaskPage.evaluate(network => {
-        const elements = document.querySelectorAll('li.dropdown-menu-item')
-        for (let i = 0; i < elements.length; i++) {
-          const element = elements[i]
-          if ((element as HTMLLIElement).innerText.toLowerCase().includes(network.toLowerCase())) {
-            return i
-          }
-        }
-        return elements.length - 1
-      }, 'Custom RPC')
-      const networkButton = (await metamaskPage.$$('li.dropdown-menu-item'))[networkIndex]
-      await networkButton.click()
-      const newRPCInput = await metamaskPage.waitForSelector('input#new-rpc')
-      await newRPCInput.type(url)
-      const saveButton = await metamaskPage.waitForSelector('button.settings-tab__rpc-save-button')
-      await saveButton.click()
-      const prevButton = await metamaskPage.waitForSelector('img.app-header__metafox-logo')
-      await prevButton.click()
-    },
-
-    importPK: async pk => {
-      await metamaskPage.bringToFront()
-      const accountSwitcher = await metamaskPage.waitForSelector('.identicon')
-      await accountSwitcher.click()
-      const addAccount = await metamaskPage.waitForSelector('.account-menu > div:nth-child(7)')
-      await addAccount.click()
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const PKInput = await metamaskPage.waitForSelector('input#private-key-box')
-      await PKInput.type(pk)
-      const importButton = await metamaskPage.waitForSelector('button.btn-secondary')
-      await importButton.click()
-    },
-
-    switchAccount: async accountNumber => {
-      await metamaskPage.bringToFront()
-      const accountSwitcher = await metamaskPage.waitForSelector('.identicon')
-      await accountSwitcher.click()
-      const account = await metamaskPage.waitForSelector(
-        `.account-menu__accounts > div:nth-child(${accountNumber})`
-      )
-      await account.click()
-    },
-
-    switchNetwork: async (network = 'main') => {
-      await metamaskPage.bringToFront()
-      const networkSwitcher = await metamaskPage.waitForSelector('.network-display')
-      await networkSwitcher.click()
-      await metamaskPage.waitForSelector('li.dropdown-menu-item')
-      const networkIndex = await metamaskPage.evaluate(network => {
-        const elements = document.querySelectorAll('li.dropdown-menu-item')
-        for (let i = 0; i < elements.length; i++) {
-          const element = elements[i]
-          if ((element as HTMLLIElement).innerText.toLowerCase().includes(network.toLowerCase())) {
-            return i
-          }
-        }
-        return 0
-      }, network)
-      const networkButton = (await metamaskPage.$$('li.dropdown-menu-item'))[networkIndex]
-      await networkButton.click()
-    },
-
-    confirmTransaction: async options => {
-      await metamaskPage.bringToFront()
-      if (!signedIn) {
-        throw new Error("You haven't signed in yet")
-      }
-      await metamaskPage.waitForTimeout(500);
-      await metamaskPage.reload()
-      if (options) {
-        if (options.gas) {
-          const gasSelector = '.advanced-gas-inputs__gas-edit-row:nth-child(1) input'
-          const gas = await metamaskPage.waitForSelector(gasSelector)
-
-          await metamaskPage.evaluate(
-            () =>
-              ((document.querySelectorAll(
-                '.advanced-gas-inputs__gas-edit-row:nth-child(1) input'
-              )[0] as HTMLInputElement).value = '')
-          )
-          await gas.type(options.gas.toString())
-        }
-
-        if (options.gasLimit) {
-          const gasLimitSelector = '.advanced-gas-inputs__gas-edit-row:nth-child(2) input'
-          const gasLimit = await metamaskPage.waitForSelector(gasLimitSelector)
-
-          await metamaskPage.evaluate(
-            () =>
-              ((document.querySelectorAll(
-                '.advanced-gas-inputs__gas-edit-row:nth-child(2) input'
-              )[0] as HTMLInputElement).value = '')
-          )
-          await gasLimit.type(options.gasLimit.toString())
-        }
-      }
-      const confirmButton = await metamaskPage.waitForSelector('.btn-primary')
-      await confirmButton.click()
-    },
+    })
+  });
 
     sign: async () => {
       await metamaskPage.bringToFront()
