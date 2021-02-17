@@ -1,0 +1,36 @@
+import { Page } from "puppeteer";
+
+import { Dappeteer } from "..";
+
+import { addNetwork } from "./addNetwork";
+import { approve } from "./approve";
+import { confirmTransaction } from "./configrmTransaction";
+import { importPk } from "./importPk";
+import { lock } from "./lock";
+import { sign } from "./sign";
+import { switchAccount } from "./switchAccount";
+import { switchNetwork } from "./switchNetwork";
+import { unlock } from "./unlock";
+
+export type SetSignedIn = (state: boolean) => Promise<void>;
+export type GetSingedIn = () => Promise<boolean>;
+
+export const getMetamaskMethods = async (page: Page, version?: string): Promise<Dappeteer> => {
+  // modified window object to kep state between tests
+  const setSignedIn = async (state: boolean): Promise<void> => {
+    await page.evaluate((s: boolean) => {(window as any).signedIn = s;}, state)
+  };
+  const getSingedIn = (): Promise<boolean> => page.evaluate(() => (window as any).signedIn !== undefined ? (window as any).signedIn : true);
+
+  return {
+    addNetwork: addNetwork(page, version),
+    approve: approve(page, version),
+    confirmTransaction: confirmTransaction(page, getSingedIn, version),
+    importPK: importPk(page, version),
+    lock: lock(page, setSignedIn, getSingedIn, version),
+    sign: sign(page, getSingedIn, version),
+    switchAccount: switchAccount(page, version),
+    switchNetwork: switchNetwork(page, version),
+    unlock: unlock(page, setSignedIn, getSingedIn, version),
+  };
+};

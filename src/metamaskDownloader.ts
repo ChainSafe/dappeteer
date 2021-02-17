@@ -2,6 +2,7 @@ import * as fs from "fs";
 import {IncomingMessage} from "http";
 import {get} from "https";
 import * as path from "path";
+
 import StreamZip from "node-stream-zip";
 
 const MetamaskDirectory = path.resolve(__dirname, "..", "metamask");

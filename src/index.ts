@@ -1,4 +1,6 @@
 import * as puppeteer from 'puppeteer';
+
+import { getMetamaskMethods } from './metamask';
 import downloader from './metamaskDownloader';
 
 export type LaunchOptions = Parameters<typeof puppeteer["launch"]>[0] & {
@@ -70,31 +72,7 @@ export async function getMetamask(browser: puppeteer.Browser, version?: string):
     })
   });
 
-    sign: async () => {
-      await metamaskPage.bringToFront()
-      if (!signedIn) {
-        throw new Error("You haven't signed in yet")
-      }
-      await metamaskPage.reload()
-
-      const button = await Promise.race([
-        metamaskPage.waitForSelector('.request-signature__footer__sign-button'),
-        metamaskPage.waitForSelector('.signature-request-footer button:last-child'),
-      ]);
-      await button.click()
-    },
-
-    approve: async () => {
-      await metamaskPage.bringToFront()
-      await metamaskPage.reload()
-
-      const button = await metamaskPage.waitForSelector('button.button.btn-primary')
-      await button.click()
-
-      const connectButton = await metamaskPage.waitForSelector('button.button.btn-primary')
-      await connectButton.click()
-    }
-  }
+  return getMetamaskMethods(metamaskPage, version);
 }
 
 async function closeHomeScreen(browser: puppeteer.Browser): Promise<puppeteer.Page> {
