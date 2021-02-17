@@ -50,7 +50,6 @@ export async function getMetamask(
   options: MetamaskOptions = {}
 ): Promise<Dappeteer> {
   const metamaskPage = await closeHomeScreen(browser)
-  // const metamaskPage = await getMetamaskPage(browser, options.extensionId, options.extensionUrl)
   await confirmWelcomeScreen(metamaskPage)
 
   await importAccount(
@@ -59,9 +58,9 @@ export async function getMetamask(
     options.password || 'password1234'
   )
 
-  let signedIn = true
+  let signedIn = true;
 
-  closeNotificationPage(browser)
+  await closeNotificationPage(browser);
 
   return {
     lock: async () => {
@@ -160,6 +159,7 @@ export async function getMetamask(
       if (!signedIn) {
         throw new Error("You haven't signed in yet")
       }
+      await metamaskPage.waitForTimeout(500);
       await metamaskPage.reload()
       if (options) {
         if (options.gas) {
@@ -199,7 +199,10 @@ export async function getMetamask(
       }
       await metamaskPage.reload()
 
-      const button = await metamaskPage.waitForSelector('.request-signature__footer__sign-button')
+      const button = await Promise.race([
+        metamaskPage.waitForSelector('.request-signature__footer__sign-button'),
+        metamaskPage.waitForSelector('.signature-request-footer button:last-child'),
+      ]);
       await button.click()
     },
 
@@ -233,7 +236,7 @@ async function closeHomeScreen(browser: puppeteer.Browser): Promise<puppeteer.Pa
 
 async function closeNotificationPage(browser: puppeteer.Browser): Promise<void> {
   browser.on('targetcreated', async target => {
-    if (target.url() === 'chrome-extension://plkiloelkgnphnmaonlbbjbiphdalblo/notification.html') {
+    if (target.url().match("chrome-extension://[a-z]+/notification.html")) {
       try {
         const page = await target.page()
         await page.close()
@@ -242,17 +245,6 @@ async function closeNotificationPage(browser: puppeteer.Browser): Promise<void> 
       }
     }
   })
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function getMetamaskPage(browser, extensionId, extensionUrl): Promise<void> {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const EXTENSION_ID = extensionId || 'nkbihfbeogaeaoehlefnkodbefgpgknn'
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const EXTENSION_URL = extensionUrl || `chrome-extension://${EXTENSION_ID}/popup.html`
-
-  const metamaskPage = await browser.newPage()
-  await metamaskPage.goto(EXTENSION_URL)
 }
 
 async function confirmWelcomeScreen(metamaskPage: puppeteer.Page): Promise<void>  {
