@@ -32,12 +32,11 @@ describe('dappeteer', () => {
   before(async () => {
     testContract = await deploy();
     browser = await dappeteer.launch(puppeteer);
-    const page = await dappeteer.setupMetamask(browser, {
+    metamask = await dappeteer.setupMetamask(browser, {
       // optional, else it will use a default seed
       seed: 'pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog',
       password: 'password1234',
     });
-    metamask = await dappeteer.getMetamask(page);
     testPage = await browser.newPage();
     await testPage.goto('localhost:8080');
   });
