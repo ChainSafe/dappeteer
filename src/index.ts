@@ -48,21 +48,22 @@ export async function launch(
   });
 }
 
-export async function setupMetamask(browser: puppeteer.Browser, options: MetamaskOptions = {}): Promise<boolean> {
-  try {
-    const metamaskPage = await closeHomeScreen(browser);
-    await confirmWelcomeScreen(metamaskPage);
+export async function setupMetamask(
+  browser: puppeteer.Browser,
+  options: MetamaskOptions = {},
+): Promise<puppeteer.Page> {
+  const metamaskPage = await closeHomeScreen(browser);
+  await confirmWelcomeScreen(metamaskPage);
 
-    await importAccount(
-      metamaskPage,
-      options.seed || 'already turtle birth enroll since owner keep patch skirt drift any dinner',
-      options.password || 'password1234',
-    );
+  await importAccount(
+    metamaskPage,
+    options.seed || 'already turtle birth enroll since owner keep patch skirt drift any dinner',
+    options.password || 'password1234',
+  );
 
-    await closeNotificationPage(browser);
-  } catch {
-    return false;
-  }
+  await closeNotificationPage(browser);
+
+  return metamaskPage;
 }
 
 export async function getMetamaskWindow(browser: puppeteer.Browser, version?: string): Promise<Dappeteer> {
