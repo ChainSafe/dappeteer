@@ -14,6 +14,7 @@ module.exports = {
     'plugin:prettier/recommended',
   ],
   rules: {
+    'prettier/prettier': ['error', {}, { usePrettierrc: true }],
     '@typescript-eslint/no-require-imports': 'error',
     '@typescript-eslint/no-unused-vars': [
       'error',

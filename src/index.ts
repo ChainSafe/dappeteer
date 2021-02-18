@@ -34,6 +34,9 @@ export type TransactionOptions = {
   gasLimit: number;
 };
 
+/**
+ * Launch Puppeteer chromium instance with MetaMask plugin installed
+ * */
 export async function launch(
   puppeteerLib: typeof puppeteer,
   { args, ...rest }: LaunchOptions = {},
@@ -48,24 +51,27 @@ export async function launch(
   });
 }
 
-export async function setupMetamask(
-  browser: puppeteer.Browser,
-  options: MetamaskOptions = {},
-): Promise<puppeteer.Page> {
-  const metamaskPage = await closeHomeScreen(browser);
-  await confirmWelcomeScreen(metamaskPage);
+/**
+ * Setup MetaMask with base account
+ * */
+export async function setupMetamask(browser: puppeteer.Browser, options: MetamaskOptions = {}): Promise<Dappeteer> {
+  const page = await closeHomeScreen(browser);
+  await confirmWelcomeScreen(page);
 
   await importAccount(
-    metamaskPage,
+    page,
     options.seed || 'already turtle birth enroll since owner keep patch skirt drift any dinner',
     options.password || 'password1234',
   );
 
   await closeNotificationPage(browser);
 
-  return metamaskPage;
+  return getMetamask(page);
 }
 
+/**
+ * Return MetaMask instance
+ * */
 export async function getMetamaskWindow(browser: puppeteer.Browser, version?: string): Promise<Dappeteer> {
   const metamaskPage = await new Promise<puppeteer.Page>((resolve) => {
     browser.pages().then((pages) => {
