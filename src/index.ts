@@ -1,7 +1,10 @@
 import * as puppeteer from 'puppeteer';
 
-import { getMetamaskMethods } from './metamask';
+import { getMetamask } from './metamask';
 import downloader from './metamaskDownloader';
+
+// re-export
+export { getMetamask };
 
 export type LaunchOptions = Parameters<typeof puppeteer['launch']>[0] & {
   metamaskVersion?: string;
@@ -45,7 +48,7 @@ export async function launch(
   });
 }
 
-export async function prepareMetamask(browser: puppeteer.Browser, options: MetamaskOptions = {}): Promise<boolean> {
+export async function setupMetamask(browser: puppeteer.Browser, options: MetamaskOptions = {}): Promise<boolean> {
   try {
     const metamaskPage = await closeHomeScreen(browser);
     await confirmWelcomeScreen(metamaskPage);
@@ -62,7 +65,7 @@ export async function prepareMetamask(browser: puppeteer.Browser, options: Metam
   }
 }
 
-export async function getMetamask(browser: puppeteer.Browser, version?: string): Promise<Dappeteer> {
+export async function getMetamaskWindow(browser: puppeteer.Browser, version?: string): Promise<Dappeteer> {
   const metamaskPage = await new Promise<puppeteer.Page>((resolve) => {
     browser.pages().then((pages) => {
       for (const page of pages) {
@@ -71,7 +74,7 @@ export async function getMetamask(browser: puppeteer.Browser, version?: string):
     });
   });
 
-  return getMetamaskMethods(metamaskPage, version);
+  return getMetamask(metamaskPage, version);
 }
 
 async function closeHomeScreen(browser: puppeteer.Browser): Promise<puppeteer.Page> {

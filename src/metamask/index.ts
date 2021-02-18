@@ -15,7 +15,7 @@ import { unlock } from './unlock';
 export type SetSignedIn = (state: boolean) => Promise<void>;
 export type GetSingedIn = () => Promise<boolean>;
 
-export const getMetamaskMethods = async (page: Page, version?: string): Promise<Dappeteer> => {
+export const getMetamask = async (page: Page, version?: string): Promise<Dappeteer> => {
   // modified window object to kep state between tests
   const setSignedIn = async (state: boolean): Promise<void> => {
     await page.evaluate((s: boolean) => {
