@@ -12,42 +12,40 @@ $ yarn add @nodefactory/dappeteer
 ## Usage
 
 ```js
-import puppeteer from 'puppeteer'
-import dappeteer from 'dappeteer'
+import puppeteer from 'puppeteer';
+import dappeteer from '@nodefactory/dappeteer';
 
 async function main() {
-  const browser = await dappeteer.launch(puppeteer)
-  const metamask = await dappeteer.getMetamask(browser)
+  const browser = await dappeteer.launch(puppeteer);
+  const metamask = await dappeteer.setupMetamask(browser);
 
   // create or import an account
   // await metamask.createAccount()
-  await metamask.importAccount('already turtle birth enroll since...')
+  await metamask.importAccount('already turtle birth enroll since...');
 
   // you can change the network if you want
-  await metamask.switchNetwork('ropsten')
+  await metamask.switchNetwork('ropsten');
 
   // go to a dapp and do something that prompts MetaMask to confirm a transaction
-  const page = await browser.newPage()
-  await page.goto('http://my-dapp.com')
-  const payButton = await page.$('#pay-with-eth')
-  await payButton.click()
+  const page = await browser.newPage();
+  await page.goto('http://my-dapp.com');
+  const payButton = await page.$('#pay-with-eth');
+  await payButton.click();
 
   // 🏌
-  await metamask.confirmTransaction()
+  await metamask.confirmTransaction();
 }
 
-main()
+main();
 ```
 
 ## API
 
-- `dappeteer.launch(puppeteer[, launchOptions])`: returns an instance of `browser`, same as `puppeteer.launch`, but it also installs the MetaMask extension. It supports all the regular `puppeteer.launch` options as a second argument with the addition of two extra ones:
+- `dappeteer.launch(puppeteer[, launchOptions])`: returns an instance of `browser`, same as `puppeteer.launch`, but it also installs the MetaMask extension. It supports all the regular `puppeteer.launch` options as a second argument with the addition of:
 
-  - `metamaskPath`: Path to the MetaMask extension (by default it uses the one bundled)
+  - `metamaskVersion`: Metamask plugin version (by default it uses latest)
 
-  - `extensionUrl`: URL of the MetaMask extension, by default it is `chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/popup.html` but if you use a different version you might need to change it use the right extension id.
-
-- `dappeteer.getMetaMask(browser)`: returns a promise that resolves to an object that allows you to interact with MetaMask by using the following methods:
+- `dappeteer.setupMetamask(browser)`: returns a promise that resolves to an object that allows you to interact with MetaMask by using the following methods:
 
   - `metamask.createAccount([password])`: it commands MetaMask to create a new account, it resolves when it's done. It can only be used while you haven't signed in yet, otherwise it throws. The password is optional, it defaults to `password1234`.
 
