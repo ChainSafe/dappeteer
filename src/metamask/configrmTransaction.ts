@@ -1,12 +1,15 @@
-import { Page } from "puppeteer";
+import { Page } from 'puppeteer';
 
-import { TransactionOptions } from "..";
+import { TransactionOptions } from '..';
 
-import { GetSingedIn } from "./index";
+import { GetSingedIn } from './index';
 
-export const confirmTransaction = (page: Page, getSingedIn: GetSingedIn, version?: string) => async (options: TransactionOptions) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const confirmTransaction = (page: Page, getSingedIn: GetSingedIn, version?: string) => async (
+  options: TransactionOptions,
+): Promise<void> => {
   await page.bringToFront();
-  if (!await getSingedIn()) {
+  if (!(await getSingedIn())) {
     throw new Error("You haven't signed in yet");
   }
   await page.waitForTimeout(500);
@@ -19,8 +22,8 @@ export const confirmTransaction = (page: Page, getSingedIn: GetSingedIn, version
       await page.evaluate(
         () =>
           ((document.querySelectorAll(
-            '.advanced-gas-inputs__gas-edit-row:nth-child(1) input'
-          )[0] as HTMLInputElement).value = '')
+            '.advanced-gas-inputs__gas-edit-row:nth-child(1) input',
+          )[0] as HTMLInputElement).value = ''),
       );
       await gas.type(options.gas.toString());
     }
@@ -32,8 +35,8 @@ export const confirmTransaction = (page: Page, getSingedIn: GetSingedIn, version
       await page.evaluate(
         () =>
           ((document.querySelectorAll(
-            '.advanced-gas-inputs__gas-edit-row:nth-child(2) input'
-          )[0] as HTMLInputElement).value = '')
+            '.advanced-gas-inputs__gas-edit-row:nth-child(2) input',
+          )[0] as HTMLInputElement).value = ''),
       );
       await gasLimit.type(options.gasLimit.toString());
     }

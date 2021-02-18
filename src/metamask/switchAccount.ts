@@ -1,6 +1,7 @@
-import { Page } from "puppeteer";
+import { Page } from 'puppeteer';
 
-export const switchAccount = (page: Page, version?: string) => async (accountNumber: number) => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const switchAccount = (page: Page, version?: string) => async (accountNumber: number): Promise<void> => {
   await page.bringToFront();
   const accountSwitcher = await page.waitForSelector('.identicon');
   await accountSwitcher.click();

@@ -1,8 +1,11 @@
-import { Page } from "puppeteer";
+import { Page } from 'puppeteer';
 
-import { GetSingedIn, SetSignedIn } from ".";
+import { GetSingedIn, SetSignedIn } from '.';
 
-export const unlock = (page: Page, setSignedIn: SetSignedIn, getSingedIn: GetSingedIn, version?: string) => async (password = 'password1234') => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const unlock = (page: Page, setSignedIn: SetSignedIn, getSingedIn: GetSingedIn, version?: string) => async (
+  password = 'password1234',
+): Promise<void> => {
   if (await getSingedIn()) {
     throw new Error("You can't sign in because you are already signed in");
   }

@@ -1,9 +1,15 @@
-import { Page } from "puppeteer";
+import { Page } from 'puppeteer';
 
-import { GetSingedIn, SetSignedIn } from "./index";
+import { GetSingedIn, SetSignedIn } from './index';
 
-export const lock = (page: Page, setSignedIn: SetSignedIn, getSingedIn: GetSingedIn, version?: string) => async () => {
-  if (!await getSingedIn()) {
+export const lock = (
+  page: Page,
+  setSignedIn: SetSignedIn,
+  getSingedIn: GetSingedIn,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  version?: string,
+) => async (): Promise<void> => {
+  if (!(await getSingedIn())) {
     throw new Error("You can't sign out because you haven't signed in yet");
   }
   await page.bringToFront();

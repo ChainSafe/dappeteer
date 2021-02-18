@@ -1,6 +1,7 @@
-import { Page } from "puppeteer";
+import { Page } from 'puppeteer';
 
-export const approve = (page: Page, version?: string) => async () => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const approve = (page: Page, version?: string) => async (): Promise<void> => {
   await page.bringToFront();
   await page.reload();
 
