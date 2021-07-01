@@ -1,4 +1,5 @@
 import { Page } from 'puppeteer';
+
 import { AddNetwork } from '../index';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
