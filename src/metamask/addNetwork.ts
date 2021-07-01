@@ -1,8 +1,14 @@
 import { Page } from 'puppeteer';
-import {AddNetwork} from "../index";
+import { AddNetwork } from '../index';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const addNetwork = (page: Page, version?: string) => async ({ networkName, rpc, chainId, symbol, explorer }: AddNetwork): Promise<void> => {
+export const addNetwork = (page: Page, version?: string) => async ({
+  networkName,
+  rpc,
+  chainId,
+  symbol,
+  explorer,
+}: AddNetwork): Promise<void> => {
   await page.bringToFront();
   const networkSwitcher = await page.waitForSelector('.network-display');
   await networkSwitcher.click();
@@ -38,7 +44,7 @@ export const addNetwork = (page: Page, version?: string) => async ({ networkName
   const saveButton = await page.waitForSelector('.network-form__footer > button.button.btn-secondary');
   await saveButton.click();
 
-  await page.waitForSelector('button.button.btn-danger')
+  await page.waitForSelector('button.button.btn-danger');
   const logo = await page.waitForSelector('.app-header__logo-container.app-header__logo-container--clickable');
   await logo.click();
 };

@@ -62,11 +62,11 @@ describe('dappeteer', () => {
 
   it('should add network', async () => {
     await metamask.addNetwork({
-      networkName: "Binance Smart Chain",
-      rpc: "https://data-seed-prebsc-1-s1.binance.org:8545/",
+      networkName: 'Binance Smart Chain',
+      rpc: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
       chainId: 97,
-      symbol: "BNB",
-      explorer: "https://testnet.bscscan.com",
+      symbol: 'BNB',
+      explorer: 'https://testnet.bscscan.com',
     });
   });
 
