@@ -17,10 +17,18 @@ export type MetamaskOptions = {
   extensionUrl?: string;
 };
 
+export type AddNetwork = {
+  networkName: string;
+  rpc: string;
+  chainId: number;
+  symbol?: string;
+  explorer?: string;
+};
+
 export type Dappeteer = {
   lock: () => Promise<void>;
   unlock: (password: string) => Promise<void>;
-  addNetwork: (url: string) => Promise<void>;
+  addNetwork: (options: AddNetwork) => Promise<void>;
   importPK: (pk: string) => Promise<void>;
   switchAccount: (accountNumber: number) => Promise<void>;
   switchNetwork: (network: string) => Promise<void>;
