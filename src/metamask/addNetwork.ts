@@ -1,9 +1,10 @@
 import { Page } from 'puppeteer';
+import {AddNetwork} from "../index";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const addNetwork = (page: Page, version?: string) => async (url: string): Promise<void> => {
+export const addNetwork = (page: Page, version?: string) => async ({ networkName, rpc, chainId, symbol, explorer }: AddNetwork): Promise<void> => {
   await page.bringToFront();
-  const networkSwitcher = await page.waitForSelector('.network-indicator');
+  const networkSwitcher = await page.waitForSelector('.network-display');
   await networkSwitcher.click();
   await page.waitForSelector('li.dropdown-menu-item');
   const networkIndex = await page.evaluate((network) => {
@@ -18,10 +19,26 @@ export const addNetwork = (page: Page, version?: string) => async (url: string):
   }, 'Custom RPC');
   const networkButton = (await page.$$('li.dropdown-menu-item'))[networkIndex];
   await networkButton.click();
-  const newRPCInput = await page.waitForSelector('input#new-rpc');
-  await newRPCInput.type(url);
-  const saveButton = await page.waitForSelector('button.settings-tab__rpc-save-button');
+
+  const networkNameInput = await page.waitForSelector('input#network-name');
+  await networkNameInput.type(networkName);
+  const rpcInput = await page.waitForSelector('input#rpc-url');
+  await rpcInput.type(rpc);
+  const chainIdInput = await page.waitForSelector('input#chainId');
+  await chainIdInput.type(String(chainId));
+  if (symbol) {
+    const symbolInput = await page.waitForSelector('input#network-ticker');
+    await symbolInput.type(symbol);
+  }
+  if (explorer) {
+    const explorerInput = await page.waitForSelector('input#block-explorer-url');
+    await explorerInput.type(explorer);
+  }
+
+  const saveButton = await page.waitForSelector('.network-form__footer > button.button.btn-secondary');
   await saveButton.click();
-  const prevButton = await page.waitForSelector('img.app-header__metafox-logo');
-  await prevButton.click();
+
+  await page.waitForSelector('button.button.btn-danger')
+  const logo = await page.waitForSelector('.app-header__logo-container.app-header__logo-container--clickable');
+  await logo.click();
 };
