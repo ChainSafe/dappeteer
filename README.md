@@ -5,15 +5,15 @@ E2E testing for dApps using Puppeteer + MetaMask
 ## Installation
 
 ```
-$ npm install -s @nodefactory/dappeteer
-$ yarn add @nodefactory/dappeteer
+$ npm install -s @chainsafe/dappeteer
+$ yarn add @chainsafe/dappeteer
 ```
 
 ## Usage
 
 ```js
 import puppeteer from 'puppeteer';
-import dappeteer from '@nodefactory/dappeteer';
+import dappeteer from '@chainsafe/dappeteer';
 
 async function main() {
   const browser = await dappeteer.launch(puppeteer);
