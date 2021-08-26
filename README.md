@@ -5,23 +5,19 @@ E2E testing for dApps using Puppeteer + MetaMask
 ## Installation
 
 ```
-$ npm install -s @nodefactory/dappeteer
-$ yarn add @nodefactory/dappeteer
+$ npm install -s @chainsafe/dappeteer
+$ yarn add @chainsafe/dappeteer
 ```
 
 ## Usage
 
 ```js
 import puppeteer from 'puppeteer';
-import dappeteer from '@nodefactory/dappeteer';
+import dappeteer from '@chainsafe/dappeteer';
 
 async function main() {
   const browser = await dappeteer.launch(puppeteer);
   const metamask = await dappeteer.setupMetamask(browser);
-
-  // create or import an account
-  // await metamask.createAccount()
-  await metamask.importAccount('already turtle birth enroll since...');
 
   // you can change the network if you want
   await metamask.switchNetwork('ropsten');
@@ -45,11 +41,7 @@ main();
 
   - `metamaskVersion`: Metamask plugin version (by default it uses latest)
 
-- `dappeteer.setupMetamask(browser)`: returns a promise that resolves to an object that allows you to interact with MetaMask by using the following methods:
-
-  - `metamask.createAccount([password])`: it commands MetaMask to create a new account, it resolves when it's done. It can only be used while you haven't signed in yet, otherwise it throws. The password is optional, it defaults to `password1234`.
-
-  - `metamask.importAccount(seed[, password])`: it commands MetaMask to import an account, you need to provide the twelve words seed. It can only be used while you haven't signed in yet, otherwise it throws. The password is optional, it defaults to `password1234`.
+- `dappeteer.setupMetamask(browser[, {seed, password}])`: returns a promise that resolves to an object that allows you to interact with MetaMask by using the following methods:
 
   - `metamask.switchAccount(accountIndex)`: it commands MetaMask to switch to a different account, by passing the index/position of the account in the accounts list.
 
@@ -61,7 +53,7 @@ main();
 
   - `metamask.switchNetwork(networkName)`: it changes the current selected network. `networkName` can take the following values: `"main"`, `"ropsten"`, `"rinkeby"`, `"kovan"`, `"localhost"`.
 
-  - `metamask.addNetwork(url)`: it adds a custom network to MetaMask.
+  - `metamask.addNetwork({ networkName, rpc, chainId[, symbol, explorer]})`: it adds a custom network to MetaMask.
 
   - `metamask.confirmTransaction([{ gas, gasLimit }])`: commands MetaMask to submit a transaction. For this to work MetaMask has to be in a transaction confirmation state (basically promting the user to submit/reject a transaction). You can (optionally) pass an object with `gas` and/or `gasLimit`, by default they are `20` and `50000` respectively.
 
