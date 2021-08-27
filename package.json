@@ -1,5 +1,5 @@
 {
-  "name": "@nodefactory/dappeteer",
+  "name": "@chainsafe/dappeteer",
   "version": "2.0.3",
   "description": "E2E testing for dApps using Puppeteer + MetaMask",
   "main": "dist/index.js",
