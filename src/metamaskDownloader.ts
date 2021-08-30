@@ -59,7 +59,9 @@ const getMetamaskReleases = (version?: string): Promise<MetamaskReleases> =>
         body += chunk;
       });
       response.on('end', () => {
-        for (const result of JSON.parse(body)) {
+        const data = JSON.parse(body);
+        if (data.message) reject(data.message);
+        for (const result of data) {
           if (result.draft) continue;
           if (!version || result.name.includes(version) || result.tag_name.includes(version)) {
             for (const asset of result.assets) {
