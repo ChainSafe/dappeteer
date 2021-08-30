@@ -1,6 +1,6 @@
 {
-  "name": "@nodefactory/dappeteer",
-  "version": "2.0.0",
+  "name": "@chainsafe/dappeteer",
+  "version": "2.0.3",
   "description": "E2E testing for dApps using Puppeteer + MetaMask",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/decentraland/dappeteer.git"
+    "url": "https://github.com/chainsafe/dappeteer.git"
   },
   "keywords": [
     "e2e",
@@ -27,7 +27,10 @@
     "dapp",
     "ethereum"
   ],
-  "author": "Juan Cazala <juan@decentraland.org>",
+  "contributors": [
+    "Juan Cazala <juan@decentraland.org>",
+    "ChainSafe <info@chainsafe.io>"
+  ],
   "license": "MIT",
   "dependencies": {
     "node-stream-zip": "^1.13.0"

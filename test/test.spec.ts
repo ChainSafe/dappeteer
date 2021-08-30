@@ -60,6 +60,16 @@ describe('dappeteer', () => {
     assert.equal(await testPage.title(), 'Local metamask test');
   });
 
+  it('should add network', async () => {
+    await metamask.addNetwork({
+      networkName: 'Binance Smart Chain',
+      rpc: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+      chainId: 97,
+      symbol: 'BNB',
+      explorer: 'https://testnet.bscscan.com',
+    });
+  });
+
   it('should switch network, localhost', async () => {
     await metamask.switchNetwork('localhost');
   });

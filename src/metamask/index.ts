@@ -4,7 +4,7 @@ import { Dappeteer } from '..';
 
 import { addNetwork } from './addNetwork';
 import { approve } from './approve';
-import { confirmTransaction } from './configrmTransaction';
+import { confirmTransaction } from './confirmTransaction';
 import { importPk } from './importPk';
 import { lock } from './lock';
 import { sign } from './sign';
