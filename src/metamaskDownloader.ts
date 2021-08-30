@@ -8,6 +8,10 @@ import StreamZip from 'node-stream-zip';
 const metamaskDirectory = path.resolve(__dirname, '..', 'metamask');
 
 export default async (version?: string): Promise<string> => {
+  if (version) {
+    const extractDestination = path.resolve(metamaskDirectory, version.replace(/\./g, '_'));
+    if (fs.existsSync(extractDestination)) return extractDestination;
+  }
   const { filename, downloadUrl, tag } = await getMetamaskReleases(version);
   const extractDestination = path.resolve(metamaskDirectory, tag.replace(/\./g, '_'));
   if (!fs.existsSync(extractDestination)) {
