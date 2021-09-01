@@ -29,10 +29,13 @@ export const addNetwork = (page: Page, version?: string) => async ({
 
   const networkNameInput = await page.waitForSelector('input#network-name');
   await networkNameInput.type(networkName);
+
   const rpcInput = await page.waitForSelector('input#rpc-url');
   await rpcInput.type(rpc);
+
   const chainIdInput = await page.waitForSelector('input#chainId');
   await chainIdInput.type(String(chainId));
+
   if (symbol) {
     const symbolInput = await page.waitForSelector('input#network-ticker');
     await symbolInput.type(symbol);
@@ -48,4 +51,6 @@ export const addNetwork = (page: Page, version?: string) => async ({
   await page.waitForSelector('button.button.btn-danger');
   const logo = await page.waitForSelector('.app-header__logo-container.app-header__logo-container--clickable');
   await logo.click();
+
+  await page.waitForXPath(`//*[text() = '${networkName}']`);
 };
