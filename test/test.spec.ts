@@ -68,10 +68,20 @@ describe('dappeteer', () => {
       symbol: 'BNB',
       explorer: 'https://testnet.bscscan.com',
     });
+
+    const selectedNetwork = await metamask.page.evaluate(
+      () => (document.querySelector('.network-display > span:nth-child(2)') as HTMLSpanElement).innerHTML,
+    );
+    assert.equal(selectedNetwork, 'Binance Smart Chain');
   });
 
   it('should switch network, localhost', async () => {
     await metamask.switchNetwork('localhost');
+
+    const selectedNetwork = await metamask.page.evaluate(
+      () => (document.querySelector('.network-display > span:nth-child(2)') as HTMLSpanElement).innerHTML,
+    );
+    assert.equal(selectedNetwork, 'Localhost 8545');
   });
 
   it('should import private key', async () => {

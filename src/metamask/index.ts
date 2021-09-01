@@ -39,5 +39,6 @@ export const getMetamask = async (page: Page, version?: string): Promise<Dappete
     switchAccount: switchAccount(page, version),
     switchNetwork: switchNetwork(page, version),
     unlock: unlock(page, setSignedIn, getSingedIn, version),
+    page,
   };
 };

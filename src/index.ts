@@ -1,4 +1,5 @@
 import * as puppeteer from 'puppeteer';
+import { Page } from 'puppeteer';
 
 import { getMetamask } from './metamask';
 import downloader from './metamaskDownloader';
@@ -35,6 +36,7 @@ export type Dappeteer = {
   confirmTransaction: (options?: TransactionOptions) => Promise<void>;
   sign: () => Promise<void>;
   approve: () => Promise<void>;
+  page: Page;
 };
 
 export type TransactionOptions = {
