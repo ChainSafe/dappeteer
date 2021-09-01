@@ -6,6 +6,7 @@ export const switchNetwork = (page: Page, version?: string) => async (network = 
   const networkSwitcher = await page.waitForSelector('.network-display');
   await networkSwitcher.click();
   await page.waitForSelector('li.dropdown-menu-item');
+
   const networkIndex = await page.evaluate((network) => {
     const elements = document.querySelectorAll('li.dropdown-menu-item');
     for (let i = 0; i < elements.length; i++) {
@@ -16,6 +17,14 @@ export const switchNetwork = (page: Page, version?: string) => async (network = 
     }
     return 0;
   }, network);
+
+  const networkFullName = await page.evaluate((index) => {
+    const elements = document.querySelectorAll(`li.dropdown-menu-item > span`);
+    return (elements[index] as HTMLLIElement).innerText;
+  }, networkIndex);
+
   const networkButton = (await page.$$('li.dropdown-menu-item'))[networkIndex];
   await networkButton.click();
+
+  await page.waitForXPath(`//*[text() = '${networkFullName}']`);
 };
