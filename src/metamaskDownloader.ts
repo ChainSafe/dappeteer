@@ -64,21 +64,20 @@ const getMetamaskReleases = (version?: string): Promise<MetamaskReleases> =>
       });
       response.on('end', () => {
         const data = JSON.parse(body);
-        if (data.message) reject(data.message);
-        else
-          for (const result of data) {
-            if (result.draft) continue;
-            if (!version || result.name.includes(version) || result.tag_name.includes(version)) {
-              for (const asset of result.assets) {
-                if (asset.name.includes('chrome'))
-                  resolve({
-                    downloadUrl: asset.browser_download_url,
-                    filename: asset.name,
-                    tag: result.tag_name,
-                  });
-              }
+        if (data.message) return reject(data.message);
+        for (const result of data) {
+          if (result.draft) continue;
+          if (!version || result.name.includes(version) || result.tag_name.includes(version)) {
+            for (const asset of result.assets) {
+              if (asset.name.includes('chrome'))
+                resolve({
+                  downloadUrl: asset.browser_download_url,
+                  filename: asset.name,
+                  tag: result.tag_name,
+                });
             }
           }
+        }
         reject(`Version ${version} not found!`);
       });
     });
