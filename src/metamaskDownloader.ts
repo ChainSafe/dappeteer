@@ -64,7 +64,7 @@ const getMetamaskReleases = (version?: string): Promise<MetamaskReleases> =>
       });
       response.on('end', () => {
         const data = JSON.parse(body);
-        if (data.message) reject(data.message);
+        if (data.message) return reject(data.message);
         for (const result of data) {
           if (result.draft) continue;
           if (!version || result.name.includes(version) || result.tag_name.includes(version)) {
