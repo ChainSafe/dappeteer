@@ -37,4 +37,4 @@ main();
 
 - All methods can be found on [API page](docs/API.md)  
 - Instructions to setup [dAppeteer with Jest](docs/JEST.md)  
-- Mocha example can be found [here](./test)
+- Mocha example can be found [inside test folder](./test)

@@ -36,7 +36,7 @@ interface MetamaskOptions {
 ```
 
 <a name="getMetamask"></a>
-## `getMetamaskWindow(browser: Browser, version?: string): Promise<Dappeteer>`
+## `dappeteer.getMetamaskWindow(browser: Browser, version?: string): Promise<Dappeteer>`
 
 <a name="methods"></a>
 # dAppeteer methods
