@@ -1,9 +1,13 @@
-import puppeteer from 'puppeteer';
+import puppeteer, { Product } from 'puppeteer';
 
 import { launch, setupMetamask } from '../index';
 
 import { DappateerConfig } from './global';
-import { PUPPETEER_DEFAULT_CONFIG } from './jest-preset';
+
+export const PUPPETEER_DEFAULT_CONFIG: puppeteer.LaunchOptions = {
+  product: (process.env.PUPPETEER_PRODUCT ?? 'chrome') as Product,
+  args: ['--disable-web-security'] as string[],
+};
 
 export default async function (jestConfig: DappateerConfig = {}): Promise<void> {
   const browser = await launch(puppeteer, jestConfig.puppeteer || PUPPETEER_DEFAULT_CONFIG);
