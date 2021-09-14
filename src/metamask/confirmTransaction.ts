@@ -6,7 +6,7 @@ import { GetSingedIn } from './index';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const confirmTransaction = (page: Page, getSingedIn: GetSingedIn, version?: string) => async (
-  options: TransactionOptions,
+  options?: TransactionOptions,
 ): Promise<void> => {
   await page.bringToFront();
   if (!(await getSingedIn())) {

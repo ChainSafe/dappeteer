@@ -14,8 +14,6 @@ export type LaunchOptions = Parameters<typeof puppeteer['launch']>[0] & {
 export type MetamaskOptions = {
   seed?: string;
   password?: string;
-  extensionId?: string;
-  extensionUrl?: string;
 };
 
 export type AddNetwork = {
@@ -40,8 +38,8 @@ export type Dappeteer = {
 };
 
 export type TransactionOptions = {
-  gas: number;
-  gasLimit: number;
+  gas?: number;
+  gasLimit?: number;
 };
 
 /**
