@@ -1,5 +1,8 @@
 # dAppeteer API
 
+Methods provided by dAppeteer.  
+For additional information read root [readme](../README.md)
+
 - [Launch dAppeteer](#launch)
 - [Setup Metamask](#setup)
 - [Get Metamask Window](#getMetamask)
