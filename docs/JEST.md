@@ -1,6 +1,6 @@
 # dAppeteer with jest
 
-As dAppeteer is Puppeteer with Metamask using it with jest is pretty similar to `jest-puppeteer`
+As dAppeteer is Puppeteer with Metamask. Using it with jest is pretty similar to `jest-puppeteer`.
 
 ## Use preset
 
