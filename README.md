@@ -35,28 +35,6 @@ async function main() {
 main();
 ```
 
-## API
-
-- `dappeteer.launch(puppeteer[, launchOptions])`: returns an instance of `browser`, same as `puppeteer.launch`, but it also installs the MetaMask extension. It supports all the regular `puppeteer.launch` options as a second argument with the addition of:
-
-  - `metamaskVersion`: Metamask plugin version (by default it uses latest)
-
-- `dappeteer.setupMetamask(browser[, {seed, password}])`: returns a promise that resolves to an object that allows you to interact with MetaMask by using the following methods:
-
-  - `metamask.switchAccount(accountIndex)`: it commands MetaMask to switch to a different account, by passing the index/position of the account in the accounts list.
-
-  - `metamask.importPK(privateKey)`: it commands MetaMask to import an private key. It can only be used while you haven't signed in yet, otherwise it throws.
-
-  - `metamask.lock()`: signs out from MetaMask. It can only be used if you arelady signed it, otherwise it throws.
-
-  - `metamask.unlock([password])`: it unlocks the MetaMask extension. It can only be used in you locked/signed out before, otherwise it throws. The password is optional, it defaults to `password1234`.
-
-  - `metamask.switchNetwork(networkName)`: it changes the current selected network. `networkName` can take the following values: `"main"`, `"ropsten"`, `"rinkeby"`, `"kovan"`, `"localhost"`.
-
-  - `metamask.addNetwork({ networkName, rpc, chainId[, symbol, explorer]})`: it adds a custom network to MetaMask.
-
-  - `metamask.confirmTransaction([{ gas, gasLimit }])`: commands MetaMask to submit a transaction. For this to work MetaMask has to be in a transaction confirmation state (basically promting the user to submit/reject a transaction). You can (optionally) pass an object with `gas` and/or `gasLimit`, by default they are `20` and `50000` respectively.
-
-  - `metamask.sign()`: commands MetaMask to sign a message. For this to work MetaMask must be in a sign confirmation state.
-  
-  - `metamask.approve()`: enables the app to connect to MetaMask account in privacy mode
+- All methods can be found on [API page](docs/API.md)  
+- Instructions to setup [dAppeteer with Jest](docs/JEST.md)  
+- Mocha example can be found [inside test folder](./test)
