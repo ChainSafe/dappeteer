@@ -5,9 +5,20 @@ import * as path from 'path';
 
 import StreamZip from 'node-stream-zip';
 
-const metamaskDirectory = path.resolve(__dirname, '..', 'metamask');
+const defaultDirectory = path.resolve(__dirname, '..', 'metamask');
 
-export default async (version?: string): Promise<string> => {
+export type Path =
+  | string
+  | {
+      download: string;
+      extract: string;
+    };
+
+export default async (version?: string, location?: Path): Promise<string> => {
+  const metamaskDirectory = typeof location === 'string' ? location : location?.extract || defaultDirectory;
+  const downloadDirectory =
+    typeof location === 'string' ? location : location?.download || path.resolve(defaultDirectory, 'download');
+
   if (version) {
     const extractDestination = path.resolve(metamaskDirectory, version.replace(/\./g, '_'));
     if (fs.existsSync(extractDestination)) return extractDestination;
@@ -15,7 +26,7 @@ export default async (version?: string): Promise<string> => {
   const { filename, downloadUrl, tag } = await getMetamaskReleases(version);
   const extractDestination = path.resolve(metamaskDirectory, tag.replace(/\./g, '_'));
   if (!fs.existsSync(extractDestination)) {
-    const downloadedFile = await downloadMetamaskReleases(filename, downloadUrl);
+    const downloadedFile = await downloadMetamaskReleases(filename, downloadUrl, downloadDirectory);
     const zip = new StreamZip.async({ file: downloadedFile });
     fs.mkdirSync(extractDestination);
     await zip.extract(null, extractDestination);
@@ -35,14 +46,13 @@ const request = (url: string): Promise<IncomingMessage> =>
     });
   });
 
-const downloadMetamaskReleases = (name: string, url: string): Promise<string> =>
+const downloadMetamaskReleases = (name: string, url: string, location: string): Promise<string> =>
   // eslint-disable-next-line no-async-promise-executor
   new Promise(async (resolve) => {
-    const downloadsDirectory = path.resolve(metamaskDirectory, 'download');
-    if (!fs.existsSync(downloadsDirectory)) {
-      fs.mkdirSync(downloadsDirectory, { recursive: true });
+    if (!fs.existsSync(location)) {
+      fs.mkdirSync(location, { recursive: true });
     }
-    const fileLocation = path.join(downloadsDirectory, name);
+    const fileLocation = path.join(location, name);
     const file = fs.createWriteStream(fileLocation);
     const stream = await request(url);
     stream.pipe(file);
