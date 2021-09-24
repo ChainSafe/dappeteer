@@ -10,6 +10,7 @@ Thank you for your pull request. Please provide all required information
 
 - [ ] I have run linter locally
 - [ ] I have run unit and integration tests locally
+  - [ ] Update configuration the newest version (readme and const)
 - [ ] Rebased to master branch / merged master
 
 ### Changes
