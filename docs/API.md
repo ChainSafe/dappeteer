@@ -25,7 +25,10 @@ For additional information read root [readme](../README.md)
 ```typescript
 interface LaunchOptions {
   metamaskVersion?: string; // Metamask plugin version (by default it uses latest)
+  metamaskLocation?: Path; // Custom location of download and extract path
 }
+
+type Path = string | { download: string; extract: string; };
 ```
 returns an instance of `browser`, same as `puppeteer.launch`, but it also installs the MetaMask extension. [It supports all the regular `puppeteer.launch` options](https://github.com/puppeteer/puppeteer/blob/v5.5.0/docs/api.md#puppeteerlaunchoptions)
 
