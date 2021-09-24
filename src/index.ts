@@ -8,7 +8,7 @@ import downloader, { Path } from './metamaskDownloader';
 export { getMetamask };
 
 export type LaunchOptions = Parameters<typeof puppeteer['launch']>[0] & {
-  metamaskVersion?: string;
+  metamaskVersion: 'latest' | string;
   metamaskLocation?: Path;
 };
 
@@ -46,12 +46,14 @@ export type TransactionOptions = {
 /**
  * Launch Puppeteer chromium instance with MetaMask plugin installed
  * */
-export async function launch(
-  puppeteerLib: typeof puppeteer,
-  { args, metamaskLocation, ...rest }: LaunchOptions = {},
-): Promise<puppeteer.Browser> {
+export async function launch(puppeteerLib: typeof puppeteer, options: LaunchOptions): Promise<puppeteer.Browser> {
+  if (!options || !options.metamaskVersion)
+    throw new Error(`Pleas provide "metamaskVersion" (use "latest" to always get latest release of MetaMask)`);
+
+  const { args, metamaskVersion, metamaskLocation, ...rest } = options;
+
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const METAMASK_PATH = await downloader(rest.metamaskVersion, metamaskLocation);
+  const METAMASK_PATH = await downloader(metamaskVersion, metamaskLocation);
 
   return puppeteerLib.launch({
     headless: false,
