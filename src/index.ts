@@ -2,13 +2,14 @@ import * as puppeteer from 'puppeteer';
 import { Page } from 'puppeteer';
 
 import { getMetamask } from './metamask';
-import downloader from './metamaskDownloader';
+import downloader, { Path } from './metamaskDownloader';
 
 // re-export
 export { getMetamask };
 
 export type LaunchOptions = Parameters<typeof puppeteer['launch']>[0] & {
   metamaskVersion?: string;
+  metamaskLocation?: Path;
 };
 
 export type MetamaskOptions = {
@@ -47,10 +48,10 @@ export type TransactionOptions = {
  * */
 export async function launch(
   puppeteerLib: typeof puppeteer,
-  { args, ...rest }: LaunchOptions = {},
+  { args, metamaskLocation, ...rest }: LaunchOptions = {},
 ): Promise<puppeteer.Browser> {
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const METAMASK_PATH = await downloader(rest.metamaskVersion);
+  const METAMASK_PATH = await downloader(rest.metamaskVersion, metamaskLocation);
 
   return puppeteerLib.launch({
     headless: false,
