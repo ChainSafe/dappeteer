@@ -31,7 +31,7 @@ let testContract, browser, metamask, testPage;
 describe('dappeteer', () => {
   before(async () => {
     testContract = await deploy();
-    browser = await dappeteer.launch(puppeteer);
+    browser = await dappeteer.launch(puppeteer, { metamaskVersion: 'latest' });
     metamask = await dappeteer.setupMetamask(browser, {
       // optional, else it will use a default seed
       seed: 'pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog',

@@ -1,7 +1,7 @@
 import { Config } from '@jest/types';
 import puppeteer from 'puppeteer';
 
-import { Dappeteer, MetamaskOptions } from '..';
+import { Dappeteer, LaunchOptions, MetamaskOptions } from '..';
 
 declare global {
   namespace NodeJS {
@@ -15,6 +15,6 @@ declare global {
 
 export type DappateerConfig = Config.InitialOptions &
   Partial<{
-    puppeteer: puppeteer.LaunchOptions;
+    dappeteer: LaunchOptions;
     metamask: MetamaskOptions;
   }>;

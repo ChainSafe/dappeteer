@@ -14,12 +14,12 @@ export type Path =
       extract: string;
     };
 
-export default async (version?: string, location?: Path): Promise<string> => {
+export default async (version: string, location?: Path): Promise<string> => {
   const metamaskDirectory = typeof location === 'string' ? location : location?.extract || defaultDirectory;
   const downloadDirectory =
     typeof location === 'string' ? location : location?.download || path.resolve(defaultDirectory, 'download');
 
-  if (version) {
+  if (version !== 'latest') {
     const extractDestination = path.resolve(metamaskDirectory, version.replace(/\./g, '_'));
     if (fs.existsSync(extractDestination)) return extractDestination;
   }
@@ -64,7 +64,7 @@ const downloadMetamaskReleases = (name: string, url: string, location: string): 
 type MetamaskReleases = { downloadUrl: string; filename: string; tag: string };
 const metamaskReleasesUrl = 'https://api.github.com/repos/metamask/metamask-extension/releases';
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const getMetamaskReleases = (version?: string): Promise<MetamaskReleases> =>
+const getMetamaskReleases = (version: string): Promise<MetamaskReleases> =>
   new Promise((resolve, reject) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     get(metamaskReleasesUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (response) => {
@@ -77,7 +77,7 @@ const getMetamaskReleases = (version?: string): Promise<MetamaskReleases> =>
         if (data.message) return reject(data.message);
         for (const result of data) {
           if (result.draft) continue;
-          if (!version || result.name.includes(version) || result.tag_name.includes(version)) {
+          if (version === 'latest' || result.name.includes(version) || result.tag_name.includes(version)) {
             for (const asset of result.assets) {
               if (asset.name.includes('chrome'))
                 resolve({

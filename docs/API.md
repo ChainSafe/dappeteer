@@ -24,7 +24,7 @@ For additional information read root [readme](../README.md)
 ## `dappeteer.launch(puppeteerLib: typeof puppeteer, options: LaunchOptions = {}): Promise<Browser>`
 ```typescript
 interface LaunchOptions {
-  metamaskVersion?: string; // Metamask plugin version (by default it uses latest)
+  metamaskVersion: 'latest' | string; // Metamask plugin version
   metamaskLocation?: Path; // Custom location of download and extract path
 }
 
