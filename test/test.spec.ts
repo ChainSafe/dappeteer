@@ -1,12 +1,12 @@
 import * as assert from 'assert';
+import { readdir } from 'fs/promises';
+import path from 'path';
 
 import puppeteer from 'puppeteer';
 
 import * as dappeteer from '../src/index';
 
 import deploy from './deploy';
-import path from "path";
-import {readdir} from "fs/promises";
 
 function pause(seconds: number): Promise<void> {
   return new Promise((res) => setTimeout(res, 1000 * seconds));
