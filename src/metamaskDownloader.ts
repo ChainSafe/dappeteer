@@ -37,12 +37,22 @@ export default async (version: string, location?: Path): Promise<string> => {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const request = (url: string): Promise<IncomingMessage> =>
   new Promise((resolve) => {
-    get(url, (response) => {
+    const request = get(url, (response) => {
       if (response.statusCode == 302) {
-        get(response.headers.location, resolve);
+        const redirectRequest = get(response.headers.location, resolve);
+        redirectRequest.on('error', (error) => {
+          // eslint-disable-next-line no-console
+          console.warn('request redirected error:', error.message);
+          throw error;
+        });
       } else {
         resolve(response);
       }
+    });
+    request.on('error', (error) => {
+      // eslint-disable-next-line no-console
+      console.warn('request error:', error.message);
+      throw error;
     });
   });
 
@@ -63,11 +73,10 @@ const downloadMetamaskReleases = (name: string, url: string, location: string): 
 
 type MetamaskReleases = { downloadUrl: string; filename: string; tag: string };
 const metamaskReleasesUrl = 'https://api.github.com/repos/metamask/metamask-extension/releases';
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const getMetamaskReleases = (version: string): Promise<MetamaskReleases> =>
   new Promise((resolve, reject) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    get(metamaskReleasesUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (response) => {
+    const request = get(metamaskReleasesUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (response) => {
       let body = '';
       response.on('data', (chunk) => {
         body += chunk;
@@ -90,5 +99,10 @@ const getMetamaskReleases = (version: string): Promise<MetamaskReleases> =>
         }
         reject(`Version ${version} not found!`);
       });
+    });
+    request.on('error', (error) => {
+      // eslint-disable-next-line no-console
+      console.warn('getMetamaskReleases error:', error.message);
+      throw error;
     });
   });
