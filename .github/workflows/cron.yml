@@ -28,7 +28,7 @@ jobs:
 
       - name: Check if issue already exists
         if: failure()
-        uses: nickderobertis/check-if-issue-exists-action@master
+        uses: nickderobertis/check-if-issue-exists-action@8edfc8560578e80eb6061565e5359d85d5d63b74
         id: issue
         with:
           repo: ChainSafe/dappeteer
