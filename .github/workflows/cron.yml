@@ -23,21 +23,28 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Tests
+        id: tests
         run: xvfb-run --auto-servernum yarn run test
 
-      - name: Submit issue
+      - name: Check if issue already exists
         if: failure()
-        uses: imjohnbo/issue-bot@3daae12aa54d38685d7ff8459fc8a2aee8cea98b
+        uses: nickderobertis/check-if-issue-exists-action@master
+        id: issue
+        with:
+          repo: ChainSafe/dappeteer
+          token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "question, bug"
+          title: "Problem with MetaMask version ${{ steps.tests.outputs.version }}"
+
+      - name: Submit issue
+        if: failure() && steps.issue.outputs.exists == 'false'
+        uses: imjohnbo/issue-bot@v3
         with:
           assignees: "BeroBurny, "
           labels: "question, bug"
-          title: "[cron] Seems update broke dappeeter"
-          body: |
-            ### Agenda
-            Seems there is a new update of metamask that broke a dappeeter.
-
-            - [ ] Validate is not false alarm
-            - [ ] Fix issue
+          title: "Problem with MetaMask version ${{ steps.tests.outputs.version }}"
+          body: |-
+            Seems that `MetaMask` version `${{ steps.tests.outputs.version }}` is not working currect with current version of `Dappeteer`
           pinned: false
           close-previous: false
         env:

@@ -5,6 +5,8 @@ import puppeteer from 'puppeteer';
 import * as dappeteer from '../src/index';
 
 import deploy from './deploy';
+import path from "path";
+import {readdir} from "fs/promises";
 
 function pause(seconds: number): Promise<void> {
   return new Promise((res) => setTimeout(res, 1000 * seconds));
@@ -39,6 +41,11 @@ describe('dappeteer', () => {
     });
     testPage = await browser.newPage();
     await testPage.goto('localhost:8080');
+
+    // output version
+    const directory = path.resolve(__dirname, '..', 'metamask');
+    const files = await readdir(directory);
+    console.log(`::set-output name=version::${files.pop().replace(/_/g, '.')}`);
   });
 
   it('should be deployed, contract', async () => {
