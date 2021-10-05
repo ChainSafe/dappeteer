@@ -4,6 +4,7 @@ import path from 'path';
 
 import puppeteer from 'puppeteer';
 
+import { RECOMMENDED_METAMASK_VERSION } from '../src';
 import * as dappeteer from '../src/index';
 
 import deploy from './deploy';
@@ -33,7 +34,9 @@ let testContract, browser, metamask, testPage;
 describe('dappeteer', () => {
   before(async () => {
     testContract = await deploy();
-    browser = await dappeteer.launch(puppeteer, { metamaskVersion: 'latest' });
+    browser = await dappeteer.launch(puppeteer, {
+      metamaskVersion: process.env.METAMASK_VERSION || RECOMMENDED_METAMASK_VERSION,
+    });
     metamask = await dappeteer.setupMetamask(browser, {
       // optional, else it will use a default seed
       seed: 'pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog',

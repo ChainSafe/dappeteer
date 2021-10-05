@@ -25,6 +25,8 @@ jobs:
       - name: Tests
         id: tests
         run: xvfb-run --auto-servernum yarn run test
+        env:
+          METAMASK_VERSION: 'latest'
 
       - name: Check if issue already exists
         if: failure()
