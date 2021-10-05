@@ -1,7 +1,10 @@
 import * as assert from 'assert';
+import { readdir } from 'fs/promises';
+import path from 'path';
 
 import puppeteer from 'puppeteer';
 
+import { RECOMMENDED_METAMASK_VERSION } from '../src';
 import * as dappeteer from '../src/index';
 
 import deploy from './deploy';
@@ -31,7 +34,9 @@ let testContract, browser, metamask, testPage;
 describe('dappeteer', () => {
   before(async () => {
     testContract = await deploy();
-    browser = await dappeteer.launch(puppeteer, { metamaskVersion: 'latest' });
+    browser = await dappeteer.launch(puppeteer, {
+      metamaskVersion: process.env.METAMASK_VERSION || RECOMMENDED_METAMASK_VERSION,
+    });
     metamask = await dappeteer.setupMetamask(browser, {
       // optional, else it will use a default seed
       seed: 'pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog',
@@ -39,6 +44,11 @@ describe('dappeteer', () => {
     });
     testPage = await browser.newPage();
     await testPage.goto('localhost:8080');
+
+    // output version
+    const directory = path.resolve(__dirname, '..', 'metamask');
+    const files = await readdir(directory);
+    console.log(`::set-output name=version::${files.pop().replace(/_/g, '.')}`);
   });
 
   it('should be deployed, contract', async () => {
