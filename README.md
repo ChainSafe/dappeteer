@@ -22,6 +22,9 @@ async function main() {
   // you can change the network if you want
   await metamask.switchNetwork('ropsten');
 
+  // you can import a token
+  await metamask.addToken('0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa');
+
   // go to a dapp and do something that prompts MetaMask to confirm a transaction
   const page = await browser.newPage();
   await page.goto('http://my-dapp.com');
