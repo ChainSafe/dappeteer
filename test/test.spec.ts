@@ -102,6 +102,12 @@ describe('dappeteer', () => {
     await metamask.switchAccount(1);
   });
 
+  it('should add token', async () => {
+    await metamask.switchNetwork('kovan');
+    await metamask.addToken('0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa');
+    await metamask.switchNetwork('localhost');
+  });
+
   it('should lock and unlock', async () => {
     await metamask.lock();
     await metamask.unlock('password1234');

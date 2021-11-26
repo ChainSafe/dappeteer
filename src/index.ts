@@ -36,6 +36,7 @@ export type Dappeteer = {
   confirmTransaction: (options?: TransactionOptions) => Promise<void>;
   sign: () => Promise<void>;
   approve: () => Promise<void>;
+  addToken: (tokenAddress: string) => Promise<void>;
   page: Page;
 };
 
