@@ -37,6 +37,7 @@ export type Dappeteer = {
   sign: () => Promise<void>;
   approve: () => Promise<void>;
   addToken: (tokenAddress: string) => Promise<void>;
+  getTokenBalance: (tokenSymbol: string) => Promise<number>;
   page: Page;
 };
 
