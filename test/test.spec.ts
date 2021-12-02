@@ -2,6 +2,7 @@ import * as assert from 'assert';
 import { readdir } from 'fs/promises';
 import path from 'path';
 
+import { expect } from 'chai';
 import puppeteer from 'puppeteer';
 
 import { RECOMMENDED_METAMASK_VERSION } from '../src';
@@ -102,6 +103,12 @@ describe('dappeteer', () => {
     await metamask.switchAccount(1);
   });
 
+  it('should add token', async () => {
+    await metamask.switchNetwork('kovan');
+    await metamask.addToken('0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa');
+    await metamask.switchNetwork('localhost');
+  });
+
   it('should lock and unlock', async () => {
     await metamask.lock();
     await metamask.unlock('password1234');
@@ -121,6 +128,16 @@ describe('dappeteer', () => {
     await metamask.sign();
 
     await testPage.waitForSelector('#signed');
+  });
+
+  it('should return token balance', async () => {
+    const tokenBalance: number = await metamask.getTokenBalance('ETH');
+    expect(tokenBalance).to.be.greaterThan(0);
+  });
+
+  it('should return 0 token balance when token not found', async () => {
+    const tokenBalance: number = await metamask.getTokenBalance('FARTBUCKS');
+    expect(tokenBalance).to.be.equal(0);
   });
 
   describe('test contract', async () => {

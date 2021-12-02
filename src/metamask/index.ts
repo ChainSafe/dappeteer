@@ -3,8 +3,10 @@ import { Page } from 'puppeteer';
 import { Dappeteer } from '..';
 
 import { addNetwork } from './addNetwork';
+import { addToken } from './addToken';
 import { approve } from './approve';
 import { confirmTransaction } from './confirmTransaction';
+import { getTokenBalance } from './getTokenBalance';
 import { importPk } from './importPk';
 import { lock } from './lock';
 import { sign } from './sign';
@@ -39,6 +41,8 @@ export const getMetamask = async (page: Page, version?: string): Promise<Dappete
     switchAccount: switchAccount(page, version),
     switchNetwork: switchNetwork(page, version),
     unlock: unlock(page, setSignedIn, getSingedIn, version),
+    addToken: addToken(page),
+    getTokenBalance: getTokenBalance(page),
     page,
   };
 };
