@@ -14,43 +14,41 @@ export const addNetwork = (page: Page, version?: string) => async ({
   const networkSwitcher = await page.waitForSelector('.network-display');
   await networkSwitcher.click();
   await page.waitForSelector('li.dropdown-menu-item');
-  const networkIndex = await page.evaluate((network) => {
-    const elements = document.querySelectorAll('li.dropdown-menu-item');
-    for (let i = 0; i < elements.length; i++) {
-      const element = elements[i];
-      if ((element as HTMLLIElement).innerText.toLowerCase().includes(network.toLowerCase())) {
-        return i;
-      }
-    }
-    return elements.length - 1;
-  }, 'Custom RPC');
-  const networkButton = (await page.$$('li.dropdown-menu-item'))[networkIndex];
+
+  const networkButton = await page.waitForSelector('.menu-droppo > button');
   await networkButton.click();
 
-  const networkNameInput = await page.waitForSelector('input#network-name');
+  const networkNameInput = await page.waitForSelector(
+    '.networks-tab__add-network-form-body > div:nth-child(1) > label > input',
+  );
   await networkNameInput.type(networkName);
 
-  const rpcInput = await page.waitForSelector('input#rpc-url');
+  const rpcInput = await page.waitForSelector(
+    '.networks-tab__add-network-form-body > div:nth-child(2) > label > input',
+  );
   await rpcInput.type(rpc);
 
-  const chainIdInput = await page.waitForSelector('input#chainId');
+  const chainIdInput = await page.waitForSelector(
+    '.networks-tab__add-network-form-body > div:nth-child(3) > label > input',
+  );
   await chainIdInput.type(String(chainId));
 
   if (symbol) {
-    const symbolInput = await page.waitForSelector('input#network-ticker');
+    const symbolInput = await page.waitForSelector(
+      '.networks-tab__add-network-form-body > div:nth-child(4) > label > input',
+    );
     await symbolInput.type(symbol);
   }
   if (explorer) {
-    const explorerInput = await page.waitForSelector('input#block-explorer-url');
+    const explorerInput = await page.waitForSelector(
+      '.networks-tab__add-network-form-body > div:nth-child(5) > label > input',
+    );
     await explorerInput.type(explorer);
   }
 
-  const saveButton = await page.waitForSelector('.network-form__footer > button.button.btn-secondary');
+  const saveButton = await page.waitForSelector(
+    '.networks-tab__add-network-form-footer > button.button.btn--rounded.btn-primary',
+  );
   await saveButton.click();
-
-  await page.waitForSelector('button.button.btn-danger');
-  const logo = await page.waitForSelector('.app-header__logo-container.app-header__logo-container--clickable');
-  await logo.click();
-
   await page.waitForXPath(`//*[text() = '${networkName}']`);
 };

@@ -9,13 +9,14 @@ import { isNewerVersion } from './utils';
 export { getMetamask };
 
 export type LaunchOptions = Parameters<typeof puppeteer['launch']>[0] & {
-  metamaskVersion: 'v10.1.1' | 'latest' | string;
+  metamaskVersion: 'v10.8.1' | 'latest' | string;
   metamaskLocation?: Path;
 };
 
 export type MetamaskOptions = {
   seed?: string;
   password?: string;
+  showTestNets?: boolean;
 };
 
 export type AddNetwork = {
@@ -46,7 +47,7 @@ export type TransactionOptions = {
   gasLimit?: number;
 };
 
-export const RECOMMENDED_METAMASK_VERSION = 'v10.1.1';
+export const RECOMMENDED_METAMASK_VERSION = 'v10.8.1';
 
 /**
  * Launch Puppeteer chromium instance with MetaMask plugin installed
@@ -96,7 +97,19 @@ export async function launch(puppeteerLib: typeof puppeteer, options: LaunchOpti
 /**
  * Setup MetaMask with base account
  * */
-export async function setupMetamask(browser: puppeteer.Browser, options: MetamaskOptions = {}): Promise<Dappeteer> {
+const defaultMetamaskOptions: MetamaskOptions = {
+  showTestNets: true,
+};
+
+export async function setupMetamask(
+  browser: puppeteer.Browser,
+  options: MetamaskOptions = defaultMetamaskOptions,
+): Promise<Dappeteer> {
+  // set default values of not provided values (but required)
+  for (const key of Object.keys(defaultMetamaskOptions)) {
+    if (options[key] === undefined) options[key] = defaultMetamaskOptions[key];
+  }
+
   const page = await closeHomeScreen(browser);
   await confirmWelcomeScreen(page);
 
@@ -107,6 +120,8 @@ export async function setupMetamask(browser: puppeteer.Browser, options: Metamas
   );
 
   await closeNotificationPage(browser);
+
+  await showTestNets(page);
 
   return getMetamask(page);
 }
@@ -152,6 +167,23 @@ async function closeNotificationPage(browser: puppeteer.Browser): Promise<void> 
       }
     }
   });
+}
+
+async function showTestNets(metamaskPage: puppeteer.Page): Promise<void> {
+  const networkSwitcher = await metamaskPage.waitForSelector('.network-display');
+  await networkSwitcher.click();
+  await metamaskPage.waitForSelector('li.dropdown-menu-item');
+
+  const showHideButton = await metamaskPage.waitForSelector('.network-dropdown-content--link');
+  await showHideButton.click();
+
+  const option = await metamaskPage.waitForSelector(
+    '.settings-page__body > div:nth-child(7) > div:nth-child(2) > div > div > div:nth-child(1)',
+  );
+  await option.click();
+
+  const header = await metamaskPage.waitForSelector('.app-header__logo-container');
+  await header.click();
 }
 
 async function confirmWelcomeScreen(metamaskPage: puppeteer.Page): Promise<void> {

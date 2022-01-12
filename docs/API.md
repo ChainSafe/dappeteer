@@ -13,6 +13,7 @@ For additional information read root [readme](../README.md)
   - [unlock](#unlock)
   - [switchNetwork](#switchNetwork)
   - [addNetwork](#addNetwork)
+  - [addToken](#addToken)
   - [confirmTransaction](#confirmTransaction)
   - [sign](#sign)
   - [approve](#approve)
@@ -38,6 +39,7 @@ returns an instance of `browser`, same as `puppeteer.launch`, but it also instal
 interface MetamaskOptions {
   seed?: string;
   password?: string;
+  showTestNets?: boolean;
 }
 ```
 
@@ -81,6 +83,10 @@ interface AddNetwork {
 }
 ```
 it adds a custom network to MetaMask.
+
+<a name="addToken"></a>
+## `metamask.addToken(tokenAddress: string): Promise<void>`
+it adds a custom token to MetaMask.  
 
 <a name="confirmTransaction"></a>
 ## `metamask.confirmTransaction(options?: TransactionOptions): Promise<void>`
