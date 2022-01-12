@@ -16,7 +16,7 @@ import puppeteer from 'puppeteer';
 import dappeteer from '@chainsafe/dappeteer';
 
 async function main() {
-  const browser = await dappeteer.launch(puppeteer, { metamaskVersion: 'v10.1.1' });
+  const browser = await dappeteer.launch(puppeteer, { metamaskVersion: 'v10.8.1' });
   const metamask = await dappeteer.setupMetamask(browser);
 
   // you can change the network if you want

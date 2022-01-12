@@ -9,7 +9,7 @@ import { isNewerVersion } from './utils';
 export { getMetamask };
 
 export type LaunchOptions = Parameters<typeof puppeteer['launch']>[0] & {
-  metamaskVersion: 'v10.1.1' | 'latest' | string;
+  metamaskVersion: 'v10.8.1' | 'latest' | string;
   metamaskLocation?: Path;
 };
 
