@@ -193,7 +193,12 @@ async function confirmWelcomeScreen(metamaskPage: puppeteer.Page): Promise<void>
   await continueButton.click();
 }
 
-async function importAccount(metamaskPage: puppeteer.Page, seed: string, password: string, hideSeed: boolean): Promise<void> {
+async function importAccount(
+  metamaskPage: puppeteer.Page,
+  seed: string,
+  password: string,
+  hideSeed: boolean,
+): Promise<void> {
   const importLink = await metamaskPage.waitForSelector('.first-time-flow button');
   await importLink.click();
 
