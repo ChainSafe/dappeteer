@@ -40,6 +40,7 @@ interface MetamaskOptions {
   seed?: string;
   password?: string;
   showTestNets?: boolean;
+  hideSeed?: boolean;
 }
 ```
 
