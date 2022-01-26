@@ -9,6 +9,6 @@ export const importPk = (page: Page, version?: string) => async (privateKey: str
   await addAccount.click();
   const pKInput = await page.waitForSelector('input#private-key-box');
   await pKInput.type(privateKey);
-  const importButton = await page.waitForSelector('button.btn-secondary');
+  const importButton = await page.waitForSelector('button.btn-primary');
   await importButton.click();
 };
