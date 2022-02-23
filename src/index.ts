@@ -1,5 +1,4 @@
-import * as puppeteer from 'puppeteer';
-import { Page } from 'puppeteer';
+import puppeteer, { Page, BrowserLaunchArgumentOptions } from 'puppeteer';
 
 import { getMetamask } from './metamask';
 import downloader, { Path } from './metamaskDownloader';
@@ -8,7 +7,7 @@ import { isNewerVersion } from './utils';
 // re-export
 export { getMetamask };
 
-export type LaunchOptions = Parameters<typeof puppeteer['launch']>[0] & {
+export type LaunchOptions = BrowserLaunchArgumentOptions & {
   metamaskVersion: 'v10.8.1' | 'latest' | string;
   metamaskLocation?: Path;
 };

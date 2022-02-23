@@ -44,7 +44,7 @@ describe('dappeteer', () => {
       password: 'password1234',
     });
     testPage = await browser.newPage();
-    await testPage.goto('localhost:8080');
+    await testPage.goto('http://localhost:8080/');
 
     // output version
     const directory = path.resolve(__dirname, '..', 'metamask');
