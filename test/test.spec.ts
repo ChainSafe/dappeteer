@@ -7,6 +7,7 @@ import puppeteer from 'puppeteer';
 
 import { RECOMMENDED_METAMASK_VERSION } from '../src';
 import * as dappeteer from '../src/index';
+import { getElementByContent } from '../src/utils';
 
 import deploy from './deploy';
 
@@ -50,6 +51,12 @@ describe('dappeteer', () => {
     const directory = path.resolve(__dirname, '..', 'metamask');
     const files = await readdir(directory);
     console.log(`::set-output name=version::${files.pop().replace(/_/g, '.')}`);
+  });
+
+  it('should test xPath', async () => {
+    await testPage.bringToFront();
+    const r = await getElementByContent(testPage, 'Increase');
+    await r.hover();
   });
 
   it('should be deployed, contract', async () => {

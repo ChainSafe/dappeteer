@@ -2,7 +2,7 @@ import puppeteer, { Page, BrowserLaunchArgumentOptions } from 'puppeteer';
 
 import { getMetamask } from './metamask';
 import downloader, { Path } from './metamaskDownloader';
-import { isNewerVersion } from './utils';
+import { clickOnSettingsSwitch, getElementByContent, getInputByLabel, isNewerVersion } from './utils';
 
 // re-export
 export { getMetamask };
@@ -55,7 +55,7 @@ export const RECOMMENDED_METAMASK_VERSION = 'v10.8.1';
 export async function launch(puppeteerLib: typeof puppeteer, options: LaunchOptions): Promise<puppeteer.Browser> {
   if (!options || !options.metamaskVersion)
     throw new Error(
-      `Pleas provide "metamaskVersion" (use recommended "${RECOMMENDED_METAMASK_VERSION}" or "latest" to always get latest release of MetaMask)`,
+      `Pleas provide "metamaskVersion" (recommended "${RECOMMENDED_METAMASK_VERSION}" or "latest" to always get latest release of MetaMask)`,
     );
 
   const { args, metamaskVersion, metamaskLocation, ...rest } = options;
@@ -111,6 +111,8 @@ export async function setupMetamask(
   }
 
   const page = await closeHomeScreen(browser);
+  await closeNotificationPage(browser);
+
   await confirmWelcomeScreen(page);
 
   await importAccount(
@@ -119,8 +121,6 @@ export async function setupMetamask(
     options.password || 'password1234',
     options.hideSeed,
   );
-
-  await closeNotificationPage(browser);
 
   await showTestNets(page);
 
@@ -175,20 +175,17 @@ async function showTestNets(metamaskPage: puppeteer.Page): Promise<void> {
   await networkSwitcher.click();
   await metamaskPage.waitForSelector('li.dropdown-menu-item');
 
-  const showHideButton = await metamaskPage.waitForSelector('.network-dropdown-content--link');
+  const showHideButton = await getElementByContent(metamaskPage, 'Show/hide');
   await showHideButton.click();
 
-  const option = await metamaskPage.waitForSelector(
-    '.settings-page__body > div:nth-child(7) > div:nth-child(2) > div > div > div:nth-child(1)',
-  );
-  await option.click();
+  await clickOnSettingsSwitch(metamaskPage, 'Show test networks');
 
   const header = await metamaskPage.waitForSelector('.app-header__logo-container');
   await header.click();
 }
 
 async function confirmWelcomeScreen(metamaskPage: puppeteer.Page): Promise<void> {
-  const continueButton = await metamaskPage.waitForSelector('.welcome-page button');
+  const continueButton = await getElementByContent(metamaskPage, 'Get Started');
   await continueButton.click();
 }
 
@@ -198,37 +195,34 @@ async function importAccount(
   password: string,
   hideSeed: boolean,
 ): Promise<void> {
-  const importLink = await metamaskPage.waitForSelector('.first-time-flow button');
+  const importLink = await getElementByContent(metamaskPage, 'Import wallet');
   await importLink.click();
 
-  const metricsOptOut = await metamaskPage.waitForSelector('.metametrics-opt-in button.btn-primary');
+  const metricsOptOut = await getElementByContent(metamaskPage, 'I Agree');
   await metricsOptOut.click();
 
-  if (hideSeed) {
-    const seedPhraseInput = await metamaskPage.waitForSelector('.first-time-flow__seedphrase input[type=password]');
-    await seedPhraseInput.click();
-    await seedPhraseInput.type(seed);
-  } else {
-    const showSeedPhraseInput = await metamaskPage.waitForSelector('#ftf-chk1-label');
+  if (!hideSeed) {
+    const showSeedPhraseInput = await getElementByContent(metamaskPage, 'Show Secret Recovery Phrase');
     await showSeedPhraseInput.click();
-
-    const seedPhraseInput = await metamaskPage.waitForSelector('.first-time-flow textarea');
-    await seedPhraseInput.type(seed);
   }
 
-  const passwordInput = await metamaskPage.waitForSelector('#password');
+  const seedPhraseInput = await getInputByLabel(metamaskPage, 'Secret Recovery Phrase');
+  await seedPhraseInput.click();
+  await seedPhraseInput.type(seed);
+
+  const passwordInput = await getInputByLabel(metamaskPage, 'New password');
   await passwordInput.type(password);
 
-  const passwordConfirmInput = await metamaskPage.waitForSelector('#confirm-password');
+  const passwordConfirmInput = await getInputByLabel(metamaskPage, 'Confirm password');
   await passwordConfirmInput.type(password);
 
   const acceptTerms = await metamaskPage.waitForSelector('.first-time-flow__terms');
   await acceptTerms.click();
 
-  const restoreButton = await metamaskPage.waitForSelector('.first-time-flow button');
+  const restoreButton = await getElementByContent(metamaskPage, 'Import', 'button');
   await restoreButton.click();
 
-  const doneButton = await metamaskPage.waitForSelector('.end-of-flow button');
+  const doneButton = await getElementByContent(metamaskPage, 'All Done');
   await doneButton.click();
 
   const popupButton = await metamaskPage.waitForSelector('.popover-header__button');
