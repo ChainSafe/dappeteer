@@ -2,7 +2,13 @@ import puppeteer, { Page, BrowserLaunchArgumentOptions } from 'puppeteer';
 
 import { getMetamask } from './metamask';
 import downloader, { Path } from './metamaskDownloader';
-import { clickOnSettingsSwitch, getElementByContent, getInputByLabel, isNewerVersion } from './utils';
+import {
+  clickOnSettingsSwitch,
+  getElementByContent,
+  getInputByLabel,
+  isNewerVersion,
+  openNetworkDropdown,
+} from './utils';
 
 // re-export
 export { getMetamask };
@@ -27,18 +33,24 @@ export type AddNetwork = {
   explorer?: string;
 };
 
+export type AddToken = {
+  tokenAddress: string;
+  symbol?: string;
+  decimals?: number;
+};
+
 export type Dappeteer = {
   lock: () => Promise<void>;
   unlock: (password: string) => Promise<void>;
   addNetwork: (options: AddNetwork) => Promise<void>;
+  addToken: (options: AddToken) => Promise<void>;
   importPK: (pk: string) => Promise<void>;
   switchAccount: (accountNumber: number) => Promise<void>;
   switchNetwork: (network: string) => Promise<void>;
   confirmTransaction: (options?: TransactionOptions) => Promise<void>;
   sign: () => Promise<void>;
   approve: () => Promise<void>;
-  addToken: (tokenAddress: string) => Promise<void>;
-  getTokenBalance: (tokenSymbol: string) => Promise<number>;
+  getTokenBalance: (tokenSymbol: string) => Promise<number>; // TODO: validate if this there is place for this here
   page: Page;
 };
 
@@ -171,9 +183,7 @@ async function closeNotificationPage(browser: puppeteer.Browser): Promise<void> 
 }
 
 async function showTestNets(metamaskPage: puppeteer.Page): Promise<void> {
-  const networkSwitcher = await metamaskPage.waitForSelector('.network-display');
-  await networkSwitcher.click();
-  await metamaskPage.waitForSelector('li.dropdown-menu-item');
+  await openNetworkDropdown(metamaskPage);
 
   const showHideButton = await getElementByContent(metamaskPage, 'Show/hide');
   await showHideButton.click();

@@ -1,5 +1,7 @@
 import { Page } from 'puppeteer';
 
+import { getElementByContent } from '../utils';
+
 import { GetSingedIn, SetSignedIn } from './index';
 
 export const lock = (
@@ -15,7 +17,8 @@ export const lock = (
   await page.bringToFront();
   const accountSwitcher = await page.waitForSelector('.identicon');
   await accountSwitcher.click();
-  const lockButton = await page.waitForSelector('.account-menu__lock-button');
+
+  const lockButton = await getElementByContent(page, 'Lock');
   await lockButton.click();
   await setSignedIn(false);
 };

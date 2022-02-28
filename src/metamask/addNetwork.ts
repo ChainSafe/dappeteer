@@ -1,6 +1,7 @@
 import { Page } from 'puppeteer';
 
 import { AddNetwork } from '../index';
+import { getElementByContent, getInputByLabel, openNetworkDropdown } from '../utils';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const addNetwork = (page: Page, version?: string) => async ({
@@ -11,44 +12,30 @@ export const addNetwork = (page: Page, version?: string) => async ({
   explorer,
 }: AddNetwork): Promise<void> => {
   await page.bringToFront();
-  const networkSwitcher = await page.waitForSelector('.network-display');
-  await networkSwitcher.click();
-  await page.waitForSelector('li.dropdown-menu-item');
+  await openNetworkDropdown(page);
 
-  const networkButton = await page.waitForSelector('.menu-droppo > button');
+  const networkButton = await getElementByContent(page, 'Add Network');
   await networkButton.click();
 
-  const networkNameInput = await page.waitForSelector(
-    '.networks-tab__add-network-form-body > div:nth-child(1) > label > input',
-  );
+  const networkNameInput = await getInputByLabel(page, 'Network Name');
   await networkNameInput.type(networkName);
 
-  const rpcInput = await page.waitForSelector(
-    '.networks-tab__add-network-form-body > div:nth-child(2) > label > input',
-  );
+  const rpcInput = await getInputByLabel(page, 'New RPC URL');
   await rpcInput.type(rpc);
 
-  const chainIdInput = await page.waitForSelector(
-    '.networks-tab__add-network-form-body > div:nth-child(3) > label > input',
-  );
+  const chainIdInput = await getInputByLabel(page, 'Chain ID');
   await chainIdInput.type(String(chainId));
 
   if (symbol) {
-    const symbolInput = await page.waitForSelector(
-      '.networks-tab__add-network-form-body > div:nth-child(4) > label > input',
-    );
+    const symbolInput = await getInputByLabel(page, 'Currency Symbol');
     await symbolInput.type(symbol);
   }
   if (explorer) {
-    const explorerInput = await page.waitForSelector(
-      '.networks-tab__add-network-form-body > div:nth-child(5) > label > input',
-    );
+    const explorerInput = await getInputByLabel(page, 'Block Explorer URL');
     await explorerInput.type(explorer);
   }
 
-  const saveButton = await page.waitForSelector(
-    '.networks-tab__add-network-form-footer > button.button.btn--rounded.btn-primary',
-  );
+  const saveButton = await getElementByContent(page, 'Save');
   await saveButton.click();
   await page.waitForXPath(`//*[text() = '${networkName}']`);
 };

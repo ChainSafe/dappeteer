@@ -1,5 +1,7 @@
 import { Page } from 'puppeteer';
 
+import { getElementByContent } from '../utils';
+
 import { GetSingedIn } from '.';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -10,9 +12,6 @@ export const sign = (page: Page, getSingedIn: GetSingedIn, version?: string) => 
   }
   await page.reload();
 
-  const button = await Promise.race([
-    page.waitForSelector('.request-signature__footer__sign-button'),
-    page.waitForSelector('.signature-request-footer button:last-child'),
-  ]);
+  const button = await getElementByContent(page, 'Sign', 'button');
   await button.click();
 };

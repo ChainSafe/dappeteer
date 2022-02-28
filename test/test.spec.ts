@@ -5,7 +5,7 @@ import path from 'path';
 import { expect } from 'chai';
 import puppeteer from 'puppeteer';
 
-import { RECOMMENDED_METAMASK_VERSION } from '../src';
+import { Dappeteer, RECOMMENDED_METAMASK_VERSION } from '../src';
 import * as dappeteer from '../src/index';
 import { getElementByContent } from '../src/utils';
 
@@ -31,7 +31,7 @@ async function clickElement(page, selector): Promise<void> {
   await element.click();
 }
 
-let testContract, browser, metamask, testPage;
+let testContract, browser, metamask: Dappeteer, testPage;
 
 describe('dappeteer', () => {
   before(async () => {
@@ -110,9 +110,13 @@ describe('dappeteer', () => {
     await metamask.switchAccount(1);
   });
 
+  // TODO: cover more cases
   it('should add token', async () => {
     await metamask.switchNetwork('kovan');
-    await metamask.addToken('0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa');
+    await metamask.addToken({
+      tokenAddress: '0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa',
+      symbol: 'KAKI',
+    });
     await metamask.switchNetwork('localhost');
   });
 

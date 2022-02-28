@@ -16,11 +16,18 @@ export const isNewerVersion = (current: string, comparingWith: string): boolean 
 };
 
 export const getElementByContent = (page: Page, text: string, type = '*'): Promise<ElementHandle | null> =>
-  page.waitForXPath(`//${type}[contains(text(),'${text}')]`);
+  page.waitForXPath(`//${type}[contains(text(), '${text}')]`);
 
 export const getInputByLabel = (page: Page, text: string): Promise<ElementHandle | null> =>
   page.waitForXPath(
-    `//label[contains(text(),'${text}')]/following-sibling::textarea|//label[contains(text(),'${text}')]/following-sibling::*//input`,
+    [
+      `//label[contains(text(),'${text}')]/following-sibling::textarea`,
+      `//label[contains(text(),'${text}')]/following-sibling::*//input`,
+      `//h6[contains(text(),'${text}')]/parent::node()/parent::node()/following-sibling::input`,
+      `//h6[contains(text(),'${text}')]/parent::node()/parent::node()/following-sibling::*//input`,
+      `//span[contains(text(),'${text}')]/parent::node()/parent::node()/following-sibling::*//input`,
+      `//span[contains(text(),'${text}')]/following-sibling::*//input`,
+    ].join('|'),
   );
 
 export const clickOnSettingsSwitch = async (page: Page, text: string): Promise<void> => {
@@ -28,4 +35,10 @@ export const clickOnSettingsSwitch = async (page: Page, text: string): Promise<v
     `//span[contains(text(),'${text}')]/parent::div/following-sibling::div/div/div/div`,
   );
   await button.click();
+};
+
+export const openNetworkDropdown = async (page: Page): Promise<void> => {
+  const networkSwitcher = await page.waitForSelector('.network-display');
+  await networkSwitcher.click();
+  await page.waitForSelector('li.dropdown-menu-item');
 };

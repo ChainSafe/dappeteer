@@ -1,5 +1,6 @@
 import { Page } from 'puppeteer';
 
+// TODO: this should be helper
 export const getTokenBalance = (page: Page) => async (tokenSymbol: string): Promise<number> => {
   await page.bringToFront();
   await page.waitForTimeout(1000);
