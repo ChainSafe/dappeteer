@@ -8,6 +8,6 @@ export const importPk = (page: Page, version?: string) => async (privateKey: str
   await openProfileDropdown(page);
 
   await clickOnElement(page, 'Import Account');
-  await typeOnInputField(page, 'Paste your private key', privateKey);
+  await typeOnInputField(page, 'your private key', privateKey);
   await clickOnButton(page, 'Import');
 };

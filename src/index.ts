@@ -62,7 +62,7 @@ export type TransactionOptions = {
   gasLimit?: number;
 };
 
-export const RECOMMENDED_METAMASK_VERSION = 'v10.8.1';
+export const RECOMMENDED_METAMASK_VERSION = 'v10.10.1';
 
 /**
  * Launch Puppeteer chromium instance with MetaMask plugin installed
