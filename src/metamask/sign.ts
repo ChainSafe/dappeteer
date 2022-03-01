@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer';
 
-import { getElementByContent } from '../utils';
+import { clickOnButton } from '../helpers';
 
 import { GetSingedIn } from '.';
 
@@ -12,6 +12,5 @@ export const sign = (page: Page, getSingedIn: GetSingedIn, version?: string) => 
   }
   await page.reload();
 
-  const button = await getElementByContent(page, 'Sign', 'button');
-  await button.click();
+  await clickOnButton(page, 'Sign');
 };

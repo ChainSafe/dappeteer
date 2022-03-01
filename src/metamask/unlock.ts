@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer';
 
-import { getElementByContent, getInputByLabel } from '../utils';
+import { clickOnButton, typeOnInputField } from '../helpers';
 
 import { GetSingedIn, SetSignedIn } from '.';
 
@@ -13,10 +13,8 @@ export const unlock = (page: Page, setSignedIn: SetSignedIn, getSingedIn: GetSin
   }
   await page.bringToFront();
 
-  const passwordBox = await getInputByLabel(page, 'Password');
-  await passwordBox.type(password);
+  await typeOnInputField(page, 'Password', password);
+  await clickOnButton(page, 'Unlock');
 
-  const unlockButton = await getElementByContent(page, 'Unlock');
-  await unlockButton.click();
   await setSignedIn(true);
 };

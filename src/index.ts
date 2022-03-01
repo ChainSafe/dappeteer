@@ -1,14 +1,17 @@
 import puppeteer, { Page, BrowserLaunchArgumentOptions } from 'puppeteer';
 
+import {
+  openNetworkDropdown,
+  clickOnSettingsSwitch,
+  clickOnButton,
+  clickOnLogo,
+  typeOnInputField,
+  closePopup,
+  clickOnElement,
+} from './helpers';
 import { getMetamask } from './metamask';
 import downloader, { Path } from './metamaskDownloader';
-import {
-  clickOnSettingsSwitch,
-  getElementByContent,
-  getInputByLabel,
-  isNewerVersion,
-  openNetworkDropdown,
-} from './utils';
+import { isNewerVersion } from './utils';
 
 // re-export
 export { getMetamask };
@@ -185,18 +188,13 @@ async function closeNotificationPage(browser: puppeteer.Browser): Promise<void> 
 async function showTestNets(metamaskPage: puppeteer.Page): Promise<void> {
   await openNetworkDropdown(metamaskPage);
 
-  const showHideButton = await getElementByContent(metamaskPage, 'Show/hide');
-  await showHideButton.click();
-
+  await clickOnElement(metamaskPage, 'Show/hide');
   await clickOnSettingsSwitch(metamaskPage, 'Show test networks');
-
-  const header = await metamaskPage.waitForSelector('.app-header__logo-container');
-  await header.click();
+  await clickOnLogo(metamaskPage);
 }
 
 async function confirmWelcomeScreen(metamaskPage: puppeteer.Page): Promise<void> {
-  const continueButton = await getElementByContent(metamaskPage, 'Get Started');
-  await continueButton.click();
+  await clickOnButton(metamaskPage, 'Get Started');
 }
 
 async function importAccount(
@@ -205,36 +203,21 @@ async function importAccount(
   password: string,
   hideSeed: boolean,
 ): Promise<void> {
-  const importLink = await getElementByContent(metamaskPage, 'Import wallet');
-  await importLink.click();
+  await clickOnButton(metamaskPage, 'Import wallet');
+  await clickOnButton(metamaskPage, 'I Agree');
 
-  const metricsOptOut = await getElementByContent(metamaskPage, 'I Agree');
-  await metricsOptOut.click();
+  if (!hideSeed) await clickOnElement(metamaskPage, 'Show Secret Recovery Phrase');
 
-  if (!hideSeed) {
-    const showSeedPhraseInput = await getElementByContent(metamaskPage, 'Show Secret Recovery Phrase');
-    await showSeedPhraseInput.click();
-  }
+  await typeOnInputField(metamaskPage, 'Secret Recovery Phrase', seed);
+  await typeOnInputField(metamaskPage, 'New password', password);
+  await typeOnInputField(metamaskPage, 'Confirm password', password);
 
-  const seedPhraseInput = await getInputByLabel(metamaskPage, 'Secret Recovery Phrase');
-  await seedPhraseInput.click();
-  await seedPhraseInput.type(seed);
-
-  const passwordInput = await getInputByLabel(metamaskPage, 'New password');
-  await passwordInput.type(password);
-
-  const passwordConfirmInput = await getInputByLabel(metamaskPage, 'Confirm password');
-  await passwordConfirmInput.type(password);
-
+  // select checkbox "I have read and agree to the"
   const acceptTerms = await metamaskPage.waitForSelector('.first-time-flow__terms');
   await acceptTerms.click();
 
-  const restoreButton = await getElementByContent(metamaskPage, 'Import', 'button');
-  await restoreButton.click();
+  await clickOnButton(metamaskPage, 'Import');
+  await clickOnButton(metamaskPage, 'All Done');
 
-  const doneButton = await getElementByContent(metamaskPage, 'All Done');
-  await doneButton.click();
-
-  const popupButton = await metamaskPage.waitForSelector('.popover-header__button');
-  await popupButton.click();
+  await closePopup(metamaskPage);
 }

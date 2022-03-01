@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer';
 
+import { clickOnButton, openNetworkDropdown, typeOnInputField } from '../helpers';
 import { AddNetwork } from '../index';
-import { getElementByContent, getInputByLabel, openNetworkDropdown } from '../utils';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const addNetwork = (page: Page, version?: string) => async ({
@@ -13,29 +13,15 @@ export const addNetwork = (page: Page, version?: string) => async ({
 }: AddNetwork): Promise<void> => {
   await page.bringToFront();
   await openNetworkDropdown(page);
+  await clickOnButton(page, 'Add Network');
 
-  const networkButton = await getElementByContent(page, 'Add Network');
-  await networkButton.click();
+  await typeOnInputField(page, 'Network Name', networkName);
+  await typeOnInputField(page, 'New RPC URL', rpc);
+  await typeOnInputField(page, 'Chain ID', String(chainId));
 
-  const networkNameInput = await getInputByLabel(page, 'Network Name');
-  await networkNameInput.type(networkName);
+  if (symbol) await typeOnInputField(page, 'Currency Symbol', symbol);
+  if (explorer) await typeOnInputField(page, 'Block Explorer URL', explorer);
 
-  const rpcInput = await getInputByLabel(page, 'New RPC URL');
-  await rpcInput.type(rpc);
-
-  const chainIdInput = await getInputByLabel(page, 'Chain ID');
-  await chainIdInput.type(String(chainId));
-
-  if (symbol) {
-    const symbolInput = await getInputByLabel(page, 'Currency Symbol');
-    await symbolInput.type(symbol);
-  }
-  if (explorer) {
-    const explorerInput = await getInputByLabel(page, 'Block Explorer URL');
-    await explorerInput.type(explorer);
-  }
-
-  const saveButton = await getElementByContent(page, 'Save');
-  await saveButton.click();
+  await clickOnButton(page, 'Save');
   await page.waitForXPath(`//*[text() = '${networkName}']`);
 };

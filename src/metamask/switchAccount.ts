@@ -1,14 +1,12 @@
 import { Page } from 'puppeteer';
 
-import { getElementByContent } from '../utils';
+import { clickOnElement, openProfileDropdown } from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const switchAccount = (page: Page, version?: string) => async (accountNumber: number): Promise<void> => {
   await page.bringToFront();
-  const accountSwitcher = await page.waitForSelector('.identicon');
-  await accountSwitcher.click();
+  await openProfileDropdown(page);
 
   // TODO: use different approach? maybe change param to account name
-  const account = await getElementByContent(page, `Account ${accountNumber}`);
-  await account.click();
+  await clickOnElement(page, `Account ${accountNumber}`);
 };

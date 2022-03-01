@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer';
 
 import { TransactionOptions } from '..';
-import { getElementByContent, getInputByLabel } from '../utils';
+import { clickOnButton, typeOnInputField } from '../helpers';
 
 import { GetSingedIn } from './index';
 
@@ -17,28 +17,14 @@ export const confirmTransaction = (page: Page, getSingedIn: GetSingedIn, version
   await page.reload();
 
   if (options) {
-    const edit = await getElementByContent(page, 'Edit');
-    await edit.click();
+    await clickOnButton(page, 'Edit');
+    await clickOnButton(page, 'Edit suggested gas fee');
 
-    const processEdit = await getElementByContent(page, 'Edit suggested gas fee');
-    await processEdit.click();
+    if (options.gas) await typeOnInputField(page, 'Gas price', String(options.gas), true);
+    if (options.gasLimit) await typeOnInputField(page, 'Gas Limit', String(options.gasLimit), true);
 
-    if (options.gas) {
-      const gas = await getInputByLabel(page, 'Gas price');
-      await gas.click({ clickCount: 3 });
-      await gas.type(options.gas.toString());
-    }
-
-    if (options.gasLimit) {
-      const gasLimit = await getInputByLabel(page, 'Gas Limit');
-      await gasLimit.click({ clickCount: 3 });
-      await gasLimit.type(options.gasLimit.toString());
-    }
-
-    const save = await getElementByContent(page, 'Save');
-    await save.click();
+    await clickOnButton(page, 'Save');
   }
 
-  const confirmButton = await getElementByContent(page, 'Confirm');
-  await confirmButton.click();
+  await clickOnButton(page, 'Confirm');
 };
