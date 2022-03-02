@@ -6,12 +6,12 @@ export const getElementByContent = (page: Page, text: string, type = '*'): Promi
 export const getInputByLabel = (page: Page, text: string): Promise<ElementHandle | null> =>
   page.waitForXPath(
     [
-      `//label[contains(text(),'${text}')]/following-sibling::textarea`,
-      `//label[contains(text(),'${text}')]/following-sibling::*//input`,
-      `//h6[contains(text(),'${text}')]/parent::node()/parent::node()/following-sibling::input`,
-      `//h6[contains(text(),'${text}')]/parent::node()/parent::node()/following-sibling::*//input`,
-      `//span[contains(text(),'${text}')]/parent::node()/parent::node()/following-sibling::*//input`,
-      `//span[contains(text(),'${text}')]/following-sibling::*//input`,
+      `//label[contains(.,'${text}')]/following-sibling::textarea`,
+      `//label[contains(.,'${text}')]/following-sibling::*//input`,
+      `//h6[contains(.,'${text}')]/parent::node()/parent::node()/following-sibling::input`,
+      `//h6[contains(.,'${text}')]/parent::node()/parent::node()/following-sibling::*//input`,
+      `//span[contains(.,'${text}')]/parent::node()/parent::node()/following-sibling::*//input`,
+      `//span[contains(.,'${text}')]/following-sibling::*//input`,
     ].join('|'),
   );
 

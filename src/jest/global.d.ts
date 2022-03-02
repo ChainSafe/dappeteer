@@ -1,13 +1,13 @@
 import { Config } from '@jest/types';
-import puppeteer from 'puppeteer';
+import { Browser, Page } from 'puppeteer';
 
 import { Dappeteer, LaunchOptions, MetamaskOptions } from '..';
 
 declare global {
   namespace NodeJS {
     interface Global {
-      page: puppeteer.Page;
-      browser: puppeteer.Browser;
+      page: Page;
+      browser: Browser;
       metamask: Dappeteer;
     }
   }

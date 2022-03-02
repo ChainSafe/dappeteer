@@ -1,4 +1,4 @@
-import { Page } from 'puppeteer';
+import { Browser, Page } from 'puppeteer';
 
 import { Dappeteer } from '..';
 
@@ -46,3 +46,18 @@ export const getMetamask = async (page: Page, version?: string): Promise<Dappete
     page,
   };
 };
+
+/**
+ * Return MetaMask instance
+ * */
+export async function getMetamaskWindow(browser: Browser, version?: string): Promise<Dappeteer> {
+  const metamaskPage = await new Promise<Page>((resolve) => {
+    browser.pages().then((pages) => {
+      for (const page of pages) {
+        if (page.url().includes('chrome-extension')) resolve(page);
+      }
+    });
+  });
+
+  return getMetamask(metamaskPage, version);
+}

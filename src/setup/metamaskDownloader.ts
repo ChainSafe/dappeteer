@@ -5,7 +5,7 @@ import * as path from 'path';
 
 import StreamZip from 'node-stream-zip';
 
-const defaultDirectory = path.resolve(__dirname, '..', 'metamask');
+const defaultDirectory = path.resolve(__dirname, '..', '..', 'metamask');
 
 export type Path =
   | string
