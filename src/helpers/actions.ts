@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer';
 
-import { getElementByContent, getInputByLabel, getSettingsSwitch } from './selectors';
+import { getAccountMenuButton, getElementByContent, getInputByLabel, getSettingsSwitch } from './selectors';
 
 export const clickOnSettingsSwitch = async (page: Page, text: string): Promise<void> => {
   const button = await getSettingsSwitch(page, text);
@@ -16,6 +16,12 @@ export const openNetworkDropdown = async (page: Page): Promise<void> => {
 export const openProfileDropdown = async (page: Page): Promise<void> => {
   const accountSwitcher = await page.waitForSelector('.identicon');
   await accountSwitcher.click();
+};
+
+export const openAccountDropdown = async (page: Page): Promise<void> => {
+  const accMenu = await getAccountMenuButton(page);
+  await accMenu.click();
+  await page.waitForSelector('.menu__container.account-options-menu');
 };
 
 export const clickOnElement = async (page: Page, text: string, type?: string): Promise<void> => {

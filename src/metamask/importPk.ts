@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer';
 
-import { clickOnButton, clickOnElement, openProfileDropdown, typeOnInputField } from '../helpers';
+import { clickOnButton, clickOnElement, getErrorMessage, openProfileDropdown, typeOnInputField } from '../helpers';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const importPk = (page: Page, version?: string) => async (privateKey: string): Promise<void> => {
@@ -10,4 +10,7 @@ export const importPk = (page: Page, version?: string) => async (privateKey: str
   await clickOnElement(page, 'Import Account');
   await typeOnInputField(page, 'your private key', privateKey);
   await clickOnButton(page, 'Import');
+
+  const errorMessage = await getErrorMessage(page);
+  if (errorMessage) throw new SyntaxError(errorMessage);
 };

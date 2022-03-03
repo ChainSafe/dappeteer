@@ -2,13 +2,19 @@ import * as assert from 'assert';
 import { readdir } from 'fs/promises';
 import path from 'path';
 
-import { expect } from 'chai';
+import { expect, use as chaiUse } from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import puppeteer from 'puppeteer';
 
 import { Dappeteer, RECOMMENDED_METAMASK_VERSION } from '../src';
+import { clickOnLogo, openProfileDropdown } from '../src/helpers';
 import * as dappeteer from '../src/index';
+// TODO - Remove after implementation
+import { deleteAccount } from '../src/metamask/helpers/deleteAccount';
 
 import deploy from './deploy';
+
+chaiUse(chaiAsPromised);
 
 function pause(seconds: number): Promise<void> {
   return new Promise((res) => setTimeout(res, 1000 * seconds));
@@ -95,12 +101,64 @@ describe('dappeteer', () => {
     assert.equal(selectedNetwork, 'Localhost 8545');
   });
 
-  it('should import private key', async () => {
-    await metamask.importPK('4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b10');
+  describe('test importPK method', async () => {
+    afterEach(async () => {
+      await clickOnLogo(metamask.page);
+    });
+
+    after(async () => {
+      await deleteAccount(metamask.page)(2);
+      await pause(0.5);
+    });
+
+    it('should import private key', async () => {
+      const countAccounts = async (): Promise<number> => {
+        await openProfileDropdown(metamask.page);
+        const container = await metamask.page.$('.account-menu__accounts');
+        const count = (await container.$$('.account-menu__account')).length;
+        await openProfileDropdown(metamask.page);
+        return count;
+      };
+
+      const beforeImport = await countAccounts();
+      await metamask.importPK('4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b10');
+      const afterImport = await countAccounts();
+
+      expect(beforeImport + 1).to.be.equal(afterImport);
+    });
+
+    it('should throw error on duplicated private key', async () => {
+      await expect(
+        metamask.importPK('4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b10'),
+      ).to.be.rejectedWith(SyntaxError);
+    });
+
+    it('should throw error on wrong key', async () => {
+      await expect(
+        metamask.importPK('4f3edf983ac636a65a$@!ce7c78d9aa706d3b113bce9c46f30d7d21715b23b10'),
+      ).to.be.rejectedWith(SyntaxError);
+    });
+
+    it('should throw error on to short key', async () => {
+      await expect(
+        metamask.importPK('4f3edf983ac636a65ace7c78d9aa706d3b113bce9c46f30d7d21715b23b10'),
+      ).to.be.rejectedWith(SyntaxError);
+    });
   });
 
-  it('should switch accounts', async () => {
-    await metamask.switchAccount(1);
+  describe('test switchAccount method', async () => {
+    before(async () => {
+      await metamask.importPK('4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b10');
+    });
+
+    after(async () => {
+      await deleteAccount(metamask.page)(2);
+      await pause(0.5);
+    });
+
+    it('should switch accounts', async () => {
+      await metamask.switchAccount(1);
+    });
   });
 
   // TODO: cover more cases
