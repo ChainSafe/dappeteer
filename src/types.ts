@@ -39,7 +39,11 @@ export type Dappeteer = {
   confirmTransaction: (options?: TransactionOptions) => Promise<void>;
   sign: () => Promise<void>;
   approve: () => Promise<void>;
-  getTokenBalance: (tokenSymbol: string) => Promise<number>; // TODO: validate if this there is place for this here
+  helpers: {
+    getTokenBalance: (tokenSymbol: string) => Promise<number>;
+    deleteAccount: (accountNumber: number) => Promise<void>;
+    deleteNetwork: (name: string) => Promise<void>;
+  };
   page: Page;
 };
 

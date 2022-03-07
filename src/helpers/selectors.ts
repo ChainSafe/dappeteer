@@ -20,7 +20,12 @@ export const getSettingsSwitch = (page: Page, text: string): Promise<ElementHand
   page.waitForXPath(`//span[contains(.,'${text}')]/parent::div/following-sibling::div/div/div/div`);
 
 export const getErrorMessage = async (page: Page): Promise<string | false> => {
-  const errorElement = await page.waitForSelector(`span.error`, { timeout: 1000 }).catch(() => null);
+  const options: Parameters<Page['waitForSelector']>[1] = { timeout: 1000 };
+
+  const errorElement = await Promise.race([
+    page.waitForSelector(`span.error`, options),
+    page.waitForSelector(`.typography--color-error-1`, options),
+  ]).catch(() => null);
   if (!errorElement) return false;
   return page.evaluate((node) => node.textContent, errorElement);
 };

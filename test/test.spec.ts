@@ -1,4 +1,3 @@
-import * as assert from 'assert';
 import { readdir } from 'fs/promises';
 import path from 'path';
 
@@ -9,8 +8,6 @@ import puppeteer from 'puppeteer';
 import { Dappeteer, RECOMMENDED_METAMASK_VERSION } from '../src';
 import { clickOnLogo, openProfileDropdown } from '../src/helpers';
 import * as dappeteer from '../src/index';
-// TODO - Remove after implementation
-import { deleteAccount } from '../src/metamask/helpers/deleteAccount';
 
 import deploy from './deploy';
 
@@ -59,37 +56,104 @@ describe('dappeteer', () => {
   });
 
   it('should be deployed, contract', async () => {
-    assert.ok(testContract);
-    assert.ok(testContract.address);
-    assert.ok(testContract.options.address);
+    expect(testContract).to.be.ok;
+    expect(testContract.address).to.be.ok;
+    expect(testContract.options.address).to.be.ok;
   });
 
   it('should running, puppeteer', async () => {
-    assert.ok(browser);
+    expect(browser).to.be.ok;
   });
 
   it('should open, metamask', async () => {
-    assert.ok(metamask);
+    expect(metamask).to.be.ok;
   });
 
   it('should open, test page', async () => {
-    assert.ok(testPage);
-    assert.equal(await testPage.title(), 'Local metamask test');
+    expect(testPage).to.be.ok;
+    expect(await testPage.title()).to.be.equal('Local metamask test');
   });
 
-  it('should add network', async () => {
-    await metamask.addNetwork({
-      networkName: 'Binance Smart Chain',
-      rpc: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
-      chainId: 97,
-      symbol: 'BNB',
-      explorer: 'https://testnet.bscscan.com',
+  describe('test addNetwork method', async () => {
+    after(async () => {
+      await metamask.switchNetwork('local');
+      await metamask.helpers.deleteNetwork('Binance Smart Chain');
+      await pause(0.5);
+      await metamask.helpers.deleteNetwork('Optimistic Ethereum Testnet Kovan');
+      await pause(0.5);
+      await metamask.helpers.deleteNetwork('KCC Testnet');
+      await pause(0.5);
     });
 
-    const selectedNetwork = await metamask.page.evaluate(
-      () => (document.querySelector('.network-display > span:nth-child(2)') as HTMLSpanElement).innerHTML,
-    );
-    assert.equal(selectedNetwork, 'Binance Smart Chain');
+    it('should add network with required params and symbol and explorer', async () => {
+      await metamask.addNetwork({
+        networkName: 'Binance Smart Chain',
+        rpc: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+        chainId: 97,
+        symbol: 'BNB',
+        explorer: 'https://testnet.bscscan.com',
+      });
+
+      const selectedNetwork = await metamask.page.evaluate(
+        () => (document.querySelector('.network-display > span:nth-child(2)') as HTMLSpanElement).innerHTML,
+      );
+      expect(selectedNetwork).to.be.equal('Binance Smart Chain');
+    });
+
+    it('should fail to add already added network', async () => {
+      await expect(
+        metamask.addNetwork({
+          networkName: 'Binance Smart Chain',
+          rpc: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+          chainId: 97,
+          symbol: 'BNB',
+          explorer: 'https://testnet.bscscan.com',
+        }),
+      ).to.be.rejectedWith(SyntaxError);
+
+      await clickOnLogo(metamask.page);
+    });
+
+    it('should fail to add network with wrong chain ID', async () => {
+      await expect(
+        metamask.addNetwork({
+          networkName: 'Optimistic Ethereum Testnet Kovan',
+          rpc: 'https://kovan.optimism.io/',
+          chainId: 420,
+          explorer: 'https://kovan-optimistic.etherscan.io',
+        }),
+      ).to.be.rejectedWith(SyntaxError);
+
+      await clickOnLogo(metamask.page);
+    });
+
+    it('should add network with explorer', async () => {
+      await metamask.addNetwork({
+        networkName: 'Optimistic Ethereum Testnet Kovan',
+        rpc: 'https://kovan.optimism.io/',
+        chainId: 69,
+        explorer: 'https://kovan-optimistic.etherscan.io',
+      });
+
+      const selectedNetwork = await metamask.page.evaluate(
+        () => (document.querySelector('.network-display > span:nth-child(2)') as HTMLSpanElement).innerHTML,
+      );
+      expect(selectedNetwork).to.be.equal('Optimistic Ethereum Testnet Kovan');
+    });
+
+    it('should add network with symbol', async () => {
+      await metamask.addNetwork({
+        networkName: 'KCC Testnet',
+        rpc: 'https://rpc-testnet.kcc.network',
+        chainId: 322,
+        symbol: 'fejk',
+      });
+
+      const selectedNetwork = await metamask.page.evaluate(
+        () => (document.querySelector('.network-display > span:nth-child(2)') as HTMLSpanElement).innerHTML,
+      );
+      expect(selectedNetwork).to.be.equal('KCC Testnet');
+    });
   });
 
   it('should switch network, localhost', async () => {
@@ -98,7 +162,7 @@ describe('dappeteer', () => {
     const selectedNetwork = await metamask.page.evaluate(
       () => (document.querySelector('.network-display > span:nth-child(2)') as HTMLSpanElement).innerHTML,
     );
-    assert.equal(selectedNetwork, 'Localhost 8545');
+    expect(selectedNetwork).to.be.equal('Localhost 8545');
   });
 
   describe('test importPK method', async () => {
@@ -107,7 +171,7 @@ describe('dappeteer', () => {
     });
 
     after(async () => {
-      await deleteAccount(metamask.page)(2);
+      await metamask.helpers.deleteAccount(2);
       await pause(0.5);
     });
 
@@ -152,7 +216,7 @@ describe('dappeteer', () => {
     });
 
     after(async () => {
-      await deleteAccount(metamask.page)(2);
+      await metamask.helpers.deleteAccount(2);
       await pause(0.5);
     });
 
@@ -193,12 +257,12 @@ describe('dappeteer', () => {
   });
 
   it('should return token balance', async () => {
-    const tokenBalance: number = await metamask.getTokenBalance('ETH');
+    const tokenBalance: number = await metamask.helpers.getTokenBalance('ETH');
     expect(tokenBalance).to.be.greaterThan(0);
   });
 
   it('should return 0 token balance when token not found', async () => {
-    const tokenBalance: number = await metamask.getTokenBalance('FARTBUCKS');
+    const tokenBalance: number = await metamask.helpers.getTokenBalance('FARTBUCKS');
     expect(tokenBalance).to.be.equal(0);
   });
 
@@ -206,6 +270,7 @@ describe('dappeteer', () => {
     let counterBefore;
 
     before(async () => {
+      await metamask.switchNetwork('local');
       counterBefore = await getCounterNumber(testContract);
     });
 
@@ -224,11 +289,7 @@ describe('dappeteer', () => {
 
       const counterAfter = await getCounterNumber(testContract);
 
-      assert.equal(
-        counterAfter,
-        counterBefore + 1,
-        `Counter does not match BEFORE: ${counterBefore} AFTER: ${counterAfter}`,
-      );
+      expect(counterAfter).to.be.equal(counterBefore + 1);
     });
   });
 
