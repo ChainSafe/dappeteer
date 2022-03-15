@@ -3,7 +3,12 @@ import { Page } from 'puppeteer';
 import { clickOnButton, clickOnElement, getInputByLabel, typeOnInputField } from '../helpers';
 import { AddToken } from '../index';
 
-export const addToken = (page: Page) => async ({ tokenAddress, symbol, decimals = 0 }: AddToken): Promise<void> => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const addToken = (page: Page, version?: string) => async ({
+  tokenAddress,
+  symbol,
+  decimals = 0,
+}: AddToken): Promise<void> => {
   await page.bringToFront();
 
   await clickOnElement(page, 'Import tokens');
