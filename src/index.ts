@@ -127,7 +127,7 @@ export async function setupMetamask(
     options.password || 'password1234',
   )
 
-  await closeNotificationPage(browser)
+  // await closeNotificationPage(browser)
 
   await showTestNets(page)
 
@@ -164,18 +164,18 @@ async function closeHomeScreen(browser: puppeteer.Browser): Promise<puppeteer.Pa
   })
 }
 
-async function closeNotificationPage(browser: puppeteer.Browser): Promise<void> {
-  browser.on('targetcreated', async target => {
-    if (target.url().match('chrome-extension://[a-z]+/notification.html')) {
-      try {
-        const page = await target.page()
-        await page.close()
-      } catch {
-        return
-      }
-    }
-  })
-}
+// async function closeNotificationPage(browser: puppeteer.Browser): Promise<void> {
+//   browser.on('targetcreated', async target => {
+//     if (target.url().match('chrome-extension://[a-z]+/notification.html')) {
+//       try {
+//         const page = await target.page()
+//         await page.close()
+//       } catch {
+//         return
+//       }
+//     }
+//   })
+// }
 
 async function showTestNets(metamaskPage: puppeteer.Page): Promise<void> {
   const networkSwitcher = await metamaskPage.waitForSelector('.network-display.network-display--clickable')
