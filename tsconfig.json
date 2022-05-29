@@ -9,6 +9,6 @@
     "esModuleInterop": true,
     "outDir": "dist"
   },
-  "include": ["src/**/*", "test/**/*"],
+  "include": ["src/**/*", "test/**/*", "test/dapp/ethers.min.js"],
   "exclude": ["node_modules"]
 }

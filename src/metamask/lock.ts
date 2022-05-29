@@ -1,6 +1,6 @@
-import { Page } from 'puppeteer';
+import { Page } from 'puppeteer'
 
-import { GetSingedIn, SetSignedIn } from './index';
+import { GetSingedIn, SetSignedIn } from './index'
 
 export const lock = (
   page: Page,
@@ -10,12 +10,12 @@ export const lock = (
   version?: string,
 ) => async (): Promise<void> => {
   if (!(await getSingedIn())) {
-    throw new Error("You can't sign out because you haven't signed in yet");
+    throw new Error("You can't sign out because you haven't signed in yet")
   }
-  await page.bringToFront();
-  const accountSwitcher = await page.waitForSelector('.identicon');
-  await accountSwitcher.click();
-  const lockButton = await page.waitForSelector('.account-menu__lock-button');
-  await lockButton.click();
-  await setSignedIn(false);
-};
+  await page.bringToFront()
+  const accountSwitcher = await page.waitForSelector('.identicon')
+  await accountSwitcher.click()
+  const lockButton = await page.waitForSelector('.account-menu__lock-button')
+  await lockButton.click()
+  await setSignedIn(false)
+}

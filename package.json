@@ -1,5 +1,5 @@
 {
-  "name": "@chainsafe/dappeteer",
+  "name": "@yovelsapir/dappeteer",
   "version": "2.4.1",
   "description": "E2E testing for dApps using Puppeteer + MetaMask",
   "main": "dist/index.js",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/chainsafe/dappeteer.git"
+    "url": "https://github.com/yovelsapir/dappeteer.git"
   },
   "keywords": [
     "e2e",
@@ -56,8 +56,7 @@
     "serve-handler": "5.0.8",
     "solc": "0.5.2",
     "ts-node": "9.1.1",
-    "typescript": "^3.8",
-    "web3": "1.3.4"
+    "typescript": "^3.8"
   },
   "peerDependencies": {
     "puppeteer": ">5"
