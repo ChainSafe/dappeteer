@@ -46,6 +46,7 @@ export type Dappeteer = {
 export type TransactionOptions = {
   gas?: number;
   gasLimit?: number;
+  gasExtra?: number;
 };
 
 export const RECOMMENDED_METAMASK_VERSION = 'v10.8.1';

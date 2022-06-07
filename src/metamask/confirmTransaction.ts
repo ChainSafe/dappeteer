@@ -46,6 +46,17 @@ export const confirmTransaction = (page: Page, getSingedIn: GetSingedIn, version
       await gasLimit.type(options.gasLimit.toString());
     }
 
+    if (options.gasExtra) {
+      const gasExtraSelector = '.advanced-gas-controls > div:nth-child(3) > label > div.numeric-input > input';
+      const gasExtra = await page.waitForSelector(gasExtraSelector);
+
+      await page.evaluate(
+        (selector) => ((document.querySelectorAll(selector)[0] as HTMLInputElement).value = ''),
+        gasExtraSelector,
+      );
+      await gasExtra.type(options.gasExtra.toString());
+    }
+
     const saveSelector = '.btn-primary';
     const save = await page.waitForSelector(saveSelector);
     await save.click();
