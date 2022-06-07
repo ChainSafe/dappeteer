@@ -122,7 +122,7 @@ interface TransactionOptions {
 }
 ```
 
-commands MetaMask to submit a transaction. For this to work MetaMask has to be in a transaction confirmation state (basically promting the user to submit/reject a transaction). You can (optionally) pass an object with `gas` and/or `gasLimit`, by default they are `20` and `50000` respectively.
+commands MetaMask to submit a transaction. For this to work MetaMask has to be in a transaction confirmation state (basically promting the user to submit/reject a transaction). You can (optionally) pass an object with `gas` and/or `gasLimit`, by default they are `20` and `50000` respectively. (You can also specify `gasExtra` if there is an extra input field in the gas editor.)
 
 <a name="sign"></a>
 
