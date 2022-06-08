@@ -25,7 +25,7 @@ export const confirmTransaction = (page: Page, getSingedIn: GetSingedIn, version
     await processEdit.click();
 
     if (options.gas) {
-      const gasSelector = '.advanced-gas-controls > div:nth-child(2) > label > div.numeric-input > input';
+      const gasSelector = '.advanced-gas-controls > div:nth-child(3) > label > div.numeric-input > input';
       const gas = await page.waitForSelector(gasSelector);
 
       await page.evaluate(
@@ -47,7 +47,7 @@ export const confirmTransaction = (page: Page, getSingedIn: GetSingedIn, version
     }
 
     if (options.gasPriority) {
-      const gasPrioritySelector = '.advanced-gas-controls > div:nth-child(3) > label > div.numeric-input > input';
+      const gasPrioritySelector = '.advanced-gas-controls > div:nth-child(2) > label > div.numeric-input > input';
       const gasPriority = await page.waitForSelector(gasPrioritySelector);
 
       await page.evaluate(
