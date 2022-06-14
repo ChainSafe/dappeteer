@@ -52,7 +52,6 @@ interface MetamaskOptions {
   seed?: string;
   password?: string;
   showTestNets?: boolean;
-  hideSeed?: boolean;
 }
 ```
 
@@ -105,7 +104,7 @@ interface AddNetwork {
   networkName: string;
   rpc: string;
   chainId: number;
-  symbol?: string;
+  symbol: string;
   explorer?: string;
 }
 ```

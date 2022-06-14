@@ -39,11 +39,6 @@ export const clickOnLogo = async (page: Page): Promise<void> => {
   await header.click();
 };
 
-export const closePopup = async (page: Page): Promise<void> => {
-  const button = await page.waitForSelector('.popover-header__button');
-  await button.click();
-};
-
 export const typeOnInputField = async (page: Page, label: string, text: string, clear = false): Promise<void> => {
   const input = await getInputByLabel(page, label);
 

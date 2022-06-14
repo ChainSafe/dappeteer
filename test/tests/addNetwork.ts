@@ -9,8 +9,6 @@ export const addNetworkTests = async (): Promise<void> => {
     await metamask.switchNetwork('local');
     await metamask.helpers.deleteNetwork('Binance Smart Chain');
     await pause(0.5);
-    await metamask.helpers.deleteNetwork('Optimistic Ethereum Testnet Kovan');
-    await pause(0.5);
     await metamask.helpers.deleteNetwork('KCC Testnet');
     await pause(0.5);
   });
@@ -50,25 +48,12 @@ export const addNetworkTests = async (): Promise<void> => {
         networkName: 'Optimistic Ethereum Testnet Kovan',
         rpc: 'https://kovan.optimism.io/',
         chainId: 420,
+        symbol: 'KUR',
         explorer: 'https://kovan-optimistic.etherscan.io',
       }),
     ).to.be.rejectedWith(SyntaxError);
 
     await clickOnLogo(metamask.page);
-  });
-
-  it('should add network with explorer', async () => {
-    await metamask.addNetwork({
-      networkName: 'Optimistic Ethereum Testnet Kovan',
-      rpc: 'https://kovan.optimism.io/',
-      chainId: 69,
-      explorer: 'https://kovan-optimistic.etherscan.io',
-    });
-
-    const selectedNetwork = await metamask.page.evaluate(
-      () => (document.querySelector('.network-display > span:nth-child(2)') as HTMLSpanElement).innerHTML,
-    );
-    expect(selectedNetwork).to.be.equal('Optimistic Ethereum Testnet Kovan');
   });
 
   it('should add network with symbol', async () => {

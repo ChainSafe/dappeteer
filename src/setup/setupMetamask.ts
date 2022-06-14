@@ -3,13 +3,13 @@ import { Browser, Page } from 'puppeteer';
 import { getMetamask } from '../metamask';
 import { Dappeteer, MetamaskOptions } from '../types';
 
-import { confirmWelcomeScreen, importAccount, showTestNets } from './setupActions';
+import { closePopup, confirmWelcomeScreen, importAccount, showTestNets } from './setupActions';
 
 /**
  * Setup MetaMask with base account
  * */
 type Step<Options> = (page: Page, options?: Options) => void;
-const defaultMetamaskSteps: Step<MetamaskOptions>[] = [confirmWelcomeScreen, importAccount, showTestNets];
+const defaultMetamaskSteps: Step<MetamaskOptions>[] = [confirmWelcomeScreen, importAccount, closePopup, showTestNets];
 
 export async function setupMetamask<Options = MetamaskOptions>(
   browser: Browser,

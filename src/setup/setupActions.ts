@@ -5,7 +5,6 @@ import {
   clickOnElement,
   clickOnLogo,
   clickOnSettingsSwitch,
-  closePopup,
   openNetworkDropdown,
   typeOnInputField,
 } from '../helpers';
@@ -28,24 +27,28 @@ export async function importAccount(
   {
     seed = 'already turtle birth enroll since owner keep patch skirt drift any dinner',
     password = 'password1234',
-    hideSeed,
   }: MetamaskOptions,
 ): Promise<void> {
   await clickOnButton(metamaskPage, 'Import wallet');
   await clickOnButton(metamaskPage, 'I Agree');
 
-  if (!hideSeed) await clickOnElement(metamaskPage, 'Show Secret Recovery Phrase');
+  for (const [index, seedPart] of seed.split(' ').entries())
+    await typeOnInputField(metamaskPage, `${index + 1}.`, seedPart);
 
-  await typeOnInputField(metamaskPage, 'Secret Recovery Phrase', seed);
   await typeOnInputField(metamaskPage, 'New password', password);
   await typeOnInputField(metamaskPage, 'Confirm password', password);
 
   // select checkbox "I have read and agree to the"
-  const acceptTerms = await metamaskPage.waitForSelector('.first-time-flow__terms');
+  const acceptTerms = await metamaskPage.waitForSelector('.create-new-vault__terms-label');
   await acceptTerms.click();
 
   await clickOnButton(metamaskPage, 'Import');
   await clickOnButton(metamaskPage, 'All Done');
-
-  await closePopup(metamaskPage);
 }
+
+export const closePopup = async (page: Page): Promise<void> => {
+  /* For some reason popup deletes close button and then create new one (react stuff)
+   * hacky solution can be found here => https://github.com/puppeteer/puppeteer/issues/3496 */
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await page.$eval('.popover-header__button', (node: HTMLElement) => node.click());
+};
