@@ -10,9 +10,9 @@ const defaultDirectory = path.resolve(__dirname, '..', 'metamask');
 export type Path =
   | string
   | {
-      download: string;
-      extract: string;
-    };
+    download: string;
+    extract: string;
+  };
 
 export default async (version: string, location?: Path): Promise<string> => {
   const metamaskDirectory = typeof location === 'string' ? location : location?.extract || defaultDirectory;
@@ -75,13 +75,14 @@ type MetamaskReleases = { downloadUrl: string; filename: string; tag: string };
 const metamaskReleasesUrl = 'https://api.github.com/repos/metamask/metamask-extension/releases';
 const getMetamaskReleases = (version: string): Promise<MetamaskReleases> =>
   new Promise((resolve, reject) => {
+    let idx: number = 1
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const request = get(metamaskReleasesUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (response) => {
+    const request = get(metamaskReleasesUrl + '?page=' + idx, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (response) => {
       let body = '';
       response.on('data', (chunk) => {
         body += chunk;
       });
-      response.on('end', () => {
+      response.on('end', async () => {
         const data = JSON.parse(body);
         if (data.message) return reject(data.message);
         for (const result of data) {
@@ -97,7 +98,24 @@ const getMetamaskReleases = (version: string): Promise<MetamaskReleases> =>
             }
           }
         }
-        reject(`Version ${version} not found!`);
+        if (data.length === 0) {
+          reject(`Version ${version} not found!`);
+        } else {
+
+          try {
+            idx++;
+            const { filename, downloadUrl, tag } = await getMetamaskReleases(version);
+            resolve({
+              downloadUrl: downloadUrl,
+              filename: filename,
+              tag: tag,
+            });
+          } catch (error) {
+            console.warn('getMetamaskReleases error:', error);
+            throw error;
+          }
+
+        }
       });
     });
     request.on('error', (error) => {
