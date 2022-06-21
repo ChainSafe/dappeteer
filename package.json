@@ -1,6 +1,6 @@
 {
   "name": "@chainsafe/dappeteer",
-  "version": "3.0.0-next.0",
+  "version": "3.0.0-rc.0",
   "description": "E2E testing for dApps using Puppeteer + MetaMask",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -57,11 +57,11 @@
     "puppeteer": "14.0.0",
     "serve-handler": "5.0.8",
     "solc": "0.5.2",
-    "ts-node": "9.1.1",
-    "typescript": "^4.1",
+    "ts-node": "10.8.1",
+    "typescript": "^4.7",
     "web3": "1.3.4"
   },
   "peerDependencies": {
-    "puppeteer": ">14"
+    "puppeteer": ">13"
   }
 }

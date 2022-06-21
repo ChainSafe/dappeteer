@@ -16,7 +16,7 @@ import puppeteer from 'puppeteer';
 import dappeteer from '@chainsafe/dappeteer';
 
 async function main() {
-  const [metamask, page] = await dappeteer.bootstrap(puppeteer, { metamaskVersion: 'v10.10.1' });
+  const [metamask, page] = await dappeteer.bootstrap(puppeteer, { metamaskVersion: 'v10.15.0' });
 
   // you can change the network if you want
   await metamask.switchNetwork('ropsten');

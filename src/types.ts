@@ -2,15 +2,17 @@ import { BrowserLaunchArgumentOptions, Page } from 'puppeteer';
 
 import { Path } from './setup/metamaskDownloader';
 
+import { RECOMMENDED_METAMASK_VERSION } from './index';
+
 export type LaunchOptions = OfficialOptions | CustomOptions;
 
 export type OfficialOptions = BrowserLaunchArgumentOptions & {
-  metamaskVersion: 'v10.10.1' | 'latest' | string;
+  metamaskVersion: typeof RECOMMENDED_METAMASK_VERSION | 'latest' | string;
   metamaskLocation?: Path;
 };
 
 export type CustomOptions = BrowserLaunchArgumentOptions & {
-  metamaskVersion?: undefined;
+  metamaskVersion?: string;
   metamaskPath: string;
 };
 
