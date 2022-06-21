@@ -25,7 +25,6 @@ export type AddNetwork = {
   rpc: string;
   chainId: number;
   symbol: string;
-  explorer?: string;
 };
 
 export type AddToken = {

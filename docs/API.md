@@ -105,7 +105,6 @@ interface AddNetwork {
   rpc: string;
   chainId: number;
   symbol: string;
-  explorer?: string;
 }
 ```
 it adds a custom network to MetaMask.

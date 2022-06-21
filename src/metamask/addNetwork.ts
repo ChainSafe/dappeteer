@@ -9,30 +9,27 @@ export const addNetwork = (page: Page, version?: string) => async ({
   rpc,
   chainId,
   symbol,
-  explorer,
 }: AddNetwork): Promise<void> => {
   await page.bringToFront();
   await openNetworkDropdown(page);
   await clickOnButton(page, 'Add Network');
 
-  await typeOnInputField(page, 'Network Name', networkName);
-  await typeOnInputField(page, 'New RPC URL', rpc);
-  await typeOnInputField(page, 'Chain ID', String(chainId));
-
-  if (symbol) await typeOnInputField(page, 'Currency Symbol', symbol);
-  if (explorer) await typeOnInputField(page, 'Block Explorer URL', explorer);
-
-  const rpcErrorMessage = await getErrorMessage(page);
-  if (rpcErrorMessage) throw new SyntaxError(rpcErrorMessage);
-
   const responsePromise = page.waitForResponse(
     (response) => new URL(response.url()).pathname === new URL(rpc).pathname,
   );
-  await clickOnButton(page, 'Save');
-  await responsePromise;
 
-  const chainErrorMessage = await getErrorMessage(page);
-  if (chainErrorMessage) throw new SyntaxError(chainErrorMessage);
+  await typeOnInputField(page, 'Network Name', networkName);
+  await typeOnInputField(page, 'New RPC URL', rpc);
+  await typeOnInputField(page, 'Chain ID', String(chainId));
+  await typeOnInputField(page, 'Currency Symbol', symbol);
+
+  await responsePromise;
+  await page.waitForTimeout(500);
+
+  const errorMessage = await getErrorMessage(page);
+  if (errorMessage) throw new SyntaxError(errorMessage);
+
+  await clickOnButton(page, 'Save');
 
   await page.waitForXPath(`//*[text() = '${networkName}']`);
 };
