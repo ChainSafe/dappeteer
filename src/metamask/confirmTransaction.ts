@@ -20,8 +20,10 @@ export const confirmTransaction = (page: Page, getSingedIn: GetSingedIn, version
     await clickOnButton(page, 'Edit');
     await clickOnButton(page, 'Edit suggested gas fee');
 
-    if (options.gas) await typeOnInputField(page, 'Gas price', String(options.gas), true);
+    if (options.priority) await typeOnInputField(page, 'Max priority fee', String(options.priority), true);
     if (options.gasLimit) await typeOnInputField(page, 'Gas Limit', String(options.gasLimit), true);
+    if (options.gas)
+      await typeOnInputField(page, options.priority ? 'Max fee' : 'Gas price', String(options.gas), true, true);
 
     await clickOnButton(page, 'Save');
   }

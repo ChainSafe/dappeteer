@@ -33,6 +33,12 @@ export type AddToken = {
   decimals?: number;
 };
 
+export type TransactionOptions = {
+  gas?: number;
+  gasLimit?: number;
+  priority?: number;
+};
+
 export type Dappeteer = {
   lock: () => Promise<void>;
   unlock: (password: string) => Promise<void>;
@@ -50,9 +56,4 @@ export type Dappeteer = {
     deleteNetwork: (name: string) => Promise<void>;
   };
   page: Page;
-};
-
-export type TransactionOptions = {
-  gas?: number;
-  gasLimit?: number;
 };

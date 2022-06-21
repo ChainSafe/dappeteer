@@ -169,18 +169,36 @@ describe('dappeteer', () => {
     });
   });
 
-  it('should change gas values', async () => {
-    // click increase button
-    await clickElement(testPage, '.increase-button');
+  describe('test confirmTransaction method', async () => {
+    it('should change gas values', async () => {
+      // click increase button
+      await clickElement(testPage, '.increase-fees-button');
 
-    // submit tx
-    await Promise.all([
-      testPage.waitForSelector('#txSent'),
-      metamask.confirmTransaction({
+      // submit tx
+      await metamask.confirmTransaction({
         gas: 20,
         gasLimit: 400000,
-      }),
-    ]);
+      });
+      await testPage.waitForSelector('#feesTxSent');
+    });
+
+    it('should change gas priority', async () => {
+      await metamask.switchNetwork('goerli');
+
+      // click increase button
+      await clickElement(testPage, '.transfer-button');
+      await pause(1);
+
+      // submit tx
+      await metamask.confirmTransaction({
+        gas: 5,
+        priority: 4,
+        gasLimit: 202020,
+      });
+
+      await pause(5);
+      await testPage.waitForSelector('#transferred');
+    });
   });
 
   after(async () => {

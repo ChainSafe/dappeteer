@@ -39,8 +39,14 @@ export const clickOnLogo = async (page: Page): Promise<void> => {
   await header.click();
 };
 
-export const typeOnInputField = async (page: Page, label: string, text: string, clear = false): Promise<void> => {
-  const input = await getInputByLabel(page, label);
+export const typeOnInputField = async (
+  page: Page,
+  label: string,
+  text: string,
+  clear = false,
+  excludeSpan = false,
+): Promise<void> => {
+  const input = await getInputByLabel(page, label, excludeSpan);
 
   if (clear)
     await page.evaluate((node) => {

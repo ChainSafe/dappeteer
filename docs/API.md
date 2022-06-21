@@ -126,6 +126,7 @@ it adds a custom token to MetaMask.
 interface TransactionOptions {
   gas?: number;
   gasLimit?: number;
+  priority?: number;
 }
 ```
 commands MetaMask to submit a transaction. For this to work MetaMask has to be in a transaction confirmation state (basically promting the user to submit/reject a transaction). You can (optionally) pass an object with `gas` and/or `gasLimit`, by default they are `20` and `50000` respectively.

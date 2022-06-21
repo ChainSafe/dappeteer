@@ -17,7 +17,6 @@ export async function setupMetamask<Options = MetamaskOptions>(
   steps: Step<Options>[] = defaultMetamaskSteps,
 ): Promise<Dappeteer> {
   const page = await closeHomeScreen(browser);
-  await closeNotificationPage(browser);
 
   // goes through the installation steps required by metamask
   for (const step of steps) {
@@ -25,19 +24,6 @@ export async function setupMetamask<Options = MetamaskOptions>(
   }
 
   return getMetamask(page);
-}
-
-async function closeNotificationPage(browser: Browser): Promise<void> {
-  browser.on('targetcreated', async (target) => {
-    if (target.url().match('chrome-extension://[a-z]+/notification.html')) {
-      try {
-        const page = await target.page();
-        await page.close();
-      } catch {
-        return;
-      }
-    }
-  });
 }
 
 async function closeHomeScreen(browser: Browser): Promise<Page> {
