@@ -2,7 +2,6 @@
 node_modules
 test/server/data.js
 build
-dist
 .vscode/
 /metamask
 .idea
