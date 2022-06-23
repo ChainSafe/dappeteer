@@ -1,5 +1,7 @@
 import { Page } from 'puppeteer';
 
+import { clickOnButton, openProfileDropdown } from '../helpers';
+
 import { GetSingedIn, SetSignedIn } from './index';
 
 export const lock = (
@@ -13,9 +15,9 @@ export const lock = (
     throw new Error("You can't sign out because you haven't signed in yet");
   }
   await page.bringToFront();
-  const accountSwitcher = await page.waitForSelector('.identicon');
-  await accountSwitcher.click();
-  const lockButton = await page.waitForSelector('.account-menu__lock-button');
-  await lockButton.click();
+
+  await openProfileDropdown(page);
+  await clickOnButton(page, 'Lock');
+
   await setSignedIn(false);
 };

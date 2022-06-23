@@ -12,7 +12,7 @@ You can use jest [preset](https://jestjs.io/docs/configuration#preset-string) pr
 ```
 Write your test
 ```js
-describe('Google', () => {
+describe('Ethereum', () => {
   beforeAll(async () => {
     await page.goto('https://ethereum.org/en/');
   });

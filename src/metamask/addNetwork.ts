@@ -1,5 +1,6 @@
 import { Page } from 'puppeteer';
 
+import { clickOnButton, getErrorMessage, openNetworkDropdown, typeOnInputField } from '../helpers';
 import { AddNetwork } from '../index';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -8,47 +9,27 @@ export const addNetwork = (page: Page, version?: string) => async ({
   rpc,
   chainId,
   symbol,
-  explorer,
 }: AddNetwork): Promise<void> => {
   await page.bringToFront();
-  const networkSwitcher = await page.waitForSelector('.network-display');
-  await networkSwitcher.click();
-  await page.waitForSelector('li.dropdown-menu-item');
+  await openNetworkDropdown(page);
+  await clickOnButton(page, 'Add Network');
 
-  const networkButton = await page.waitForSelector('.menu-droppo > button');
-  await networkButton.click();
-
-  const networkNameInput = await page.waitForSelector(
-    '.networks-tab__add-network-form-body > div:nth-child(1) > label > input',
+  const responsePromise = page.waitForResponse(
+    (response) => new URL(response.url()).pathname === new URL(rpc).pathname,
   );
-  await networkNameInput.type(networkName);
 
-  const rpcInput = await page.waitForSelector(
-    '.networks-tab__add-network-form-body > div:nth-child(2) > label > input',
-  );
-  await rpcInput.type(rpc);
+  await typeOnInputField(page, 'Network Name', networkName);
+  await typeOnInputField(page, 'New RPC URL', rpc);
+  await typeOnInputField(page, 'Chain ID', String(chainId));
+  await typeOnInputField(page, 'Currency Symbol', symbol);
 
-  const chainIdInput = await page.waitForSelector(
-    '.networks-tab__add-network-form-body > div:nth-child(3) > label > input',
-  );
-  await chainIdInput.type(String(chainId));
+  await responsePromise;
+  await page.waitForTimeout(500);
 
-  if (symbol) {
-    const symbolInput = await page.waitForSelector(
-      '.networks-tab__add-network-form-body > div:nth-child(4) > label > input',
-    );
-    await symbolInput.type(symbol);
-  }
-  if (explorer) {
-    const explorerInput = await page.waitForSelector(
-      '.networks-tab__add-network-form-body > div:nth-child(5) > label > input',
-    );
-    await explorerInput.type(explorer);
-  }
+  const errorMessage = await getErrorMessage(page);
+  if (errorMessage) throw new SyntaxError(errorMessage);
 
-  const saveButton = await page.waitForSelector(
-    '.networks-tab__add-network-form-footer > button.button.btn--rounded.btn-primary',
-  );
-  await saveButton.click();
+  await clickOnButton(page, 'Save');
+
   await page.waitForXPath(`//*[text() = '${networkName}']`);
 };

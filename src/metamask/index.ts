@@ -1,4 +1,4 @@
-import { Page } from 'puppeteer';
+import { Browser, Page } from 'puppeteer';
 
 import { Dappeteer } from '..';
 
@@ -6,7 +6,7 @@ import { addNetwork } from './addNetwork';
 import { addToken } from './addToken';
 import { approve } from './approve';
 import { confirmTransaction } from './confirmTransaction';
-import { getTokenBalance } from './getTokenBalance';
+import { deleteAccount, getTokenBalance, deleteNetwork } from './helpers';
 import { importPk } from './importPk';
 import { lock } from './lock';
 import { sign } from './sign';
@@ -42,7 +42,26 @@ export const getMetamask = async (page: Page, version?: string): Promise<Dappete
     switchNetwork: switchNetwork(page, version),
     unlock: unlock(page, setSignedIn, getSingedIn, version),
     addToken: addToken(page),
-    getTokenBalance: getTokenBalance(page),
+    helpers: {
+      getTokenBalance: getTokenBalance(page),
+      deleteAccount: deleteAccount(page),
+      deleteNetwork: deleteNetwork(page),
+    },
     page,
   };
 };
+
+/**
+ * Return MetaMask instance
+ * */
+export async function getMetamaskWindow(browser: Browser, version?: string): Promise<Dappeteer> {
+  const metamaskPage = await new Promise<Page>((resolve) => {
+    browser.pages().then((pages) => {
+      for (const page of pages) {
+        if (page.url().includes('chrome-extension')) resolve(page);
+      }
+    });
+  });
+
+  return getMetamask(metamaskPage, version);
+}

@@ -1,21 +1,33 @@
 import { Page } from 'puppeteer';
 
-export const addToken = (page: Page) => async (tokenAddress: string): Promise<void> => {
+import { clickOnButton, clickOnElement, getInputByLabel, typeOnInputField } from '../helpers';
+import { AddToken } from '../index';
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const addToken = (page: Page, version?: string) => async ({
+  tokenAddress,
+  symbol,
+  decimals = 0,
+}: AddToken): Promise<void> => {
   await page.bringToFront();
 
-  const addTokenButton = await page.waitForSelector(
-    '.box.import-token-link.box--flex-direction-row.box--text-align-center > a',
-  );
-  await addTokenButton.click();
+  await clickOnElement(page, 'Import tokens');
+  await typeOnInputField(page, 'Token Contract Address', tokenAddress);
 
-  const addressInput = await page.waitForSelector('#custom-address');
-  await addressInput.type(tokenAddress);
+  // wait to metamask pull token data
+  // TODO: handle case when contract is not containing symbol
+  const symbolInput = await getInputByLabel(page, 'Token Symbol');
+  await page.waitForFunction((node) => !!node.value, {}, symbolInput);
 
-  await page.waitForTimeout(4000);
+  if (symbol) {
+    await clickOnElement(page, 'Edit');
+    await typeOnInputField(page, 'Token Symbol', symbol, true);
+  }
 
-  const nextButton = await page.waitForSelector(`button[data-testid='page-container-footer-next']:not([disabled])`);
-  await nextButton.click();
+  const decimalsInput = await getInputByLabel(page, 'Token Decimal');
+  const isDisabled = await page.evaluate((node) => node.disabled, decimalsInput);
+  if (!isDisabled) await decimalsInput.type(String(decimals));
 
-  const footerButtons = await page.$$('footer > button');
-  await footerButtons[1].click();
+  await clickOnButton(page, 'Add Custom Token');
+  await clickOnButton(page, 'Import Tokens');
 };
