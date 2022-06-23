@@ -9,6 +9,9 @@
     "metamask",
     "dist"
   ],
+  "engines": {
+    "node": "16"
+  },
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc -p tsconfig.build.json",
