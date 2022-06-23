@@ -1,16 +1,23 @@
 name: CI
 
-on: [pull_request, push]
+on: 
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
   checks:
     name: Checks
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          cache: yarn
+          node-version: "16"
       - name: Install
         run: yarn install --frozen-lockfile
       - name: Build
@@ -19,3 +26,37 @@ jobs:
         run: yarn run lint
       - name: Tests
         run: xvfb-run --auto-servernum yarn run test
+
+  maybe-release:
+    name: release
+    runs-on: ubuntu-latest
+    needs: [checks]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    steps:
+      - uses: google-github-actions/release-please-action@v3 # it will analyze commits and create PR with new version and updated CHANGELOG:md file. On merging it will create github release page with changelog
+        id: release
+        with:
+          release-type: node
+          package-name: release-please-action
+          changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"chore","section":"Miscellaneous","hidden":false}]'
+      
+      - uses: actions/checkout@v3
+        if: ${{ steps.release.outputs.release_created }}
+        
+      - uses: actions/setup-node@v3
+        with:
+          cache: 'yarn'
+          node-version: 16
+          registry-url: 'https://registry.npmjs.org'
+        if: ${{ steps.release.outputs.release_created }}
+      
+      - run: yarn install --frozen-lockfile
+        if: ${{ steps.release.outputs.release_created }}
+      
+      - run: yarn build
+        if: ${{ steps.release.outputs.release_created }}
+
+      - run: yarn publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+        if: ${{ steps.release.outputs.release_created }}
