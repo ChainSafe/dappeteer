@@ -52,6 +52,6 @@ export const confirmTransaction = (page: Page, getSingedIn: GetSingedIn, version
   }
 
   const confirmButton = await page.waitForSelector('.btn-primary');
-  console.log(confirmButton);
+  await page.waitForTimeout(5000);
   await confirmButton.click();
 };
