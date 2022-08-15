@@ -14,7 +14,7 @@ export const bootstrap = async (
 ): Promise<[Dappeteer, Page, Browser]> => {
   const browser = await launch(puppeteerLib, launchOptions);
   const dappeteer = await setupMetamask(browser, { seed, password, showTestNets });
-  const pages = await browser.pages();
+  const page = await browser.newPage();
 
-  return [dappeteer, pages[0], browser];
+  return [dappeteer, page, browser];
 };
