@@ -22,7 +22,10 @@ async function main() {
   await metamask.switchNetwork('ropsten');
 
   // you can import a token
-  await metamask.addToken('0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa');
+  await metamask.addToken({
+    tokenAddress: '0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa',
+    symbol: 'KAKI',
+  });
 
   // go to a dapp and do something that prompts MetaMask to confirm a transaction
   await page.goto('http://my-dapp.com');
