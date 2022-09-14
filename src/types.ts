@@ -6,12 +6,14 @@ import { RECOMMENDED_METAMASK_VERSION } from './index';
 
 export type LaunchOptions = OfficialOptions | CustomOptions;
 
-export type OfficialOptions = BrowserLaunchArgumentOptions & {
+type DappaterBrowserLaunchArgumentOptions = Omit<BrowserLaunchArgumentOptions, 'headless'>;
+
+export type OfficialOptions = DappaterBrowserLaunchArgumentOptions & {
   metamaskVersion: typeof RECOMMENDED_METAMASK_VERSION | 'latest' | string;
   metamaskLocation?: Path;
 };
 
-export type CustomOptions = BrowserLaunchArgumentOptions & {
+export type CustomOptions = DappaterBrowserLaunchArgumentOptions & {
   metamaskVersion?: string;
   metamaskPath: string;
 };
