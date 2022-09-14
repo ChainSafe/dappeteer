@@ -23,6 +23,26 @@ describe('Ethereum', () => {
 });
 ```
 
+### Configuring preset
+To configure Dappeteer to use custom config values as `metamaskVersion` or own `seed` phrase you need to create file `dappeteer.config.js` that exports config object
+
+**example of `dappeteer.config.js`**
+``` js
+/** @type {import('@chainsafe/dappeteer').DappateerJestConfig} */
+
+const config = {
+    dappeteer: {
+        metamaskVersion: 'v10.14.0',
+    },
+    metamask: {
+        seed: 'already turtle birth enroll since owner keep patch skirt drift any dinner',
+        password: 'password1234',
+    },
+};
+
+module.exports = config;
+```
+
 ## Custom example without preset
 
 In case you need more customisable use case you can rebuild it from scratch.
