@@ -8,7 +8,7 @@ import { LaunchOptions } from '../types';
 
 import { DappateerJestConfig } from './global';
 
-export const DAPPETEER_DEFAULT_CONFIG: LaunchOptions = { metamaskVersion: RECOMMENDED_METAMASK_VERSION };
+export const DAPPETEER_DEFAULT_CONFIG: LaunchOptions = { metaMaskVersion: RECOMMENDED_METAMASK_VERSION };
 
 export async function getDappeteerConfig(): Promise<DappateerJestConfig> {
   const configPath = 'dappeteer.config.js';
@@ -17,7 +17,7 @@ export async function getDappeteerConfig(): Promise<DappateerJestConfig> {
   if (!existsSync(filePath))
     return {
       dappeteer: DAPPETEER_DEFAULT_CONFIG,
-      metamask: {},
+      metaMask: {},
     };
 
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -28,8 +28,8 @@ export async function getDappeteerConfig(): Promise<DappateerJestConfig> {
       ...DAPPETEER_DEFAULT_CONFIG,
       ...config.dappeteer,
     },
-    metamask: {
-      ...config.metamask,
+    metaMask: {
+      ...config.metaMask,
     },
   };
 }

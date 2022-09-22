@@ -1,7 +1,7 @@
 import { Browser, Page } from 'puppeteer';
 
-import { getMetamask } from '../metamask';
-import { Dappeteer, MetamaskOptions } from '../types';
+import { getMetaMask } from '../metamask';
+import { Dappeteer, MetaMaskOptions } from '../types';
 
 import { closePopup, confirmWelcomeScreen, importAccount, showTestNets } from './setupActions';
 
@@ -9,21 +9,21 @@ import { closePopup, confirmWelcomeScreen, importAccount, showTestNets } from '.
  * Setup MetaMask with base account
  * */
 type Step<Options> = (page: Page, options?: Options) => void;
-const defaultMetamaskSteps: Step<MetamaskOptions>[] = [confirmWelcomeScreen, importAccount, closePopup, showTestNets];
+const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [confirmWelcomeScreen, importAccount, closePopup, showTestNets];
 
-export async function setupMetamask<Options = MetamaskOptions>(
+export async function setupMetaMask<Options = MetaMaskOptions>(
   browser: Browser,
   options?: Options,
-  steps: Step<Options>[] = defaultMetamaskSteps,
+  steps: Step<Options>[] = defaultMetaMaskSteps,
 ): Promise<Dappeteer> {
   const page = await closeHomeScreen(browser);
 
-  // goes through the installation steps required by metamask
+  // goes through the installation steps required by MetaMask
   for (const step of steps) {
     await step(page, options);
   }
 
-  return getMetamask(page);
+  return getMetaMask(page);
 }
 
 async function closeHomeScreen(browser: Browser): Promise<Page> {

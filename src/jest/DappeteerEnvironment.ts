@@ -1,7 +1,7 @@
 import NodeEnvironment from 'jest-environment-node';
 import puppeteer from 'puppeteer';
 
-import { getMetamaskWindow } from '../index';
+import { getMetaMaskWindow } from '../index';
 
 class DappeteerEnvironment extends NodeEnvironment {
   constructor(config) {
@@ -22,7 +22,7 @@ class DappeteerEnvironment extends NodeEnvironment {
       browserWSEndpoint: wsEndpoint,
     });
     this.global.browser = browser;
-    this.global.metamask = await getMetamaskWindow(browser);
+    this.global.metamask = await getMetaMaskWindow(browser);
     this.global.page = await browser.newPage();
   }
 }

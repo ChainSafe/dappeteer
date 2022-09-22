@@ -1,6 +1,6 @@
 # dAppeteer with jest
 
-As dAppeteer is Puppeteer with Metamask. Using it with jest is pretty similar to `jest-puppeteer`.
+As dAppeteer is Puppeteer with MetaMask. Using it with jest is pretty similar to `jest-puppeteer`.
 
 ## Use preset
 
@@ -58,7 +58,7 @@ module.exports = {
 };
 ```
 
-Then create `setup.js` wit responsibility to start Puppeteer with Metamask and `teardown.js` for clean up after test's
+Then create `setup.js` with responsibility to start Puppeteer with MetaMask and `teardown.js` for clean up after test's
 ```js
 // setup.js
 
@@ -66,18 +66,18 @@ const { writeFile } = require('fs').promises;
 const os = require('os');
 const path = require('path');
 
-const { launch, setupMetamask } = require('@chainsafe/dappeteer');
+const { launch, setupMetaMask } = require('@chainsafe/dappeteer');
 const mkdirp = require('mkdirp');
 const puppeteer = require('puppeteer');
 
-const { metamaskOptions, PUPPETEER_CONFIG } = require('./jest.config');
+const { metaMaskOptions, PUPPETEER_CONFIG } = require('./jest.config');
 
 const DIR = path.join(os.tmpdir(), 'jest_dappeteer_global_setup');
 
 module.exports = async function () {
   const browser = await launch(puppeteer, PUPPETEER_CONFIG);
   try {
-    await setupMetamask(browser, metamaskOptions);
+    await setupMetaMask(browser, metaMaskOptions);
     global.browser = browser;
   } catch (error) {
     console.log(error);
@@ -115,7 +115,7 @@ const os = require('os');
 const path = require('path');
 const puppeteer = require('puppeteer');
 const NodeEnvironment = require('jest-environment-node');
-const { getMetamaskWindow } = require('@chainsafe/dappeteer');
+const { getMetaMaskWindow } = require('@chainsafe/dappeteer');
 
 const DIR = path.join(os.tmpdir(), 'jest_dappeteer_global_setup');
 
@@ -131,7 +131,7 @@ class DappeteerEnvironment extends NodeEnvironment {
       browserWSEndpoint: wsEndpoint,
     });
     this.global.browser = browser;
-    this.global.metamask = await getMetamaskWindow(browser);
+    this.global.metamask = await getMetaMaskWindow(browser);
   }
 }
 
