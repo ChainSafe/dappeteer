@@ -4,9 +4,9 @@ Methods provided by dAppeteer.
 For additional information read root [readme](../README.md)
 
 - [Launch dAppeteer](#launch)
-- [Setup Metamask](#setup)
+- [Setup MetaMask](#setup)
 - [Bootstrap dAppeteer](#bootstrap)
-- [Get Metamask Window](#getMetamask)
+- [Get MetaMask Window](#getMetaMask)
 - [dAppeteer methods](#methods)
   - [switchAccount](#switchAccount)
   - [importPK](#importPK)
@@ -30,8 +30,8 @@ For additional information read root [readme](../README.md)
 ## `dappeteer.launch(puppeteerLib: typeof puppeteer, options: OfficialOptions | CustomOptions): Promise<Browser>`
 ```typescript
 interface OfficialOptions {
-  metamaskVersion: 'latest' | string;
-  metamaskLocation?: Path;
+  metaMaskVersion: 'latest' | string;
+  metaMaskLocation?: Path;
 };
 
 type Path = string | { download: string; extract: string; };
@@ -46,9 +46,9 @@ interface CustomOptions {
 returns an instance of `browser` same as `puppeteer.launch`, but it also installs the MetaMask extension. [It supports all the regular `puppeteer.launch` options](https://github.com/puppeteer/puppeteer/blob/v5.5.0/docs/api.md#puppeteerlaunchoptions)
 
 <a name="setup"></a>
-## `dappeteer.setupMetamask(browser: Browser, options: MetamaskOptions = {}, steps: Step[]): Promise<Dappeteer>`
+## `dappeteer.setupMetaMask(browser: Browser, options: MetaMaskOptions = {}, steps: Step[]): Promise<Dappeteer>`
 ```typescript
-interface MetamaskOptions {
+interface MetaMaskOptions {
   seed?: string;
   password?: string;
   showTestNets?: boolean;
@@ -60,21 +60,21 @@ type Step = (page: Page, options?: Options) => void;
 ```
 
 <a name="bootstrap"><a/>
-## `dappeteer.bootstrap(puppeteerLib: typeof puppeteer, options: OfficialOptions & MetamaskOptions): Promise<[Dappeteer, Page, Browser]>`
+## `dappeteer.bootstrap(puppeteerLib: typeof puppeteer, options: OfficialOptions & MetaMaskOptions): Promise<[Dappeteer, Page, Browser]>`
 ```typescript
 interface OfficialOptions {
-  metamaskVersion: 'latest' | string;
-  metamaskLocation?: Path;
+  metaMaskVersion: 'latest' | string;
+  metaMaskLocation?: Path;
 };
 ```
 it runs `dappeteer.launch` and `dappeteer.setup` and return array with dappetter, page and browser
 
-<a name="getMetamask"></a>
-## `dappeteer.getMetamaskWindow(browser: Browser, version?: string): Promise<Dappeteer>`
+<a name="getMetaMask"></a>
+## `dappeteer.getMetaMaskWindow(browser: Browser, version?: string): Promise<Dappeteer>`
 
 <a name="methods"></a>
 # dAppeteer methods
-`metamask` is used as placeholder for dAppeteer returned by [`setupMetamask`](setup) or [`getMetamaskWindow`](getMetamask)
+`metamask` is used as placeholder for dAppeteer returned by [`setupMetaMask`](setup) or [`getMetaMaskWindow`](getMetaMask)
 
 
 <a name="switchAccount"></a>
@@ -156,5 +156,5 @@ deletes account containing name with specified number
 deletes custom network from metamask
 
 <a name="page"></a>
-## `metamask.page` is Metamask plugin `Page`
+## `metamask.page` is MetaMask plugin `Page`
 **for advanced usages** in case you need custom features.

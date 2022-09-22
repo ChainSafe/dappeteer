@@ -1,5 +1,5 @@
 // re-export
-export { getMetamask, getMetamaskWindow } from './metamask';
+export { getMetaMask, getMetaMaskWindow } from './metamask';
 export * from './types';
 export * from './setup';
 export { DappateerJestConfig } from './jest/global';

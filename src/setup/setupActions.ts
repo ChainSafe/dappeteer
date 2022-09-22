@@ -8,42 +8,42 @@ import {
   openNetworkDropdown,
   typeOnInputField,
 } from '../helpers';
-import { MetamaskOptions } from '../types';
+import { MetaMaskOptions } from '../types';
 
-export async function showTestNets(metamaskPage: Page): Promise<void> {
-  await openNetworkDropdown(metamaskPage);
+export async function showTestNets(metaMaskPage: Page): Promise<void> {
+  await openNetworkDropdown(metaMaskPage);
 
-  await clickOnElement(metamaskPage, 'Show/hide');
-  await clickOnSettingsSwitch(metamaskPage, 'Show test networks');
-  await clickOnLogo(metamaskPage);
+  await clickOnElement(metaMaskPage, 'Show/hide');
+  await clickOnSettingsSwitch(metaMaskPage, 'Show test networks');
+  await clickOnLogo(metaMaskPage);
 }
 
-export async function confirmWelcomeScreen(metamaskPage: Page): Promise<void> {
-  await clickOnButton(metamaskPage, 'Get Started');
+export async function confirmWelcomeScreen(metaMaskPage: Page): Promise<void> {
+  await clickOnButton(metaMaskPage, 'Get Started');
 }
 
 export async function importAccount(
-  metamaskPage: Page,
+  metaMaskPage: Page,
   {
     seed = 'already turtle birth enroll since owner keep patch skirt drift any dinner',
     password = 'password1234',
-  }: MetamaskOptions,
+  }: MetaMaskOptions,
 ): Promise<void> {
-  await clickOnButton(metamaskPage, 'Import wallet');
-  await clickOnButton(metamaskPage, 'I Agree');
+  await clickOnButton(metaMaskPage, 'Import wallet');
+  await clickOnButton(metaMaskPage, 'I Agree');
 
   for (const [index, seedPart] of seed.split(' ').entries())
-    await typeOnInputField(metamaskPage, `${index + 1}.`, seedPart);
+    await typeOnInputField(metaMaskPage, `${index + 1}.`, seedPart);
 
-  await typeOnInputField(metamaskPage, 'New password', password);
-  await typeOnInputField(metamaskPage, 'Confirm password', password);
+  await typeOnInputField(metaMaskPage, 'New password', password);
+  await typeOnInputField(metaMaskPage, 'Confirm password', password);
 
   // select checkbox "I have read and agree to the"
-  const acceptTerms = await metamaskPage.waitForSelector('.create-new-vault__terms-label');
+  const acceptTerms = await metaMaskPage.waitForSelector('.create-new-vault__terms-label');
   await acceptTerms.click();
 
-  await clickOnButton(metamaskPage, 'Import');
-  await clickOnButton(metamaskPage, 'All Done');
+  await clickOnButton(metaMaskPage, 'Import');
+  await clickOnButton(metaMaskPage, 'All Done');
 }
 
 export const closePopup = async (page: Page): Promise<void> => {

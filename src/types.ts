@@ -1,6 +1,6 @@
 import { BrowserLaunchArgumentOptions, Page } from 'puppeteer';
 
-import { Path } from './setup/metamaskDownloader';
+import { Path } from './setup/metaMaskDownloader';
 
 import { RECOMMENDED_METAMASK_VERSION } from './index';
 
@@ -9,16 +9,16 @@ export type LaunchOptions = OfficialOptions | CustomOptions;
 type DappaterBrowserLaunchArgumentOptions = Omit<BrowserLaunchArgumentOptions, 'headless'>;
 
 export type OfficialOptions = DappaterBrowserLaunchArgumentOptions & {
-  metamaskVersion: typeof RECOMMENDED_METAMASK_VERSION | 'latest' | string;
-  metamaskLocation?: Path;
+  metaMaskVersion: typeof RECOMMENDED_METAMASK_VERSION | 'latest' | string;
+  metaMaskLocation?: Path;
 };
 
 export type CustomOptions = DappaterBrowserLaunchArgumentOptions & {
-  metamaskVersion?: string;
-  metamaskPath: string;
+  metaMaskVersion?: string;
+  metaMaskPath: string;
 };
 
-export type MetamaskOptions = {
+export type MetaMaskOptions = {
   seed?: string;
   password?: string;
   showTestNets?: boolean;

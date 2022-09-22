@@ -1,6 +1,6 @@
 import { Browser, Page } from 'puppeteer';
 
-import { Dappeteer, LaunchOptions, MetamaskOptions } from '..';
+import { Dappeteer, LaunchOptions, MetaMaskOptions } from '..';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -8,12 +8,12 @@ declare global {
     interface Global {
       page: Page;
       browser: Browser;
-      metamask: Dappeteer;
+      metaMask: Dappeteer;
     }
   }
 }
 
 export type DappateerJestConfig = Partial<{
   dappeteer: LaunchOptions;
-  metamask: MetamaskOptions;
+  metaMask: MetaMaskOptions;
 }>;
