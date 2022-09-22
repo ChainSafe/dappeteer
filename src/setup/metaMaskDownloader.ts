@@ -15,18 +15,18 @@ export type Path =
     };
 
 export default async (version: string, location?: Path): Promise<string> => {
-  const metamaskDirectory = typeof location === 'string' ? location : location?.extract || defaultDirectory;
+  const metaMaskDirectory = typeof location === 'string' ? location : location?.extract || defaultDirectory;
   const downloadDirectory =
     typeof location === 'string' ? location : location?.download || path.resolve(defaultDirectory, 'download');
 
   if (version !== 'latest') {
-    const extractDestination = path.resolve(metamaskDirectory, version.replace(/\./g, '_'));
+    const extractDestination = path.resolve(metaMaskDirectory, version.replace(/\./g, '_'));
     if (fs.existsSync(extractDestination)) return extractDestination;
   }
-  const { filename, downloadUrl, tag } = await getMetamaskReleases(version);
-  const extractDestination = path.resolve(metamaskDirectory, tag.replace(/\./g, '_'));
+  const { filename, downloadUrl, tag } = await getMetaMaskReleases(version);
+  const extractDestination = path.resolve(metaMaskDirectory, tag.replace(/\./g, '_'));
   if (!fs.existsSync(extractDestination)) {
-    const downloadedFile = await downloadMetamaskReleases(filename, downloadUrl, downloadDirectory);
+    const downloadedFile = await downloadMetaMaskReleases(filename, downloadUrl, downloadDirectory);
     const zip = new StreamZip.async({ file: downloadedFile });
     fs.mkdirSync(extractDestination);
     await zip.extract(null, extractDestination);
@@ -56,7 +56,7 @@ const request = (url: string): Promise<IncomingMessage> =>
     });
   });
 
-const downloadMetamaskReleases = (name: string, url: string, location: string): Promise<string> =>
+const downloadMetaMaskReleases = (name: string, url: string, location: string): Promise<string> =>
   // eslint-disable-next-line no-async-promise-executor
   new Promise(async (resolve) => {
     if (!fs.existsSync(location)) {
@@ -71,12 +71,12 @@ const downloadMetamaskReleases = (name: string, url: string, location: string): 
     });
   });
 
-type MetamaskReleases = { downloadUrl: string; filename: string; tag: string };
-const metamaskReleasesUrl = 'https://api.github.com/repos/metamask/metamask-extension/releases';
-const getMetamaskReleases = (version: string): Promise<MetamaskReleases> =>
+type MetaMaskReleases = { downloadUrl: string; filename: string; tag: string };
+const metaMaskReleasesUrl = 'https://api.github.com/repos/metamask/metamask-extension/releases';
+const getMetaMaskReleases = (version: string): Promise<MetaMaskReleases> =>
   new Promise((resolve, reject) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const request = get(metamaskReleasesUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (response) => {
+    const request = get(metaMaskReleasesUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (response) => {
       let body = '';
       response.on('data', (chunk) => {
         body += chunk;
@@ -102,7 +102,7 @@ const getMetamaskReleases = (version: string): Promise<MetamaskReleases> =>
     });
     request.on('error', (error) => {
       // eslint-disable-next-line no-console
-      console.warn('getMetamaskReleases error:', error.message);
+      console.warn('getMetaMaskReleases error:', error.message);
       throw error;
     });
   });

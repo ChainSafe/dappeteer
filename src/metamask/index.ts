@@ -17,7 +17,7 @@ import { unlock } from './unlock';
 export type SetSignedIn = (state: boolean) => Promise<void>;
 export type GetSingedIn = () => Promise<boolean>;
 
-export const getMetamask = async (page: Page, version?: string): Promise<Dappeteer> => {
+export const getMetaMask = async (page: Page, version?: string): Promise<Dappeteer> => {
   // modified window object to kep state between tests
   const setSignedIn = async (state: boolean): Promise<void> => {
     await page.evaluate((s: boolean) => {
@@ -54,8 +54,8 @@ export const getMetamask = async (page: Page, version?: string): Promise<Dappete
 /**
  * Return MetaMask instance
  * */
-export async function getMetamaskWindow(browser: Browser, version?: string): Promise<Dappeteer> {
-  const metamaskPage = await new Promise<Page>((resolve) => {
+export async function getMetaMaskWindow(browser: Browser, version?: string): Promise<Dappeteer> {
+  const metaMaskPage = await new Promise<Page>((resolve) => {
     browser.pages().then((pages) => {
       for (const page of pages) {
         if (page.url().includes('chrome-extension')) resolve(page);
@@ -63,5 +63,5 @@ export async function getMetamaskWindow(browser: Browser, version?: string): Pro
     });
   });
 
-  return getMetamask(metamaskPage, version);
+  return getMetaMask(metaMaskPage, version);
 }

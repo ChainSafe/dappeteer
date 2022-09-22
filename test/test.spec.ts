@@ -37,9 +37,9 @@ describe('dappeteer', () => {
   before(async () => {
     testContract = await deploy();
     browser = await dappeteer.launch(puppeteer, {
-      metamaskVersion: process.env.METAMASK_VERSION || RECOMMENDED_METAMASK_VERSION,
+      metaMaskVersion: process.env.METAMASK_VERSION || RECOMMENDED_METAMASK_VERSION,
     });
-    metamask = await dappeteer.setupMetamask(browser, {
+    metamask = await dappeteer.setupMetaMask(browser, {
       // optional, else it will use a default seed
       seed: 'pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog',
       password: 'password1234',
@@ -70,7 +70,7 @@ describe('dappeteer', () => {
 
   it('should open, test page', async () => {
     expect(testPage).to.be.ok;
-    expect(await testPage.title()).to.be.equal('Local metamask test');
+    expect(await testPage.title()).to.be.equal('Local MetaMask test');
   });
 
   describe('test addNetwork method', addNetworkTests.bind(this));
