@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - unstable
   pull_request:
     branches:
       - '**'
