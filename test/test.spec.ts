@@ -9,9 +9,9 @@ import { Dappeteer, RECOMMENDED_METAMASK_VERSION } from '../src';
 import * as dappeteer from '../src/index';
 
 import deploy from './deploy';
-import { addNetworkTests } from './tests/addNetwork';
-import { importPKTests } from './tests/importPK';
 import { pause } from './utils';
+import { addNetworkTests } from './utils/addNetwork';
+import { importPKTests } from './utils/importPK';
 
 chaiUse(chaiAsPromised);
 
@@ -176,14 +176,14 @@ describe('dappeteer', () => {
 
       // submit tx
       await metamask.confirmTransaction({
-        gas: 20,
+        gas: 21000,
         gasLimit: 400000,
       });
       await testPage.waitForSelector('#feesTxSent');
     });
 
-    it('should change gas priority', async () => {
-      await metamask.switchNetwork('goerli');
+    it('should not fail if gas priority is missing', async () => {
+      await metamask.switchNetwork('localhost');
 
       // click increase button
       await clickElement(testPage, '.transfer-button');
@@ -191,8 +191,8 @@ describe('dappeteer', () => {
 
       // submit tx
       await metamask.confirmTransaction({
-        gas: 5,
-        priority: 4,
+        gas: 21000,
+        priority: 2,
         gasLimit: 202020,
       });
 

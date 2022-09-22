@@ -2,7 +2,7 @@ import fs from 'fs';
 import * as http from 'http';
 import * as path from 'path';
 
-import ganache from 'ganache-core';
+import ganache, { Provider } from 'ganache';
 import handler from 'serve-handler';
 import Web3 from 'web3';
 
@@ -20,18 +20,15 @@ async function deploy(): Promise<{ address: string }> {
   return await deployContract(provider);
 }
 
-async function waitForGanache(): Promise<ganache.Provider> {
+async function waitForGanache(): Promise<Provider> {
   console.log('Starting ganache...');
-  const server = ganache.server({ seed: 'asd123' });
-  return await new Promise<ganache.Provider>((resolve) => {
-    server.listen(8545, () => {
-      console.log('Ganache running at http://localhost:8545');
-      resolve(server.provider);
-    });
-  });
+  const server = ganache.server({ seed: 'asd123', logging: { quiet: true } });
+  await server.listen(8545);
+  console.log('Ganache running at http://localhost:8545');
+  return server.provider;
 }
 
-async function deployContract(provider: ganache.Provider): Promise<{ address: string } | null> {
+async function deployContract(provider: Provider): Promise<{ address: string } | null> {
   console.log('Deploying test contract...');
   const web3 = new Web3((provider as unknown) as Web3['currentProvider']);
   const compiledContracts = compileContracts();

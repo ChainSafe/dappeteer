@@ -39,18 +39,36 @@ export const clickOnLogo = async (page: Page): Promise<void> => {
   await header.click();
 };
 
+/**
+ *
+ * @param page
+ * @param label
+ * @param text
+ * @param clear
+ * @param excludeSpan
+ * @param optional
+ * @returns true if found and updated, false otherwise
+ */
 export const typeOnInputField = async (
   page: Page,
   label: string,
   text: string,
   clear = false,
   excludeSpan = false,
-): Promise<void> => {
-  const input = await getInputByLabel(page, label, excludeSpan);
+  optional = false,
+): Promise<boolean> => {
+  let input;
+  try {
+    input = await getInputByLabel(page, label, excludeSpan, 1000);
+  } catch (e) {
+    if (optional) return false;
+    throw e;
+  }
 
   if (clear)
     await page.evaluate((node) => {
       node.value = '';
     }, input);
   await input.type(text);
+  return true;
 };
