@@ -1,20 +1,19 @@
-import { Config } from '@jest/types';
 import { Browser, Page } from 'puppeteer';
 
 import { Dappeteer, LaunchOptions, MetaMaskOptions } from '..';
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
     interface Global {
       page: Page;
       browser: Browser;
-      metamask: Dappeteer;
+      metaMask: Dappeteer;
     }
   }
 }
 
-export type DappateerConfig = Config.InitialOptions &
-  Partial<{
-    dappeteer: LaunchOptions;
-    metamask: MetaMaskOptions;
-  }>;
+export type DappateerJestConfig = Partial<{
+  dappeteer: LaunchOptions;
+  metaMask: MetaMaskOptions;
+}>;

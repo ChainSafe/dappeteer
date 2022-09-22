@@ -1,15 +1,15 @@
 import puppeteer from 'puppeteer';
 
-import { launch, LaunchOptions, setupMetaMask } from '../index';
+import { launch, setupMetaMask } from '../index';
 
-import { DappateerConfig } from './global';
+import { getDappeteerConfig } from './config';
 
-export const DAPPETEER_DEFAULT_CONFIG: LaunchOptions = { metaMaskVersion: 'latest' };
+export default async function (): Promise<void> {
+  const { dappeteer, metaMask } = await getDappeteerConfig();
 
-export default async function (jestConfig: DappateerConfig = { dappeteer: DAPPETEER_DEFAULT_CONFIG }): Promise<void> {
-  const browser = await launch(puppeteer, jestConfig.dappeteer || DAPPETEER_DEFAULT_CONFIG);
+  const browser = await launch(puppeteer, dappeteer);
   try {
-    await setupMetaMask(browser, jestConfig.metamask);
+    await setupMetaMask(browser, metaMask);
     global.browser = browser;
   } catch (error) {
     // eslint-disable-next-line no-console
