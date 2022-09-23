@@ -1,4 +1,4 @@
-import { Browser, Page } from 'puppeteer';
+import { Browser, BrowserContext, Page } from 'puppeteer';
 
 import { getMetaMask } from '../metamask';
 import { Dappeteer, MetaMaskOptions } from '../types';
@@ -12,7 +12,7 @@ type Step<Options> = (page: Page, options?: Options) => void;
 const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [confirmWelcomeScreen, importAccount, closePopup, showTestNets];
 
 export async function setupMetaMask<Options = MetaMaskOptions>(
-  browser: Browser,
+  browser: Browser | BrowserContext,
   options?: Options,
   steps: Step<Options>[] = defaultMetaMaskSteps,
 ): Promise<Dappeteer> {
@@ -26,7 +26,7 @@ export async function setupMetaMask<Options = MetaMaskOptions>(
   return getMetaMask(page);
 }
 
-async function closeHomeScreen(browser: Browser): Promise<Page> {
+async function closeHomeScreen(browser: Browser | BrowserContext): Promise<Page> {
   return new Promise((resolve, reject) => {
     browser.on('targetcreated', async (target) => {
       if (target.url().match('chrome-extension://[a-z]+/home.html')) {
