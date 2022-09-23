@@ -26,7 +26,7 @@ jobs:
       - name: Lint
         run: yarn run lint
       - name: Tests
-        run: xvfb-run --auto-servernum yarn run test
+        run: xvfb-run --auto-servernum yarn run test --timeout 50000
 
   maybe-release:
     name: release
