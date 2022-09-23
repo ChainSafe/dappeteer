@@ -4,7 +4,12 @@ import { ElementHandle, Page } from 'puppeteer';
 export const getElementByContent = (page: Page, text: string, type = '*'): Promise<ElementHandle | null> =>
   page.waitForXPath(`//${type}[contains(text(), '${text}')]`);
 
-export const getInputByLabel = (page: Page, text: string, excludeSpan = false): Promise<ElementHandle | null> =>
+export const getInputByLabel = (
+  page: Page,
+  text: string,
+  excludeSpan = false,
+  timeout = 1000,
+): Promise<ElementHandle> =>
   page.waitForXPath(
     [
       `//label[contains(.,'${text}')]/following-sibling::textarea`,
@@ -18,6 +23,7 @@ export const getInputByLabel = (page: Page, text: string, excludeSpan = false): 
           ]
         : []),
     ].join('|'),
+    { timeout },
   );
 
 export const getSettingsSwitch = (page: Page, text: string): Promise<ElementHandle | null> =>
