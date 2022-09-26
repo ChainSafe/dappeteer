@@ -39,13 +39,6 @@ describe('basic interactions', async function () {
     expect(selectedNetwork).to.be.equal('Localhost 8545');
   });
 
-  it('should be able to sign', async () => {
-    await clickElement(testPage, '.sign-button');
-    await metamask.sign();
-
-    await testPage.waitForSelector('#signed');
-  });
-
   it('should return eth balance', async () => {
     await metamask.switchNetwork('localhost');
     const tokenBalance: number = await metamask.helpers.getTokenBalance('ETH');
@@ -127,6 +120,13 @@ describe('basic interactions', async function () {
     await expect(metamask.importPK('4f3edf983ac636a65ace7c78d9aa706d3b113bce9c46f30d7d21715b23b10')).to.be.rejectedWith(
       SyntaxError,
     );
+  });
+
+  it('should be able to sign', async () => {
+    await clickElement(testPage, '.sign-button');
+    await metamask.sign();
+
+    await testPage.waitForSelector('#signed');
   });
 
   it('should lock and unlock', async () => {

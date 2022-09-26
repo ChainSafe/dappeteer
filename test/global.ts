@@ -30,7 +30,7 @@ export const mochaHooks = {
     const ethereum = await startLocalEthereum({
       wallet: {
         mnemonic: LOCAL_PREFUNDED_MNEMONIC,
-        defaultBalance: 10,
+        defaultBalance: 100,
       },
     });
     const browser = await dappeteer.launch(puppeteer, {
