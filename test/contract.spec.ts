@@ -1,3 +1,6 @@
+import { writeFileSync } from 'fs';
+import path from 'path';
+
 import { expect } from 'chai';
 import { Page } from 'puppeteer';
 
@@ -16,10 +19,14 @@ describe('contract interactions', async function () {
   before(async function (this: TestContext) {
     contract = await deployContract(this.provider);
     testPage = await this.browser.newPage();
-    await testPage.goto('http://localhost:8080/');
+    await testPage.goto('http://localhost:8080/', { waitUntil: 'load' });
     metamask = this.metamask;
-    await clickElement(testPage, '.connect-button');
-    // await metamask.approve();
+    try {
+      await clickElement(testPage, '.connect-button');
+      await metamask.approve();
+    } catch (e) {
+      //ignored
+    }
   });
 
   after(async function (this: TestContext) {
@@ -27,20 +34,25 @@ describe('contract interactions', async function () {
   });
 
   it('should have increased count', async () => {
-    await metamask.switchNetwork('local');
-    const counterBefore = await getCounterNumber(contract);
-    // click increase button
-    await clickElement(testPage, '.increase-button');
-    await pause(1);
-    // submit tx
-    await metamask.confirmTransaction();
-    await testPage.waitForSelector('#txSent');
-    await pause(1);
+    try {
+      await metamask.switchNetwork('local');
+      const counterBefore = await getCounterNumber(contract);
+      // click increase button
+      await clickElement(testPage, '.increase-button');
+      await pause(1);
+      // submit tx
+      await metamask.confirmTransaction();
+      await testPage.waitForSelector('#txSent');
+      await pause(1);
 
-    const counterAfter = await getCounterNumber(contract);
+      const counterAfter = await getCounterNumber(contract);
 
-    expect(counterAfter).to.be.equal(counterBefore + 1);
-    await metamask.switchNetwork('main');
+      expect(counterAfter).to.be.equal(counterBefore + 1);
+      await metamask.switchNetwork('main');
+    } catch (e) {
+      writeFileSync(path.resolve(__dirname, '../sign.png'), await metamask.page.screenshot({ encoding: 'binary' }));
+      expect.fail(e);
+    }
   });
 });
 

@@ -1,3 +1,6 @@
+import { writeFileSync } from 'fs';
+import path from 'path';
+
 import { expect, use } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { Page } from 'puppeteer';
@@ -16,10 +19,14 @@ describe('basic interactions', async function () {
 
   before(async function (this: TestContext) {
     testPage = await this.browser.newPage();
-    await testPage.goto('http://localhost:8080/');
-    await clickElement(testPage, '.connect-button');
+    await testPage.goto('http://localhost:8080/', { waitUntil: 'load' });
     metamask = this.metamask;
-    await metamask.approve();
+    try {
+      await clickElement(testPage, '.connect-button');
+      await metamask.approve();
+    } catch (e) {
+      //ignored
+    }
   });
 
   after(async function () {
@@ -36,10 +43,15 @@ describe('basic interactions', async function () {
   });
 
   it('should be able to sign', async () => {
-    await clickElement(testPage, '.sign-button');
-    await metamask.sign();
+    try {
+      await clickElement(testPage, '.sign-button');
+      await metamask.sign();
 
-    await testPage.waitForSelector('#signed');
+      await testPage.waitForSelector('#signed');
+    } catch (e) {
+      writeFileSync(path.resolve(__dirname, '../sign.png'), await metamask.page.screenshot({ encoding: 'binary' }));
+      expect.fail(e);
+    }
   });
 
   it('should return eth balance', async () => {
