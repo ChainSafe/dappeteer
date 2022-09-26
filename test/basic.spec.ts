@@ -1,6 +1,3 @@
-import { writeFileSync } from 'fs';
-import path from 'path';
-
 import { expect, use } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { Page } from 'puppeteer';

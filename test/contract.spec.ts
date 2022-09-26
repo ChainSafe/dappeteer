@@ -1,6 +1,3 @@
-import { writeFileSync } from 'fs';
-import path from 'path';
-
 import { expect } from 'chai';
 import { Page } from 'puppeteer';
 
