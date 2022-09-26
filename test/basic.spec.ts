@@ -1,6 +1,3 @@
-import { writeFileSync } from 'fs';
-import path from 'path';
-
 import { expect, use } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { Page } from 'puppeteer';
@@ -34,10 +31,6 @@ describe('basic interactions', async function () {
   });
 
   it('should be able to sign', async () => {
-    writeFileSync(
-      path.resolve(__dirname, `../test_page.png`),
-      await testPage.screenshot({ encoding: 'binary', fullPage: true }),
-    );
     await clickOnButton(testPage, 'Sign');
     await metamask.sign();
 

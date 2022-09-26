@@ -32,7 +32,8 @@ async function start() {
   const signButton = document.querySelector('.sign-button');
   signButton.addEventListener('click', async function () {
     const accounts = await web3.eth.getAccounts();
-    await web3.eth.personal.sign('TEST', accounts[0]);
+    const message = web3.utils.sha3('TEST');
+    await web3.eth.sign(message, accounts[0]);
     const signed = document.createElement('div');
     signed.id = 'signed';
     document.body.appendChild(signed);
