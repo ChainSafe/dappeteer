@@ -32,6 +32,7 @@ describe('contract interactions', async function () {
 
   it('should have increased count', async () => {
     await metamask.switchNetwork('local');
+    await pause(2);
     const counterBefore = await getCounterNumber(contract);
     // click increase button
     await clickElement(testPage, '.increase-button');

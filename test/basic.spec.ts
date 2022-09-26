@@ -41,7 +41,6 @@ describe('basic interactions', async function () {
 
   it('should be able to sign', async () => {
     await clickElement(testPage, '.sign-button');
-    throw Error('debug');
     await metamask.sign();
 
     await testPage.waitForSelector('#signed');
