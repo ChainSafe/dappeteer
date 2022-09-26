@@ -1,6 +1,3 @@
-import { writeFileSync } from 'fs';
-import path from 'path';
-
 import { expect } from 'chai';
 import { Page } from 'puppeteer';
 
@@ -34,12 +31,9 @@ describe('contract interactions', async function () {
   });
 
   it('should have increased count', async () => {
+    await metamask.switchAccount(1);
     await metamask.switchNetwork('local');
-    await pause(2);
-    writeFileSync(
-      path.resolve(__dirname, `../balance.png`),
-      await metamask.page.screenshot({ encoding: 'binary', fullPage: true }),
-    );
+    await pause(1);
     const counterBefore = await getCounterNumber(contract);
     // click increase button
     await clickElement(testPage, '.increase-button');
