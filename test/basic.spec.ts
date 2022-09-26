@@ -43,15 +43,11 @@ describe('basic interactions', async function () {
   });
 
   it('should be able to sign', async () => {
-    try {
-      await clickElement(testPage, '.sign-button');
-      await metamask.sign();
+    await clickElement(testPage, '.sign-button');
+    throw Error('debug');
+    await metamask.sign();
 
-      await testPage.waitForSelector('#signed');
-    } catch (e) {
-      writeFileSync(path.resolve(__dirname, '../sign.png'), await metamask.page.screenshot({ encoding: 'binary' }));
-      expect.fail(e);
-    }
+    await testPage.waitForSelector('#signed');
   });
 
   it('should return eth balance', async () => {

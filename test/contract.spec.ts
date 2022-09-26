@@ -34,25 +34,20 @@ describe('contract interactions', async function () {
   });
 
   it('should have increased count', async () => {
-    try {
-      await metamask.switchNetwork('local');
-      const counterBefore = await getCounterNumber(contract);
-      // click increase button
-      await clickElement(testPage, '.increase-button');
-      await pause(1);
-      // submit tx
-      await metamask.confirmTransaction();
-      await testPage.waitForSelector('#txSent');
-      await pause(1);
+    await metamask.switchNetwork('local');
+    const counterBefore = await getCounterNumber(contract);
+    // click increase button
+    await clickElement(testPage, '.increase-button');
+    await pause(1);
+    // submit tx
+    await metamask.confirmTransaction();
+    await testPage.waitForSelector('#txSent');
+    await pause(1);
 
-      const counterAfter = await getCounterNumber(contract);
+    const counterAfter = await getCounterNumber(contract);
 
-      expect(counterAfter).to.be.equal(counterBefore + 1);
-      await metamask.switchNetwork('main');
-    } catch (e) {
-      writeFileSync(path.resolve(__dirname, '../contract.png'), await metamask.page.screenshot({ encoding: 'binary' }));
-      expect.fail(e);
-    }
+    expect(counterAfter).to.be.equal(counterBefore + 1);
+    await metamask.switchNetwork('main');
   });
 });
 

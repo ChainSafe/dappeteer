@@ -1,4 +1,6 @@
+import { writeFileSync } from 'fs';
 import http from 'http';
+import path from 'path';
 
 import { Provider, Server } from 'ganache';
 import puppeteer, { Browser } from 'puppeteer';
@@ -55,5 +57,14 @@ export const mochaHooks = {
     this.testPageServer.close();
     await this.browser.close();
     await this.ethereum.close();
+  },
+
+  async afterEach(this: TestContext): Promise<void> {
+    if (this.currentTest.state === 'failed') {
+      writeFileSync(
+        path.resolve(__dirname, `../${this.currentTest.fullTitle()}.png`),
+        await this.metamask.page.screenshot({ encoding: 'binary', fullPage: true }),
+      );
+    }
   },
 };
