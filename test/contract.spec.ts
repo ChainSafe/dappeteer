@@ -50,7 +50,7 @@ describe('contract interactions', async function () {
       expect(counterAfter).to.be.equal(counterBefore + 1);
       await metamask.switchNetwork('main');
     } catch (e) {
-      writeFileSync(path.resolve(__dirname, '../sign.png'), await metamask.page.screenshot({ encoding: 'binary' }));
+      writeFileSync(path.resolve(__dirname, '../contract.png'), await metamask.page.screenshot({ encoding: 'binary' }));
       expect.fail(e);
     }
   });
