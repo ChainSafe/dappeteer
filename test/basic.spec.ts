@@ -1,12 +1,12 @@
-import {writeFileSync} from "fs";
-import path from "path";
+import { writeFileSync } from 'fs';
+import path from 'path';
 
 import { expect, use } from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import { Page } from 'puppeteer';
 
 import * as dappeteer from '../src';
-import { clickOnButton, clickOnLogo, openProfileDropdown } from '../src/helpers';
+import { clickOnLogo, openProfileDropdown } from '../src/helpers';
 
 import { PASSWORD, TestContext } from './global';
 import { clickElement } from './utils/utils';

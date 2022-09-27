@@ -6,7 +6,7 @@ export function pause(seconds: number): Promise<void> {
 
 export async function clickElement(page: Page, selector: string): Promise<void> {
   await page.bringToFront();
-  await page.waitForSelector(selector, {timeout: 15000});
+  await page.waitForSelector(selector, { timeout: 15000 });
   const element = await page.$(selector);
   await element.click();
 }
