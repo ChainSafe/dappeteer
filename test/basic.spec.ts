@@ -38,7 +38,7 @@ describe('basic interactions', async function () {
       path.resolve(__dirname, `../test_page.png`),
       await testPage.screenshot({ encoding: 'binary', fullPage: true }),
     );
-    await clickElement(testPage, '.sign_button');
+    await clickElement(testPage, '.sign-button');
     await metamask.sign();
 
     await testPage.waitForSelector('#signed');
