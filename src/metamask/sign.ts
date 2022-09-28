@@ -11,5 +11,8 @@ export const sign = (page: Page, getSingedIn: GetSingedIn, version?: string) => 
     throw new Error("You haven't signed in yet");
   }
 
+  await page.waitForTimeout(500);
+  await page.reload();
+
   await clickOnButton(page, 'Sign');
 };

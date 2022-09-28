@@ -8,7 +8,7 @@ import puppeteer, { Browser } from 'puppeteer';
 import * as dappeteer from '../src';
 import { Dappeteer } from '../src';
 
-import { startLocalEthereum, startTestServer } from './deploy';
+import { Contract, deployContract, startLocalEthereum, startTestServer } from './deploy';
 
 export type InjectableContext = Readonly<{
   provider: Provider;
@@ -16,6 +16,7 @@ export type InjectableContext = Readonly<{
   testPageServer: http.Server;
   browser: Browser;
   metamask: Dappeteer;
+  contract: Contract;
 }>;
 
 // TestContext will be used by all the test
@@ -42,12 +43,15 @@ export const mochaHooks = {
       seed: LOCAL_PREFUNDED_MNEMONIC,
       password: PASSWORD,
     });
+    const contract = await deployContract(ethereum.provider);
+
     const context: InjectableContext = {
       ethereum: ethereum,
       provider: ethereum.provider,
       browser,
       testPageServer: server,
       metamask,
+      contract,
     };
 
     Object.assign(this, context);

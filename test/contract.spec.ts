@@ -3,21 +3,21 @@ import { Page } from 'puppeteer';
 
 import { Dappeteer } from '../src';
 
-import { deployContract } from './deploy';
+import { Contract } from './deploy';
 import { TestContext } from './global';
 import { clickElement, pause } from './utils/utils';
 
 describe('contract interactions', async function () {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let contract: any;
+  let contract: Contract;
   let testPage: Page;
   let metamask: Dappeteer;
 
   before(async function (this: TestContext) {
-    contract = await deployContract(this.provider);
     testPage = await this.browser.newPage();
     await testPage.goto('http://localhost:8080/', { waitUntil: 'load' });
     metamask = this.metamask;
+    contract = this.contract;
     try {
       await clickElement(testPage, '.connect-button');
       await metamask.approve();
