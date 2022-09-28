@@ -19,7 +19,7 @@ describe('basic interactions', async function () {
 
   before(async function (this: TestContext) {
     testPage = await this.browser.newPage();
-    await testPage.goto('http://localhost:8080/', { waitUntil: 'load' });
+    await testPage.goto('http://localhost:8080/', { waitUntil: 'networkidle0' });
     metamask = this.metamask;
     try {
       await clickElement(testPage, '.connect-button');

@@ -1,5 +1,5 @@
 async function start() {
-  const web3 = new Web3(window.web3.currentProvider);
+  const web3 = new Web3(window.ethereum);
   console.log(web3);
   const counterContract = new web3.eth.Contract(ContractInfo.abi, ContractInfo.address);
 
@@ -23,7 +23,7 @@ async function start() {
 
   const connectButton = document.querySelector('.connect-button');
   connectButton.addEventListener('click', async function () {
-    await ethereum.enable();
+    await window.ethereum.request({ method: 'eth_requestAccounts' });
     const connected = document.createElement('div');
     connected.id = 'connected';
     document.body.appendChild(connected);
