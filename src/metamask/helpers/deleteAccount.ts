@@ -12,4 +12,5 @@ export const deleteAccount = (page: Page, version?: string) => async (accountNum
   await openAccountDropdown(page);
   await clickOnElement(page, 'Remove account');
   await clickOnButton(page, 'Remove');
+  await page.reload();
 };
