@@ -10,7 +10,8 @@ export const addToken = (page: Page, version?: string) => async ({
   decimals = 0,
 }: AddToken): Promise<void> => {
   await page.bringToFront();
-
+  await clickOnButton(page, 'Assets');
+  await page.waitForSelector('.asset-list-item__token-button');
   await clickOnElement(page, 'Import tokens');
   await typeOnInputField(page, 'Token Contract Address', tokenAddress);
 
