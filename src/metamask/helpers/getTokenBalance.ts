@@ -1,9 +1,11 @@
 import { Page } from 'puppeteer';
 
+import { clickOnButton } from '../../helpers';
+
 export const getTokenBalance = (page: Page) => async (tokenSymbol: string): Promise<number> => {
   await page.bringToFront();
-  await page.waitForTimeout(1000);
-
+  await clickOnButton(page, 'Assets');
+  await page.waitForSelector('.asset-list-item__token-button');
   const assetListItems = await page.$$('.asset-list-item__token-button');
 
   for (let index = 0; index < assetListItems.length; index++) {

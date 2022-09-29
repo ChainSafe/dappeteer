@@ -8,3 +8,4 @@ dist
 .idea
 *.log
 test/dapp/data.js
+*.png

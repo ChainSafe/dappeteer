@@ -26,6 +26,6 @@ export const switchNetwork = (page: Page, version?: string) => async (network = 
 
   const networkButton = (await page.$$('li.dropdown-menu-item'))[networkIndex];
   await networkButton.click();
-
+  await page.reload();
   await page.waitForXPath(`//*[text() = '${networkFullName}']`);
 };
