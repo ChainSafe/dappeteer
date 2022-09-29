@@ -2,7 +2,7 @@ import { ElementHandle, Page } from 'puppeteer';
 
 // TODO: change text() with '.';
 export const getElementByContent = (page: Page, text: string, type = '*'): Promise<ElementHandle | null> =>
-  page.waitForXPath(`//${type}[contains(text(), '${text}')]`);
+  page.waitForXPath(`//${type}[contains(text(), '${text}')]`, { timeout: 20000 });
 
 export const getInputByLabel = (
   page: Page,

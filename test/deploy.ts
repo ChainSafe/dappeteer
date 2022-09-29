@@ -2,7 +2,7 @@ import fs from 'fs';
 import * as http from 'http';
 import * as path from 'path';
 
-import ganache, { Provider } from 'ganache';
+import ganache, { Provider, Server, ServerOptions } from 'ganache';
 import handler from 'serve-handler';
 import Web3 from 'web3';
 
@@ -14,21 +14,19 @@ export function getCounterContract(): { address: string } | null {
   return counterContract;
 }
 
-async function deploy(): Promise<{ address: string }> {
-  const provider = await waitForGanache();
-  await startTestServer();
-  return await deployContract(provider);
-}
-
-async function waitForGanache(): Promise<Provider> {
+export async function startLocalEthereum(opts?: ServerOptions): Promise<Server<'ethereum'>> {
   console.log('Starting ganache...');
-  const server = ganache.server({ seed: 'asd123', logging: { quiet: true } });
+  opts = opts ?? {};
+  const server = ganache.server({ ...opts, logging: { quiet: true } });
   await server.listen(8545);
   console.log('Ganache running at http://localhost:8545');
-  return server.provider;
+  return server;
 }
 
-async function deployContract(provider: Provider): Promise<{ address: string } | null> {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Contract = any | null;
+
+export async function deployContract(provider: Provider): Promise<Contract> {
   console.log('Deploying test contract...');
   const web3 = new Web3((provider as unknown) as Web3['currentProvider']);
   const compiledContracts = compileContracts();
@@ -47,15 +45,15 @@ async function deployContract(provider: Provider): Promise<{ address: string } |
     null,
     2,
   )}`;
+
   await new Promise((resolve) => {
     fs.writeFile(dataJsPath, data, resolve);
   });
-  console.log('path:', dataJsPath);
 
   return { ...counterContract, ...counterContract, ...counterContract.options };
 }
 
-async function startTestServer(): Promise<void> {
+export async function startTestServer(): Promise<http.Server> {
   console.log('Starting test server...');
   const server = http.createServer((request, response) => {
     return handler(request, response, {
@@ -70,6 +68,5 @@ async function startTestServer(): Promise<void> {
       resolve();
     });
   });
+  return server;
 }
-
-export default deploy;
