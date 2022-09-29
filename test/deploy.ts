@@ -24,7 +24,9 @@ export async function startLocalEthereum(opts?: ServerOptions): Promise<Server<'
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function deployContract(provider: Provider): Promise<any | null> {
+export type Contract = any | null;
+
+export async function deployContract(provider: Provider): Promise<Contract> {
   console.log('Deploying test contract...');
   const web3 = new Web3((provider as unknown) as Web3['currentProvider']);
   const compiledContracts = compileContracts();
@@ -43,6 +45,7 @@ export async function deployContract(provider: Provider): Promise<any | null> {
     null,
     2,
   )}`;
+
   await new Promise((resolve) => {
     fs.writeFile(dataJsPath, data, resolve);
   });

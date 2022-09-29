@@ -1,4 +1,6 @@
+import { writeFileSync } from 'fs';
 import http from 'http';
+import path from 'path';
 
 import { Provider, Server } from 'ganache';
 import puppeteer, { Browser } from 'puppeteer';
@@ -6,7 +8,7 @@ import puppeteer, { Browser } from 'puppeteer';
 import * as dappeteer from '../src';
 import { Dappeteer } from '../src';
 
-import { startLocalEthereum, startTestServer } from './deploy';
+import { Contract, deployContract, startLocalEthereum, startTestServer } from './deploy';
 
 export type InjectableContext = Readonly<{
   provider: Provider;
@@ -14,6 +16,7 @@ export type InjectableContext = Readonly<{
   testPageServer: http.Server;
   browser: Browser;
   metamask: Dappeteer;
+  contract: Contract;
 }>;
 
 // TestContext will be used by all the test
@@ -28,7 +31,7 @@ export const mochaHooks = {
     const ethereum = await startLocalEthereum({
       wallet: {
         mnemonic: LOCAL_PREFUNDED_MNEMONIC,
-        defaultBalance: 10,
+        defaultBalance: 100,
       },
     });
     const browser = await dappeteer.launch(puppeteer, {
@@ -40,12 +43,15 @@ export const mochaHooks = {
       seed: LOCAL_PREFUNDED_MNEMONIC,
       password: PASSWORD,
     });
+    const contract = await deployContract(ethereum.provider);
+
     const context: InjectableContext = {
       ethereum: ethereum,
       provider: ethereum.provider,
       browser,
       testPageServer: server,
       metamask,
+      contract,
     };
 
     Object.assign(this, context);
@@ -55,5 +61,14 @@ export const mochaHooks = {
     this.testPageServer.close();
     await this.browser.close();
     await this.ethereum.close();
+  },
+
+  async afterEach(this: TestContext): Promise<void> {
+    if (this.currentTest.state === 'failed') {
+      writeFileSync(
+        path.resolve(__dirname, `../${this.currentTest.fullTitle()}.png`),
+        await this.metamask.page.screenshot({ encoding: 'binary', fullPage: true }),
+      );
+    }
   },
 };

@@ -3,23 +3,27 @@ import { Page } from 'puppeteer';
 
 import { Dappeteer } from '../src';
 
-import { deployContract } from './deploy';
+import { Contract } from './deploy';
 import { TestContext } from './global';
 import { clickElement, pause } from './utils/utils';
 
 describe('contract interactions', async function () {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let contract: any;
+  let contract: Contract;
   let testPage: Page;
   let metamask: Dappeteer;
 
   before(async function (this: TestContext) {
-    contract = await deployContract(this.provider);
     testPage = await this.browser.newPage();
-    await testPage.goto('http://localhost:8080/');
+    await testPage.goto('http://localhost:8080/', { waitUntil: 'load' });
     metamask = this.metamask;
-    await clickElement(testPage, '.connect-button');
-    // await metamask.approve();
+    contract = this.contract;
+    try {
+      await clickElement(testPage, '.connect-button');
+      await metamask.approve();
+    } catch (e) {
+      //ignored
+    }
   });
 
   after(async function (this: TestContext) {
@@ -27,7 +31,9 @@ describe('contract interactions', async function () {
   });
 
   it('should have increased count', async () => {
+    await metamask.switchAccount(1);
     await metamask.switchNetwork('local');
+    await pause(1);
     const counterBefore = await getCounterNumber(contract);
     // click increase button
     await clickElement(testPage, '.increase-button');

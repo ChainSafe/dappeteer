@@ -16,14 +16,26 @@ describe('basic interactions', async function () {
 
   before(async function (this: TestContext) {
     testPage = await this.browser.newPage();
-    await testPage.goto('http://localhost:8080/');
-    await clickElement(testPage, '.connect-button');
+    await testPage.goto('http://localhost:8080/', { waitUntil: 'networkidle0' });
     metamask = this.metamask;
-    await metamask.approve();
+    try {
+      await clickElement(testPage, '.connect-button');
+      await metamask.approve();
+    } catch (e) {
+      //ignored
+    }
   });
 
   after(async function () {
     await testPage.close();
+  });
+
+  it('should be able to sign', async () => {
+    await clickElement(testPage, '.sign-button');
+
+    await metamask.sign();
+
+    await testPage.waitForSelector('#signed');
   });
 
   it('should switch network', async () => {
@@ -33,13 +45,6 @@ describe('basic interactions', async function () {
       () => (document.querySelector('.network-display > span:nth-child(2)') as HTMLSpanElement).innerHTML,
     );
     expect(selectedNetwork).to.be.equal('Localhost 8545');
-  });
-
-  it('should be able to sign', async () => {
-    await clickElement(testPage, '.sign-button');
-    await metamask.sign();
-
-    await testPage.waitForSelector('#signed');
   });
 
   it('should return eth balance', async () => {
@@ -105,24 +110,13 @@ describe('basic interactions', async function () {
     const afterImport = await countAccounts();
 
     expect(beforeImport + 1).to.be.equal(afterImport);
-  });
-
-  it('should throw error on duplicated private key', async () => {
-    await expect(
-      metamask.importPK('4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b10'),
-    ).to.be.rejectedWith(SyntaxError);
+    await metamask.helpers.deleteAccount(2);
   });
 
   it('should throw error on wrong key', async () => {
     await expect(
       metamask.importPK('4f3edf983ac636a65a$@!ce7c78d9aa706d3b113bce9c46f30d7d21715b23b10'),
     ).to.be.rejectedWith(SyntaxError);
-  });
-
-  it('should throw error on to short key', async () => {
-    await expect(metamask.importPK('4f3edf983ac636a65ace7c78d9aa706d3b113bce9c46f30d7d21715b23b10')).to.be.rejectedWith(
-      SyntaxError,
-    );
   });
 
   it('should lock and unlock', async () => {

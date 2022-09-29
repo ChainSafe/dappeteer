@@ -17,7 +17,7 @@ export async function setupMetaMask<Options = MetaMaskOptions>(
   steps: Step<Options>[] = defaultMetaMaskSteps,
 ): Promise<Dappeteer> {
   const page = await closeHomeScreen(browser);
-
+  page.setViewport({ height: 1200, width: 800 });
   // goes through the installation steps required by MetaMask
   for (const step of steps) {
     await step(page, options);
