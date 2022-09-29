@@ -2,11 +2,11 @@ import fs from 'fs';
 import * as http from 'http';
 import * as path from 'path';
 
-import ganache, { Provider, Server, ServerOptions } from 'ganache';
+import ganache, { EthereumProvider, Server, ServerOptions } from 'ganache';
 import handler from 'serve-handler';
 import Web3 from 'web3';
 
-import { compileContracts } from './contract';
+import { compileContracts, ContractInfo } from './contract';
 
 const counterContract: { address: string } | null = null;
 
@@ -26,16 +26,16 @@ export async function startLocalEthereum(opts?: ServerOptions): Promise<Server<'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Contract = any | null;
 
-export async function deployContract(provider: Provider): Promise<Contract> {
+export async function deployContract(provider: EthereumProvider): Promise<Contract> {
   console.log('Deploying test contract...');
-  const web3 = new Web3((provider as unknown) as Web3['currentProvider']);
+  const web3 = new Web3(provider);
   const compiledContracts = compileContracts();
   const counterContractInfo = compiledContracts['Counter.sol']['Counter'];
-  const counterContractDef = new web3.eth.Contract(counterContractInfo.abi);
+  const counterContractDef = new web3.eth.Contract(ContractInfo.abi);
   const accounts = await web3.eth.getAccounts();
   const counterContract = await counterContractDef
     .deploy({ data: counterContractInfo.evm.bytecode.object })
-    .send({ from: accounts[0], gas: 4000000 });
+    .send({ from: accounts[0], gas: '4000000' });
   console.log('Contract deployed at', counterContract.options.address);
 
   // create file data for dapp
