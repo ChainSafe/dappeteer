@@ -6,7 +6,7 @@ import * as dappeteer from '../src';
 import { clickOnLogo, openProfileDropdown } from '../src/helpers';
 
 import { PASSWORD, TestContext } from './global';
-import { clickElement, pause } from './utils/utils';
+import { clickElement } from './utils/utils';
 
 use(chaiAsPromised);
 
