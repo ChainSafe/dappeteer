@@ -55,3 +55,11 @@ export const closePopup = async (page: Page): Promise<void> => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   await page.$eval('.popover-header__button', (node: HTMLElement) => node.click());
 };
+
+export const closePortfolioTooltip = async (page: Page): Promise<void> => {
+  const closeButton = await page.waitForSelector(`div.home__subheader-link--tooltip-content-header > button`, {
+    timeout: 20000,
+  });
+  await closeButton.click();
+  await page.waitForTimeout(333);
+};

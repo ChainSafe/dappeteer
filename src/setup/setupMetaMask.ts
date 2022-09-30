@@ -3,13 +3,25 @@ import { Browser, BrowserContext, Page } from 'puppeteer';
 import { getMetaMask } from '../metamask';
 import { Dappeteer, MetaMaskOptions } from '../types';
 
-import { confirmWelcomeScreen, declineAnalytics, importAccount, showTestNets } from './setupActions';
+import {
+  closePortfolioTooltip,
+  confirmWelcomeScreen,
+  declineAnalytics,
+  importAccount,
+  showTestNets
+} from './setupActions';
 
 /**
  * Setup MetaMask with base account
  * */
 type Step<Options> = (page: Page, options?: Options) => void;
-const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [confirmWelcomeScreen, declineAnalytics, importAccount, showTestNets];
+const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [
+  confirmWelcomeScreen,
+  declineAnalytics,
+  importAccount,
+  showTestNets,
+  closePortfolioTooltip,
+];
 
 export async function setupMetaMask<Options = MetaMaskOptions>(
   browser: Browser | BrowserContext,
@@ -27,10 +39,10 @@ export async function setupMetaMask<Options = MetaMaskOptions>(
 }
 
 async function getMetamaskPage(browser: Browser | BrowserContext): Promise<Page> {
-  const pages = await browser.pages()
+  const pages = await browser.pages();
   for (const page of pages) {
     if (page.url().match('chrome-extension://[a-z]+/home.html')) {
-      return page
+      return page;
     }
   }
   return new Promise((resolve, reject) => {
