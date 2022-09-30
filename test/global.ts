@@ -36,6 +36,8 @@ export const mochaHooks = {
     });
     const browser = await dappeteer.launch(puppeteer, {
       metaMaskVersion: process.env.METAMASK_VERSION || dappeteer.RECOMMENDED_METAMASK_VERSION,
+      
+    
     });
     const server = await startTestServer();
     const metamask = await dappeteer.setupMetaMask(browser, {

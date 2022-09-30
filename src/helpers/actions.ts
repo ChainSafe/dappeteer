@@ -10,7 +10,7 @@ export const clickOnSettingsSwitch = async (page: Page, text: string): Promise<v
 export const openNetworkDropdown = async (page: Page): Promise<void> => {
   const networkSwitcher = await page.waitForSelector('.network-display');
   await networkSwitcher.click();
-  await page.waitForSelector('li.dropdown-menu-item');
+  await page.waitForSelector('.network-dropdown-list');
 };
 
 export const openProfileDropdown = async (page: Page): Promise<void> => {

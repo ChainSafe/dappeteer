@@ -54,6 +54,7 @@ export async function launch(puppeteerLib: typeof puppeteer, options: LaunchOpti
 
   return puppeteerLib.launch({
     headless: false,
+    slowMo: 10,
     args: [`--disable-extensions-except=${METAMASK_PATH}`, `--load-extension=${METAMASK_PATH}`, ...(args || [])],
     ...rest,
   });

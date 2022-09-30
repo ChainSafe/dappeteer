@@ -19,7 +19,11 @@ export async function showTestNets(metaMaskPage: Page): Promise<void> {
 }
 
 export async function confirmWelcomeScreen(metaMaskPage: Page): Promise<void> {
-  await clickOnButton(metaMaskPage, 'Get Started');
+  await clickOnButton(metaMaskPage, 'Get started');
+}
+
+export async function declineAnalytics(metaMaskPage: Page): Promise<void> {
+  await clickOnButton(metaMaskPage, 'No thanks');
 }
 
 export async function importAccount(
@@ -30,7 +34,6 @@ export async function importAccount(
   }: MetaMaskOptions,
 ): Promise<void> {
   await clickOnButton(metaMaskPage, 'Import wallet');
-  await clickOnButton(metaMaskPage, 'I Agree');
 
   for (const [index, seedPart] of seed.split(' ').entries())
     await typeOnInputField(metaMaskPage, `${index + 1}.`, seedPart);
@@ -43,7 +46,7 @@ export async function importAccount(
   await acceptTerms.click();
 
   await clickOnButton(metaMaskPage, 'Import');
-  await clickOnButton(metaMaskPage, 'All Done');
+  await clickOnButton(metaMaskPage, 'All done');
 }
 
 export const closePopup = async (page: Page): Promise<void> => {
