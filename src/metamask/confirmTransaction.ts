@@ -5,6 +5,8 @@ import { clickOnButton, typeOnInputField } from '../helpers';
 
 import { GetSingedIn } from './index';
 
+const MIN_GAS = 21000;
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const confirmTransaction = (page: Page, getSingedIn: GetSingedIn, version?: string) => async (
   options?: TransactionOptions,
@@ -19,11 +21,15 @@ export const confirmTransaction = (page: Page, getSingedIn: GetSingedIn, version
   if (options) {
     await clickOnButton(page, 'Edit');
     await clickOnButton(page, 'Edit suggested gas fee');
-
-    if (options.priority) await typeOnInputField(page, 'Max priority fee', String(options.priority), true);
-    if (options.gasLimit) await typeOnInputField(page, 'Gas Limit', String(options.gasLimit), true);
-    if (options.gas)
-      await typeOnInputField(page, options.priority ? 'Max fee' : 'Gas price', String(options.gas), true, true);
+    //non EIP1559 networks don't have priority fee. TODO: run separate Ganache with older hardfork to test this
+    let priority = false;
+    if (options.priority) {
+      priority = await typeOnInputField(page, 'Max priority fee', String(options.priority), true, true, true);
+    }
+    if (options.gasLimit && options.gasLimit >= MIN_GAS)
+      await typeOnInputField(page, 'Gas Limit', String(options.gasLimit), true);
+    if (options.gas && options.gasLimit >= MIN_GAS)
+      await typeOnInputField(page, priority ? 'Max fee' : 'Gas Limit', String(options.gasLimit), true);
 
     await clickOnButton(page, 'Save');
   }
