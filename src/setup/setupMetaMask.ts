@@ -5,10 +5,11 @@ import { Dappeteer, MetaMaskOptions } from '../types';
 
 import {
   closePortfolioTooltip,
+  closeWhatsNewModal,
   confirmWelcomeScreen,
   declineAnalytics,
   importAccount,
-  showTestNets
+  showTestNets,
 } from './setupActions';
 
 /**
@@ -21,6 +22,8 @@ const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [
   importAccount,
   showTestNets,
   closePortfolioTooltip,
+  closeWhatsNewModal,
+  closeWhatsNewModal,
 ];
 
 export async function setupMetaMask<Options = MetaMaskOptions>(

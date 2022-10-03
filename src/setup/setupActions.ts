@@ -63,3 +63,9 @@ export const closePortfolioTooltip = async (page: Page): Promise<void> => {
   await closeButton.click();
   await page.waitForTimeout(333);
 };
+
+export const closeWhatsNewModal = async (page: Page): Promise<void> => {
+  await page.reload();
+  await clickOnLogo(page);
+  await page.waitForTimeout(333);
+};
