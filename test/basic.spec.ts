@@ -3,7 +3,7 @@ import chaiAsPromised from 'chai-as-promised';
 import { Page } from 'puppeteer';
 
 import * as dappeteer from '../src';
-import { clickOnLogo, openProfileDropdown } from '../src/helpers';
+import { openProfileDropdown } from '../src/helpers';
 
 import { PASSWORD, TestContext } from './global';
 import { clickElement } from './utils/utils';
