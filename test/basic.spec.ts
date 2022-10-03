@@ -83,19 +83,6 @@ describe('basic interactions', async function () {
     await metamask.switchNetwork('local');
   });
 
-  it('should fail to add network with wrong chain ID', async () => {
-    await expect(
-      metamask.addNetwork({
-        networkName: 'Optimistic Ethereum Testnet Kovan',
-        rpc: 'https://kovan.optimism.io/',
-        chainId: 420,
-        symbol: 'KUR',
-      }),
-    ).to.be.rejectedWith(SyntaxError);
-
-    await clickOnLogo(metamask.page);
-  });
-
   it('should import private key', async () => {
     const countAccounts = async (): Promise<number> => {
       await openProfileDropdown(metamask.page);
