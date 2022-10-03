@@ -7,7 +7,7 @@ export const importPk = (page: Page, version?: string) => async (privateKey: str
   await page.bringToFront();
   await openProfileDropdown(page);
 
-  await clickOnElement(page, 'Import Account');
+  await clickOnElement(page, 'Import account');
   await typeOnInputField(page, 'your private key', privateKey);
   await clickOnButton(page, 'Import');
 

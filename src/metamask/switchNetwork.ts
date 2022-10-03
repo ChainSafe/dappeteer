@@ -7,11 +7,11 @@ import { openNetworkDropdown } from '../helpers';
 export const switchNetwork = (page: Page, version?: string) => async (network = 'main'): Promise<void> => {
   await page.bringToFront();
   await openNetworkDropdown(page);
+
   const networkIndex = await page.evaluate((network) => {
     const elements = document.querySelectorAll('.network-name-item');
     for (let i = 0; i < elements.length; i++) {
       const element = elements[i];
-      console.log((element as HTMLLIElement).innerText.toLowerCase())
       if ((element as HTMLLIElement).innerText.toLowerCase().includes(network.toLowerCase())) {
         return i;
       }

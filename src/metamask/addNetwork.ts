@@ -34,4 +34,5 @@ export const addNetwork = (page: Page, version?: string) => async ({
   await clickOnButton(page, 'Save');
 
   await page.waitForXPath(`//*[text() = '${networkName}']`);
+  await clickOnButton(page, 'Got it');
 };
