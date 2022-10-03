@@ -1,6 +1,6 @@
 import { Page } from 'puppeteer';
 
-import { clickOnButton, clickOnElement, clickOnLogo, typeOnInputField } from '../helpers';
+import { clickOnButton, clickOnElement, clickOnLogo, getElementByContent, typeOnInputField } from '../helpers';
 import { AddToken } from '../index';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -22,5 +22,7 @@ export const addToken = (page: Page, version?: string) => async ({
 
   await clickOnButton(page, 'Add custom token');
   await clickOnButton(page, 'Import tokens');
+
+  await getElementByContent(page, symbol);
   await clickOnLogo(page);
 };
