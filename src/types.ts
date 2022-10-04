@@ -1,4 +1,4 @@
-import { BrowserLaunchArgumentOptions, Page } from 'puppeteer';
+import * as puppeteer from 'puppeteer';
 
 import { Path } from './setup/metaMaskDownloader';
 
@@ -6,14 +6,21 @@ import { RECOMMENDED_METAMASK_VERSION } from './index';
 
 export type LaunchOptions = OfficialOptions | CustomOptions;
 
-type DappaterBrowserLaunchArgumentOptions = Omit<BrowserLaunchArgumentOptions, 'headless'>;
+type PuppeteerLaunchOptions = puppeteer.LaunchOptions &
+  puppeteer.BrowserLaunchArgumentOptions &
+  puppeteer.BrowserConnectOptions & {
+    product?: puppeteer.Product;
+    extraPrefsFirefox?: Record<string, unknown>;
+  };
 
-export type OfficialOptions = DappaterBrowserLaunchArgumentOptions & {
+type DappeteerLaunchOptions = Omit<PuppeteerLaunchOptions, 'headless'>;
+
+export type OfficialOptions = DappeteerLaunchOptions & {
   metaMaskVersion: typeof RECOMMENDED_METAMASK_VERSION | 'latest' | string;
   metaMaskLocation?: Path;
 };
 
-export type CustomOptions = DappaterBrowserLaunchArgumentOptions & {
+export type CustomOptions = DappeteerLaunchOptions & {
   metaMaskVersion?: string;
   metaMaskPath: string;
 };
@@ -59,5 +66,5 @@ export type Dappeteer = {
     deleteAccount: (accountNumber: number) => Promise<void>;
     deleteNetwork: (name: string) => Promise<void>;
   };
-  page: Page;
+  page: puppeteer.Page;
 };
