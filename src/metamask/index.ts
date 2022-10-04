@@ -57,10 +57,7 @@ export const getMetaMask = (page: Page): Promise<Dappeteer> => {
 /**
  * Return MetaMask instance
  * */
-export async function getMetaMaskWindow(
-  browser: Browser,
-  version?: string
-): Promise<Dappeteer> {
+export async function getMetaMaskWindow(browser: Browser): Promise<Dappeteer> {
   const metaMaskPage = await new Promise<Page>((resolve, reject) => {
     browser
       .pages()
@@ -73,5 +70,5 @@ export async function getMetaMaskWindow(
       .catch((e) => reject(e));
   });
 
-  return getMetaMask(metaMaskPage, version);
+  return getMetaMask(metaMaskPage);
 }

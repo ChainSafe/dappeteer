@@ -13,7 +13,7 @@ declare global {
   }
 }
 
-export type DappateerJestConfig = Partial<{
+export type DapeteerJestConfig = Partial<{
   dappeteer: LaunchOptions;
   metaMask: MetaMaskOptions;
 }>;
