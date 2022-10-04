@@ -3,7 +3,7 @@ import chaiAsPromised from 'chai-as-promised';
 import { Page } from 'puppeteer';
 
 import * as dappeteer from '../src';
-import { clickOnLogo, openProfileDropdown } from '../src/helpers';
+import { openProfileDropdown } from '../src/helpers';
 
 import { PASSWORD, TestContext } from './global';
 import { clickElement } from './utils/utils';
@@ -24,6 +24,10 @@ describe('basic interactions', async function () {
     } catch (e) {
       //ignored
     }
+  });
+
+  afterEach(async function () {
+    await metamask.page.reload();
   });
 
   after(async function () {
@@ -60,12 +64,11 @@ describe('basic interactions', async function () {
 
   // TODO: cover more cases
   it('should add token', async () => {
-    await metamask.switchNetwork('kovan');
+    await metamask.switchNetwork('mainnet');
     await metamask.addToken({
       tokenAddress: '0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa',
       symbol: 'KAKI',
     });
-    await metamask.switchNetwork('local');
   });
 
   it('should add network with required params', async () => {
@@ -81,19 +84,6 @@ describe('basic interactions', async function () {
     );
     expect(selectedNetwork).to.be.equal('Binance Smart Chain');
     await metamask.switchNetwork('local');
-  });
-
-  it('should fail to add network with wrong chain ID', async () => {
-    await expect(
-      metamask.addNetwork({
-        networkName: 'Optimistic Ethereum Testnet Kovan',
-        rpc: 'https://kovan.optimism.io/',
-        chainId: 420,
-        symbol: 'KUR',
-      }),
-    ).to.be.rejectedWith(SyntaxError);
-
-    await clickOnLogo(metamask.page);
   });
 
   it('should import private key', async () => {

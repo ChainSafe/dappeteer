@@ -8,9 +8,15 @@ export const clickOnSettingsSwitch = async (page: Page, text: string): Promise<v
 };
 
 export const openNetworkDropdown = async (page: Page): Promise<void> => {
-  const networkSwitcher = await page.waitForSelector('.network-display');
-  await networkSwitcher.click();
-  await page.waitForSelector('li.dropdown-menu-item');
+  const networkSwitcher = await page.waitForSelector('.network-display', { visible: true });
+  try {
+    await networkSwitcher.click();
+    await page.waitForSelector('.network-dropdown-list', { visible: true, timeout: 1000 });
+  } catch (e) {
+    //retry on fail
+    await networkSwitcher.click();
+    await page.waitForSelector('.network-dropdown-list', { visible: true, timeout: 1000 });
+  }
 };
 
 export const openProfileDropdown = async (page: Page): Promise<void> => {

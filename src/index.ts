@@ -5,4 +5,4 @@ export * from './setup';
 export { DappateerJestConfig } from './jest/global';
 
 // default constants
-export const RECOMMENDED_METAMASK_VERSION = 'v10.15.0';
+export const RECOMMENDED_METAMASK_VERSION = 'v10.20.0';

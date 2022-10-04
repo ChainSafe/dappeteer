@@ -19,7 +19,11 @@ export async function showTestNets(metaMaskPage: Page): Promise<void> {
 }
 
 export async function confirmWelcomeScreen(metaMaskPage: Page): Promise<void> {
-  await clickOnButton(metaMaskPage, 'Get Started');
+  await clickOnButton(metaMaskPage, 'Get started');
+}
+
+export async function declineAnalytics(metaMaskPage: Page): Promise<void> {
+  await clickOnButton(metaMaskPage, 'No thanks');
 }
 
 export async function importAccount(
@@ -30,7 +34,6 @@ export async function importAccount(
   }: MetaMaskOptions,
 ): Promise<void> {
   await clickOnButton(metaMaskPage, 'Import wallet');
-  await clickOnButton(metaMaskPage, 'I Agree');
 
   for (const [index, seedPart] of seed.split(' ').entries())
     await typeOnInputField(metaMaskPage, `${index + 1}.`, seedPart);
@@ -43,7 +46,7 @@ export async function importAccount(
   await acceptTerms.click();
 
   await clickOnButton(metaMaskPage, 'Import');
-  await clickOnButton(metaMaskPage, 'All Done');
+  await clickOnButton(metaMaskPage, 'All done');
 }
 
 export const closePopup = async (page: Page): Promise<void> => {
@@ -51,4 +54,18 @@ export const closePopup = async (page: Page): Promise<void> => {
    * hacky solution can be found here => https://github.com/puppeteer/puppeteer/issues/3496 */
   await new Promise((resolve) => setTimeout(resolve, 1000));
   await page.$eval('.popover-header__button', (node: HTMLElement) => node.click());
+};
+
+export const closePortfolioTooltip = async (page: Page): Promise<void> => {
+  const closeButton = await page.waitForSelector(`div.home__subheader-link--tooltip-content-header > button`, {
+    timeout: 20000,
+  });
+  await closeButton.click();
+  await page.waitForTimeout(333);
+};
+
+export const closeWhatsNewModal = async (page: Page): Promise<void> => {
+  await page.reload();
+  await clickOnLogo(page);
+  await page.waitForTimeout(333);
 };
