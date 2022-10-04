@@ -12,16 +12,18 @@ export const addNetwork = (page: Page, version?: string) => async ({
 }: AddNetwork): Promise<void> => {
   await page.bringToFront();
   await openNetworkDropdown(page);
-  await clickOnButton(page, 'Add Network');
+  await clickOnButton(page, 'Add network');
 
   const responsePromise = page.waitForResponse(
     (response) => new URL(response.url()).pathname === new URL(rpc).pathname,
   );
 
-  await typeOnInputField(page, 'Network Name', networkName);
+  await page.waitForTimeout(500);
+
+  await typeOnInputField(page, 'Network name', networkName);
   await typeOnInputField(page, 'New RPC URL', rpc);
   await typeOnInputField(page, 'Chain ID', String(chainId));
-  await typeOnInputField(page, 'Currency Symbol', symbol);
+  await typeOnInputField(page, 'Currency symbol', symbol);
 
   await responsePromise;
   await page.waitForTimeout(500);
@@ -32,4 +34,5 @@ export const addNetwork = (page: Page, version?: string) => async ({
   await clickOnButton(page, 'Save');
 
   await page.waitForXPath(`//*[text() = '${networkName}']`);
+  await clickOnButton(page, 'Got it');
 };

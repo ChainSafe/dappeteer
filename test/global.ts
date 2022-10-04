@@ -1,4 +1,3 @@
-import { writeFileSync } from 'fs';
 import http from 'http';
 import path from 'path';
 
@@ -65,10 +64,10 @@ export const mochaHooks = {
 
   async afterEach(this: TestContext): Promise<void> {
     if (this.currentTest.state === 'failed') {
-      writeFileSync(
-        path.resolve(__dirname, `../${this.currentTest.fullTitle()}.png`),
-        await this.metamask.page.screenshot({ encoding: 'binary', fullPage: true }),
-      );
+      await this.metamask.page.screenshot({
+        path: path.resolve(__dirname, `../${this.currentTest.fullTitle()}.png`),
+        fullPage: true,
+      });
     }
   },
 };

@@ -2,7 +2,7 @@ import { ElementHandle, Page } from 'puppeteer';
 
 // TODO: change text() with '.';
 export const getElementByContent = (page: Page, text: string, type = '*'): Promise<ElementHandle | null> =>
-  page.waitForXPath(`//${type}[contains(text(), '${text}')]`, { timeout: 20000 });
+  page.waitForXPath(`//${type}[contains(text(), '${text}')]`, { timeout: 20000, visible: true });
 
 export const getInputByLabel = (
   page: Page,
@@ -23,7 +23,7 @@ export const getInputByLabel = (
           ]
         : []),
     ].join('|'),
-    { timeout },
+    { timeout, visible: true },
   );
 
 export const getSettingsSwitch = (page: Page, text: string): Promise<ElementHandle | null> =>
@@ -32,6 +32,7 @@ export const getSettingsSwitch = (page: Page, text: string): Promise<ElementHand
       `//span[contains(.,'${text}')]/parent::div/following-sibling::div/div/div/div`,
       `//span[contains(.,'${text}')]/parent::div/following-sibling::div/div/label/div`,
     ].join('|'),
+    { visible: true },
   );
 
 export const getErrorMessage = async (page: Page): Promise<string | false> => {
@@ -47,4 +48,4 @@ export const getErrorMessage = async (page: Page): Promise<string | false> => {
 };
 
 export const getAccountMenuButton = (page: Page): Promise<ElementHandle | null> =>
-  page.waitForXPath(`//button[contains(@title,'Account Options')]`);
+  page.waitForXPath(`//button[contains(@title,'Account options')]`);

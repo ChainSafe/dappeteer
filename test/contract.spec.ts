@@ -8,7 +8,6 @@ import { TestContext } from './global';
 import { clickElement, pause } from './utils/utils';
 
 describe('contract interactions', async function () {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let contract: Contract;
   let testPage: Page;
   let metamask: Dappeteer;
@@ -24,6 +23,8 @@ describe('contract interactions', async function () {
     } catch (e) {
       //ignored
     }
+    await metamask.switchAccount(1);
+    await metamask.switchNetwork('local');
   });
 
   after(async function (this: TestContext) {
@@ -31,8 +32,6 @@ describe('contract interactions', async function () {
   });
 
   it('should have increased count', async () => {
-    await metamask.switchAccount(1);
-    await metamask.switchNetwork('local');
     await pause(1);
     const counterBefore = await getCounterNumber(contract);
     // click increase button
@@ -46,7 +45,6 @@ describe('contract interactions', async function () {
     const counterAfter = await getCounterNumber(contract);
 
     expect(counterAfter).to.be.equal(counterBefore + 1);
-    await metamask.switchNetwork('main');
   });
 });
 
