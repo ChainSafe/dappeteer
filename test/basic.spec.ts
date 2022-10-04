@@ -26,6 +26,10 @@ describe('basic interactions', async function () {
     }
   });
 
+  afterEach(async function () {
+    await metamask.page.reload();
+  });
+
   after(async function () {
     await testPage.close();
   });
@@ -60,12 +64,11 @@ describe('basic interactions', async function () {
 
   // TODO: cover more cases
   it('should add token', async () => {
-    await metamask.switchNetwork('kovan');
+    await metamask.switchNetwork('mainnet');
     await metamask.addToken({
       tokenAddress: '0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa',
       symbol: 'KAKI',
     });
-    await metamask.switchNetwork('local');
   });
 
   it('should add network with required params', async () => {
