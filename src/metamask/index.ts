@@ -54,14 +54,18 @@ export const getMetaMask = async (page: Page, version?: string): Promise<Dappete
 /**
  * Return MetaMask instance
  * */
-export async function getMetaMaskWindow(browser: Browser, version?: string): Promise<Dappeteer> {
-  const metaMaskPage = await new Promise<Page>((resolve) => {
-    browser.pages().then((pages) => {
-      for (const page of pages) {
-        if (page.url().includes('chrome-extension')) resolve(page);
-      }
-    });
+export async function getMetaMaskWindow(browser: Browser): Promise<Dappeteer> {
+  const metaMaskPage = await new Promise<Page>((resolve, reject) => {
+    browser
+      .pages()
+      .then((pages) => {
+        for (const page of pages) {
+          if (page.url().includes('chrome-extension')) resolve(page);
+        }
+        reject('Metamask extension not found');
+      })
+      .catch((e) => reject(e));
   });
 
-  return getMetaMask(metaMaskPage, version);
+  return getMetaMask(metaMaskPage);
 }

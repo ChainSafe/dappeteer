@@ -6,10 +6,12 @@ import { LaunchOptions } from '../types';
 import { isNewerVersion } from './isNewerVersion';
 import downloader from './metaMaskDownloader';
 
+export type DappeteerBrowser = puppeteer.Browser & { flask?: boolean };
+
 /**
  * Launch Puppeteer chromium instance with MetaMask plugin installed
  * */
-export async function launch(puppeteerLib: typeof puppeteer, options: LaunchOptions): Promise<puppeteer.Browser> {
+export async function launch(puppeteerLib: typeof puppeteer, options: LaunchOptions): Promise<DappeteerBrowser> {
   if (!options || (!options.metaMaskVersion && !(options as CustomOptions).metaMaskPath))
     throw new Error(
       `Please provide "metaMaskVersion" (recommended "${RECOMMENDED_METAMASK_VERSION}" or "latest" to always get latest release of MetaMask)`,
@@ -40,11 +42,17 @@ export async function launch(puppeteerLib: typeof puppeteer, options: LaunchOpti
         `Seems you are running older version of MetaMask that recommended by dappeteer team.
       Use it at your own risk or set the recommended version "${RECOMMENDED_METAMASK_VERSION}".`,
       );
-    else console.log(`Running tests on MetaMask version ${metaMaskVersion}`);
+    else
+      console.log(
+        `Running tests on MetaMask version ${metaMaskVersion} (flask: ${String(options.metaMaskFlask ?? false)})`,
+      );
 
     console.log(); // new line
 
-    METAMASK_PATH = await downloader(metaMaskVersion, metaMaskLocation);
+    METAMASK_PATH = await downloader(metaMaskVersion, {
+      location: metaMaskLocation,
+      flask: options.metaMaskFlask,
+    });
   } else {
     console.log(`Running tests on local MetaMask build`);
 
@@ -52,9 +60,14 @@ export async function launch(puppeteerLib: typeof puppeteer, options: LaunchOpti
     /* eslint-enable no-console */
   }
 
-  return puppeteerLib.launch({
+  const browser = await puppeteerLib.launch({
     headless: false,
     args: [`--disable-extensions-except=${METAMASK_PATH}`, `--load-extension=${METAMASK_PATH}`, ...(args || [])],
     ...rest,
   });
+
+  if (options.metaMaskFlask) {
+    Object.assign(browser, { flask: true });
+  }
+  return browser;
 }

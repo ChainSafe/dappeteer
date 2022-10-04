@@ -14,17 +14,26 @@ export type Path =
       extract: string;
     };
 
-export default async (version: string, location?: Path): Promise<string> => {
+export default async (version: string, options?: { location?: Path; flask?: boolean }): Promise<string> => {
+  const location = options.location;
   const metaMaskDirectory = typeof location === 'string' ? location : location?.extract || defaultDirectory;
   const downloadDirectory =
     typeof location === 'string' ? location : location?.download || path.resolve(defaultDirectory, 'download');
 
   if (version !== 'latest') {
-    const extractDestination = path.resolve(metaMaskDirectory, version.replace(/\./g, '_'));
+    let filename = version.replace(/\./g, '_');
+    if (options?.flask) {
+      filename = 'flask_' + filename;
+    }
+    const extractDestination = path.resolve(metaMaskDirectory, filename);
     if (fs.existsSync(extractDestination)) return extractDestination;
   }
-  const { filename, downloadUrl, tag } = await getMetaMaskReleases(version);
-  const extractDestination = path.resolve(metaMaskDirectory, tag.replace(/\./g, '_'));
+  const { filename, downloadUrl, tag } = await getMetaMaskReleases(version, options?.flask ?? false);
+  let destFilename = tag.replace(/\./g, '_');
+  if (options?.flask) {
+    destFilename = 'flask_' + filename;
+  }
+  const extractDestination = path.resolve(metaMaskDirectory, destFilename);
   if (!fs.existsSync(extractDestination)) {
     const downloadedFile = await downloadMetaMaskReleases(filename, downloadUrl, downloadDirectory);
     const zip = new StreamZip.async({ file: downloadedFile });
@@ -73,7 +82,7 @@ const downloadMetaMaskReleases = (name: string, url: string, location: string): 
 
 type MetaMaskReleases = { downloadUrl: string; filename: string; tag: string };
 const metaMaskReleasesUrl = 'https://api.github.com/repos/metamask/metamask-extension/releases';
-const getMetaMaskReleases = (version: string): Promise<MetaMaskReleases> =>
+const getMetaMaskReleases = (version: string, flask: boolean): Promise<MetaMaskReleases> =>
   new Promise((resolve, reject) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const request = get(metaMaskReleasesUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (response) => {
@@ -86,18 +95,28 @@ const getMetaMaskReleases = (version: string): Promise<MetaMaskReleases> =>
         if (data.message) return reject(data.message);
         for (const result of data) {
           if (result.draft) continue;
-          if (version === 'latest' || result.name.includes(version) || result.tag_name.includes(version)) {
+          if (
+            version === 'latest' ||
+            result.name.includes(version) ||
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            result.tag_name.includes(version)
+          ) {
             for (const asset of result.assets) {
-              if (asset.name.includes('chrome'))
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+              if (
+                (!flask && asset.name.includes('chrome')) ||
+                (flask && asset.name.includes('flask') && asset.name.includes('chrome'))
+              ) {
                 resolve({
                   downloadUrl: asset.browser_download_url,
                   filename: asset.name,
                   tag: result.tag_name,
                 });
+              }
             }
           }
         }
-        reject(`Version ${version} not found!`);
+        reject(`Version ${version} (flask: ${String(flask)}) not found!`);
       });
     });
     request.on('error', (error) => {
