@@ -1,8 +1,8 @@
-import * as puppeteer from 'puppeteer';
+import * as puppeteer from "puppeteer";
 
-import { Path } from './setup/metaMaskDownloader';
+import { Path } from "./setup/metaMaskDownloader";
 
-import { RECOMMENDED_METAMASK_VERSION } from './index';
+import { RECOMMENDED_METAMASK_VERSION } from "./index";
 
 export type LaunchOptions = OfficialOptions | CustomOptions;
 
@@ -13,10 +13,10 @@ type PuppeteerLaunchOptions = puppeteer.LaunchOptions &
     extraPrefsFirefox?: Record<string, unknown>;
   };
 
-type DappeteerLaunchOptions = Omit<PuppeteerLaunchOptions, 'headless'>;
+type DappeteerLaunchOptions = Omit<PuppeteerLaunchOptions, "headless">;
 
 export type OfficialOptions = DappeteerLaunchOptions & {
-  metaMaskVersion: typeof RECOMMENDED_METAMASK_VERSION | 'latest' | string;
+  metaMaskVersion: typeof RECOMMENDED_METAMASK_VERSION | "latest" | string;
   metaMaskLocation?: Path;
 };
 

@@ -1,8 +1,8 @@
-import puppeteer from 'puppeteer';
+import puppeteer from "puppeteer";
 
-import { launch, setupMetaMask } from '../index';
+import { launch, setupMetaMask } from "../index";
 
-import { getDappeteerConfig } from './config';
+import { getDappeteerConfig } from "./config";
 
 export default async function (): Promise<void> {
   const { dappeteer, metaMask } = await getDappeteerConfig();

@@ -1,7 +1,7 @@
-import { Browser, BrowserContext, Page } from 'puppeteer';
+import { Browser, BrowserContext, Page, Target } from "puppeteer";
 
-import { getMetaMask } from '../metamask';
-import { Dappeteer, MetaMaskOptions } from '../types';
+import { getMetaMask } from "../metamask";
+import { Dappeteer, MetaMaskOptions } from "../types";
 
 import {
   closePortfolioTooltip,
@@ -10,12 +10,12 @@ import {
   declineAnalytics,
   importAccount,
   showTestNets,
-} from './setupActions';
+} from "./setupActions";
 
 /**
  * Setup MetaMask with base account
  * */
-type Step<Options> = (page: Page, options?: Options) => void;
+type Step<Options> = (page: Page, options?: Options) => void | Promise<void>;
 const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [
   confirmWelcomeScreen,
   declineAnalytics,
@@ -29,10 +29,10 @@ const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [
 export async function setupMetaMask<Options = MetaMaskOptions>(
   browser: Browser | BrowserContext,
   options?: Options,
-  steps: Step<Options>[] = defaultMetaMaskSteps,
+  steps: Step<Options>[] = defaultMetaMaskSteps
 ): Promise<Dappeteer> {
   const page = await getMetamaskPage(browser);
-  page.setViewport({ height: 1200, width: 800 });
+  await page.setViewport({ height: 1200, width: 800 });
   // goes through the installation steps required by MetaMask
   for (const step of steps) {
     await step(page, options);
@@ -41,16 +41,19 @@ export async function setupMetaMask<Options = MetaMaskOptions>(
   return getMetaMask(page);
 }
 
-async function getMetamaskPage(browser: Browser | BrowserContext): Promise<Page> {
+async function getMetamaskPage(
+  browser: Browser | BrowserContext
+): Promise<Page> {
   const pages = await browser.pages();
   for (const page of pages) {
-    if (page.url().match('chrome-extension://[a-z]+/home.html')) {
+    if (page.url().match("chrome-extension://[a-z]+/home.html")) {
       return page;
     }
   }
   return new Promise((resolve, reject) => {
-    browser.on('targetcreated', async (target) => {
-      if (target.url().match('chrome-extension://[a-z]+/home.html')) {
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    browser.on("targetcreated", async (target: Target) => {
+      if (target.url().match("chrome-extension://[a-z]+/home.html")) {
         try {
           const page = await target.page();
           resolve(page);

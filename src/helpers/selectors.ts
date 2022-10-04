@@ -1,14 +1,21 @@
-import { ElementHandle, Page } from 'puppeteer';
+import { ElementHandle, Page } from "puppeteer";
 
 // TODO: change text() with '.';
-export const getElementByContent = (page: Page, text: string, type = '*'): Promise<ElementHandle | null> =>
-  page.waitForXPath(`//${type}[contains(text(), '${text}')]`, { timeout: 20000, visible: true });
+export const getElementByContent = (
+  page: Page,
+  text: string,
+  type = "*"
+): Promise<ElementHandle | null> =>
+  page.waitForXPath(`//${type}[contains(text(), '${text}')]`, {
+    timeout: 20000,
+    visible: true,
+  });
 
 export const getInputByLabel = (
   page: Page,
   text: string,
   excludeSpan = false,
-  timeout = 1000,
+  timeout = 1000
 ): Promise<ElementHandle> =>
   page.waitForXPath(
     [
@@ -22,30 +29,36 @@ export const getInputByLabel = (
             `//span[contains(.,'${text}')]/following-sibling::*//input`,
           ]
         : []),
-    ].join('|'),
-    { timeout, visible: true },
+    ].join("|"),
+    { timeout, visible: true }
   );
 
-export const getSettingsSwitch = (page: Page, text: string): Promise<ElementHandle | null> =>
+export const getSettingsSwitch = (
+  page: Page,
+  text: string
+): Promise<ElementHandle | null> =>
   page.waitForXPath(
     [
       `//span[contains(.,'${text}')]/parent::div/following-sibling::div/div/div/div`,
       `//span[contains(.,'${text}')]/parent::div/following-sibling::div/div/label/div`,
-    ].join('|'),
-    { visible: true },
+    ].join("|"),
+    { visible: true }
   );
 
 export const getErrorMessage = async (page: Page): Promise<string | false> => {
-  const options: Parameters<Page['waitForSelector']>[1] = { timeout: 1000 };
+  const options: Parameters<Page["waitForSelector"]>[1] = { timeout: 1000 };
 
-  const errorElement = await Promise.race([
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const errorElement: ElementHandle<HTMLElement> | null = await Promise.race([
     page.waitForSelector(`span.error`, options),
     page.waitForSelector(`.typography--color-error-1`, options),
     page.waitForSelector(`.typography--color-error-default`, options),
   ]).catch(() => null);
   if (!errorElement) return false;
-  return page.evaluate((node) => node.textContent, errorElement);
+  return page.evaluate((node: HTMLElement) => node.textContent, errorElement);
 };
 
-export const getAccountMenuButton = (page: Page): Promise<ElementHandle | null> =>
+export const getAccountMenuButton = (
+  page: Page
+): Promise<ElementHandle | null> =>
   page.waitForXPath(`//button[contains(@title,'Account options')]`);
