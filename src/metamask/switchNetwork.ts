@@ -9,7 +9,7 @@ export const switchNetwork =
     await page.bringToFront();
     await openNetworkDropdown(page);
 
-    const networkIndex = await page.evaluate(() => {
+    const networkIndex = await page.evaluate((network: string) => {
       const elements = document.querySelectorAll(".network-name-item");
       for (let i = 0; i < elements.length; i++) {
         const element = elements[i];
