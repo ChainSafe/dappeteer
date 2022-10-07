@@ -1,17 +1,17 @@
 import http from "http";
 
 import { Provider, Server } from "ganache";
-import { Browser } from "puppeteer";
 
-import { Dappeteer } from "../src";
+import { Dappeteer, DappeteerBrowser } from "../src";
 
-import { Contract } from "./deploy";
+import { Contract, Snaps } from "./deploy";
 
 export type InjectableContext = Readonly<{
   provider: Provider;
   ethereum: Server<"ethereum">;
   testPageServer: http.Server;
-  browser: Browser;
+  snapServers?: Record<Snaps, http.Server>;
+  browser: DappeteerBrowser;
   metamask: Dappeteer;
   contract: Contract;
   flask: boolean;

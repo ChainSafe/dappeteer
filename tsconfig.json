@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "target": "ES2021",
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["es2017", "dom"],
@@ -9,6 +9,6 @@
     "esModuleInterop": true,
     "outDir": "dist"
   },
-  "include": ["src/**/*", "test/**/*"],
-  "exclude": ["node_modules"]
+  "files": ["./node_modules/@metamask/snap-types/global.d.ts"],
+  "include": ["src/**/*", "test/**/*"]
 }

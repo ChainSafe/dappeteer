@@ -1,3 +1,4 @@
+import { AddressInfo } from "net";
 import { Page } from "puppeteer";
 
 export function pause(seconds: number): Promise<void> {
@@ -12,4 +13,11 @@ export async function clickElement(
   await page.waitForSelector(selector, { timeout: 15000 });
   const element = await page.$(selector);
   await element.click();
+}
+
+export function toUrl(address: AddressInfo | string): string {
+  if (typeof address === "string") {
+    return address;
+  }
+  return `http://localhost:${address.port}`;
 }
