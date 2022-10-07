@@ -1,10 +1,11 @@
-import NodeEnvironment from 'jest-environment-node';
-import puppeteer from 'puppeteer';
+import { Config } from "@jest/types";
+import NodeEnvironment from "jest-environment-node";
+import puppeteer from "puppeteer";
 
-import { getMetaMaskWindow } from '../index';
+import { getMetaMaskWindow } from "../index";
 
 class DappeteerEnvironment extends NodeEnvironment {
-  constructor(config) {
+  constructor(config: Config.ProjectConfig) {
     super(config);
   }
 
@@ -14,7 +15,7 @@ class DappeteerEnvironment extends NodeEnvironment {
     // get the wsEndpoint
     const wsEndpoint = process.env.PUPPETEER_WS_ENDPOINT;
     if (!wsEndpoint) {
-      throw new Error('wsEndpoint not found');
+      throw new Error("wsEndpoint not found");
     }
 
     // connect to puppeteer

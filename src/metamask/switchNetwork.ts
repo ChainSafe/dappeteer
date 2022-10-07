@@ -1,30 +1,35 @@
-import { Page } from 'puppeteer';
+import { Page } from "puppeteer";
 
-import { openNetworkDropdown } from '../helpers';
+import { openNetworkDropdown } from "../helpers";
 
 // TODO: validate - for now works fine as it is.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const switchNetwork = (page: Page, version?: string) => async (network = 'main'): Promise<void> => {
-  await page.bringToFront();
-  await openNetworkDropdown(page);
+export const switchNetwork =
+  (page: Page) =>
+  async (network: string = "main"): Promise<void> => {
+    await page.bringToFront();
+    await openNetworkDropdown(page);
 
-  const networkIndex = await page.evaluate((network) => {
-    const elements = document.querySelectorAll('.network-name-item');
-    for (let i = 0; i < elements.length; i++) {
-      const element = elements[i];
-      if ((element as HTMLLIElement).innerText.toLowerCase().includes(network.toLowerCase())) {
-        return i;
+    const networkIndex = await page.evaluate((network: string) => {
+      const elements = document.querySelectorAll(".network-name-item");
+      for (let i = 0; i < elements.length; i++) {
+        const element = elements[i];
+        if (
+          (element as HTMLLIElement).innerText
+            .toLowerCase()
+            .includes(network.toLowerCase())
+        ) {
+          return i;
+        }
       }
-    }
-    return 0;
-  }, network);
+      return 0;
+    }, network);
 
-  const networkFullName = await page.evaluate((index) => {
-    const elements = document.querySelectorAll(`.network-name-item`);
-    return (elements[index] as HTMLLIElement).innerText;
-  }, networkIndex);
+    const networkFullName = await page.evaluate((index: number) => {
+      const elements = document.querySelectorAll(`.network-name-item`);
+      return (elements[index] as HTMLLIElement).innerText;
+    }, networkIndex);
 
-  const networkButton = (await page.$$('.network-name-item'))[networkIndex];
-  await networkButton.click();
-  await page.waitForXPath(`//*[text() = '${networkFullName}']`);
-};
+    const networkButton = (await page.$$(".network-name-item"))[networkIndex];
+    await networkButton.click();
+    await page.waitForXPath(`//*[text() = '${networkFullName}']`);
+  };

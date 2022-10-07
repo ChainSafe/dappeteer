@@ -1,17 +1,22 @@
-import http from 'http';
-import path from 'path';
+import http from "http";
+import path from "path";
 
-import { Provider, Server } from 'ganache';
-import puppeteer, { Browser } from 'puppeteer';
+import { Provider, Server } from "ganache";
+import puppeteer, { Browser } from "puppeteer";
 
-import * as dappeteer from '../src';
-import { Dappeteer } from '../src';
+import * as dappeteer from "../src";
+import { Dappeteer } from "../src";
 
-import { Contract, deployContract, startLocalEthereum, startTestServer } from './deploy';
+import {
+  Contract,
+  deployContract,
+  startLocalEthereum,
+  startTestServer,
+} from "./deploy";
 
 export type InjectableContext = Readonly<{
   provider: Provider;
-  ethereum: Server<'ethereum'>;
+  ethereum: Server<"ethereum">;
   testPageServer: http.Server;
   browser: Browser;
   metamask: Dappeteer;
@@ -22,8 +27,8 @@ export type InjectableContext = Readonly<{
 export type TestContext = Mocha.Context & InjectableContext;
 
 export const LOCAL_PREFUNDED_MNEMONIC =
-  'pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog';
-export const PASSWORD = 'password1234';
+  "pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog";
+export const PASSWORD = "password1234";
 
 export const mochaHooks = {
   async beforeAll(this: Mocha.Context): Promise<void> {
@@ -34,7 +39,8 @@ export const mochaHooks = {
       },
     });
     const browser = await dappeteer.launch(puppeteer, {
-      metaMaskVersion: process.env.METAMASK_VERSION || dappeteer.RECOMMENDED_METAMASK_VERSION,
+      metaMaskVersion:
+        process.env.METAMASK_VERSION || dappeteer.RECOMMENDED_METAMASK_VERSION,
     });
     const server = await startTestServer();
     const metamask = await dappeteer.setupMetaMask(browser, {
@@ -42,6 +48,7 @@ export const mochaHooks = {
       seed: LOCAL_PREFUNDED_MNEMONIC,
       password: PASSWORD,
     });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const contract = await deployContract(ethereum.provider);
 
     const context: InjectableContext = {
@@ -50,6 +57,7 @@ export const mochaHooks = {
       browser,
       testPageServer: server,
       metamask,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       contract,
     };
 
@@ -63,7 +71,7 @@ export const mochaHooks = {
   },
 
   async afterEach(this: TestContext): Promise<void> {
-    if (this.currentTest.state === 'failed') {
+    if (this.currentTest.state === "failed") {
       await this.metamask.page.screenshot({
         path: path.resolve(__dirname, `../${this.currentTest.fullTitle()}.png`),
         fullPage: true,
