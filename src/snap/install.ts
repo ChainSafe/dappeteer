@@ -1,11 +1,9 @@
-import { Page } from "puppeteer";
 import { MetaMaskInpageProvider } from "@metamask/providers";
-import { version } from "solc";
+import { Page } from "puppeteer";
 import {
   clickOnButton,
   clickOnElement,
   clickOnLogo,
-  clickOnSettingsSwitch,
   openProfileDropdown,
 } from "../helpers";
 import { flaskOnly } from "./utils";

@@ -11,5 +11,8 @@
     "@metamask/snaps-cli": "^0.22.0"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@metamask/snap-types": "^0.22.0"
+  }
 }
