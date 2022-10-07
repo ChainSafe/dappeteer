@@ -1,15 +1,15 @@
-import http from 'http';
+import http from "http";
 
-import { Provider, Server } from 'ganache';
-import { Browser } from 'puppeteer';
+import { Provider, Server } from "ganache";
+import { Browser } from "puppeteer";
 
-import { Dappeteer } from '../src';
+import { Dappeteer } from "../src";
 
-import { Contract } from './deploy';
+import { Contract } from "./deploy";
 
 export type InjectableContext = Readonly<{
   provider: Provider;
-  ethereum: Server<'ethereum'>;
+  ethereum: Server<"ethereum">;
   testPageServer: http.Server;
   browser: Browser;
   metamask: Dappeteer;
@@ -21,5 +21,5 @@ export type InjectableContext = Readonly<{
 export type TestContext = Mocha.Context & InjectableContext;
 
 export const LOCAL_PREFUNDED_MNEMONIC =
-  'pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog';
-export const PASSWORD = 'password1234';
+  "pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog";
+export const PASSWORD = "password1234";

@@ -1,38 +1,39 @@
-import { Page } from 'puppeteer';
+import { Page } from "puppeteer";
 
-import { clickOnButton, getErrorMessage, openNetworkDropdown, typeOnInputField } from '../helpers';
-import { AddNetwork } from '../index';
+import {
+  clickOnButton,
+  getErrorMessage,
+  openNetworkDropdown,
+  typeOnInputField,
+} from "../helpers";
+import { AddNetwork } from "../index";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const addNetwork = (page: Page, version?: string) => async ({
-  networkName,
-  rpc,
-  chainId,
-  symbol,
-}: AddNetwork): Promise<void> => {
-  await page.bringToFront();
-  await openNetworkDropdown(page);
-  await clickOnButton(page, 'Add network');
+export const addNetwork =
+  (page: Page) =>
+  async ({ networkName, rpc, chainId, symbol }: AddNetwork): Promise<void> => {
+    await page.bringToFront();
+    await openNetworkDropdown(page);
+    await clickOnButton(page, "Add network");
 
-  const responsePromise = page.waitForResponse(
-    (response) => new URL(response.url()).pathname === new URL(rpc).pathname,
-  );
+    const responsePromise = page.waitForResponse(
+      (response) => new URL(response.url()).pathname === new URL(rpc).pathname
+    );
 
-  await page.waitForTimeout(500);
+    await page.waitForTimeout(500);
 
-  await typeOnInputField(page, 'Network name', networkName);
-  await typeOnInputField(page, 'New RPC URL', rpc);
-  await typeOnInputField(page, 'Chain ID', String(chainId));
-  await typeOnInputField(page, 'Currency symbol', symbol);
+    await typeOnInputField(page, "Network name", networkName);
+    await typeOnInputField(page, "New RPC URL", rpc);
+    await typeOnInputField(page, "Chain ID", String(chainId));
+    await typeOnInputField(page, "Currency symbol", symbol);
 
-  await responsePromise;
-  await page.waitForTimeout(500);
+    await responsePromise;
+    await page.waitForTimeout(500);
 
-  const errorMessage = await getErrorMessage(page);
-  if (errorMessage) throw new SyntaxError(errorMessage);
+    const errorMessage = await getErrorMessage(page);
+    if (errorMessage) throw new SyntaxError(errorMessage);
 
-  await clickOnButton(page, 'Save');
+    await clickOnButton(page, "Save");
 
-  await page.waitForXPath(`//*[text() = '${networkName}']`);
-  await clickOnButton(page, 'Got it');
-};
+    await page.waitForXPath(`//*[text() = '${networkName}']`);
+    await clickOnButton(page, "Got it");
+  };

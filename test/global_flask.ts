@@ -1,11 +1,16 @@
-import path from 'path';
+import path from "path";
 
-import puppeteer from 'puppeteer';
+import puppeteer from "puppeteer";
 
-import * as dappeteer from '../src';
+import * as dappeteer from "../src";
 
-import { InjectableContext, LOCAL_PREFUNDED_MNEMONIC, PASSWORD, TestContext } from './constant';
-import { deployContract, startLocalEthereum, startTestServer } from './deploy';
+import {
+  InjectableContext,
+  LOCAL_PREFUNDED_MNEMONIC,
+  PASSWORD,
+  TestContext,
+} from "./constant";
+import { deployContract, startLocalEthereum, startTestServer } from "./deploy";
 
 export const mochaHooks = {
   async beforeAll(this: Mocha.Context): Promise<void> {
@@ -16,7 +21,8 @@ export const mochaHooks = {
       },
     });
     const browser = await dappeteer.launch(puppeteer, {
-      metaMaskVersion: process.env.METAMASK_VERSION || dappeteer.RECOMMENDED_METAMASK_VERSION,
+      metaMaskVersion:
+        process.env.METAMASK_VERSION || dappeteer.RECOMMENDED_METAMASK_VERSION,
       metaMaskFlask: true,
     });
     const server = await startTestServer();
@@ -49,7 +55,7 @@ export const mochaHooks = {
   },
 
   async afterEach(this: TestContext): Promise<void> {
-    if (this.currentTest.state === 'failed') {
+    if (this.currentTest.state === "failed") {
       await this.metamask.page.screenshot({
         path: path.resolve(__dirname, `../${this.currentTest.fullTitle()}.png`),
         fullPage: true,
