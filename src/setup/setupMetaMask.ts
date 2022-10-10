@@ -3,7 +3,9 @@ import { Browser, BrowserContext, Page, Target } from "puppeteer";
 import { getMetaMask } from "../metamask";
 import { Dappeteer, MetaMaskOptions } from "../types";
 
+import { DappeteerBrowser } from "./launch";
 import {
+  acceptTheRisks,
   closePortfolioTooltip,
   closeWhatsNewModal,
   confirmWelcomeScreen,
@@ -25,14 +27,26 @@ const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [
   closeWhatsNewModal,
   closeWhatsNewModal,
 ];
+const flaskMetaMaskSteps: Step<MetaMaskOptions>[] = [
+  acceptTheRisks,
+  importAccount,
+  showTestNets,
+  closePortfolioTooltip,
+  closeWhatsNewModal,
+  closeWhatsNewModal,
+];
 
 export async function setupMetaMask<Options = MetaMaskOptions>(
-  browser: Browser | BrowserContext,
+  browser: Browser | BrowserContext | DappeteerBrowser,
   options?: Options,
-  steps: Step<Options>[] = defaultMetaMaskSteps
+  steps?: Step<Options>[]
 ): Promise<Dappeteer> {
   const page = await getMetamaskPage(browser);
-  await page.setViewport({ height: 1200, width: 800 });
+  steps = steps ?? defaultMetaMaskSteps;
+  if ((browser as DappeteerBrowser).flask) {
+    steps = flaskMetaMaskSteps;
+  }
+  await page.setViewport({ height: 800, width: 800 });
   // goes through the installation steps required by MetaMask
   for (const step of steps) {
     await step(page, options);

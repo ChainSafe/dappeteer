@@ -3,8 +3,5 @@ recursive: true
 color: true
 timeout: 20000
 exit: true
-require: 
-  - 'ts-node/register'
-  - 'test/global.ts'
 spec:
   - 'test/**/*.spec.ts'

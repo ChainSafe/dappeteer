@@ -18,6 +18,10 @@ export async function showTestNets(metaMaskPage: Page): Promise<void> {
   await clickOnLogo(metaMaskPage);
 }
 
+export async function acceptTheRisks(metaMaskPage: Page): Promise<void> {
+  await clickOnButton(metaMaskPage, "I accept the risks");
+}
+
 export async function confirmWelcomeScreen(metaMaskPage: Page): Promise<void> {
   await clickOnButton(metaMaskPage, "Get started");
 }

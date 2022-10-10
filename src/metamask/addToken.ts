@@ -14,7 +14,9 @@ export const addToken =
   async ({ tokenAddress, symbol, decimals = 0 }: AddToken): Promise<void> => {
     await page.bringToFront();
     await clickOnButton(page, "Assets");
-    await page.waitForSelector(".asset-list-item__token-button");
+    await page.waitForSelector(".asset-list-item__token-button", {
+      visible: true,
+    });
     await clickOnElement(page, "import tokens");
     await clickOnButton(page, "Custom token");
 

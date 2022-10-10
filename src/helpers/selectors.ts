@@ -61,4 +61,6 @@ export const getErrorMessage = async (page: Page): Promise<string | false> => {
 export const getAccountMenuButton = (
   page: Page
 ): Promise<ElementHandle | null> =>
-  page.waitForXPath(`//button[contains(@title,'Account options')]`);
+  page.waitForXPath(`//button[contains(@title,'Account options')]`, {
+    visible: true,
+  });
