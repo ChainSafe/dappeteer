@@ -3,8 +3,8 @@ import { Page } from "puppeteer";
 
 import { Dappeteer } from "../src";
 
+import { TestContext } from "./constant";
 import { Contract } from "./deploy";
-import { TestContext } from "./global";
 import { clickElement, pause } from "./utils/utils";
 
 describe("contract interactions", function () {

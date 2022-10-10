@@ -5,7 +5,7 @@ import { Page } from "puppeteer";
 import * as dappeteer from "../src";
 import { openProfileDropdown } from "../src/helpers";
 
-import { PASSWORD, TestContext } from "./global";
+import { PASSWORD, TestContext } from "./constant";
 import { clickElement } from "./utils/utils";
 
 use(chaiAsPromised);

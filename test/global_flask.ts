@@ -23,6 +23,7 @@ export const mochaHooks = {
     const browser = await dappeteer.launch(puppeteer, {
       metaMaskVersion:
         process.env.METAMASK_VERSION || dappeteer.RECOMMENDED_METAMASK_VERSION,
+      metaMaskFlask: true,
     });
     const server = await startTestServer();
     const metamask = await dappeteer.setupMetaMask(browser, {
@@ -39,7 +40,7 @@ export const mochaHooks = {
       browser,
       testPageServer: server,
       metamask,
-      flask: false,
+      flask: true,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       contract,
     };
