@@ -4,7 +4,10 @@ import { Path } from "./setup/metaMaskDownloader";
 
 import { RECOMMENDED_METAMASK_VERSION } from "./index";
 
-export type LaunchOptions = OfficialOptions | CustomOptions;
+export type LaunchOptions = (OfficialOptions | CustomOptions) & {
+  //install flask (canary) version of metamask.
+  metaMaskFlask?: boolean;
+};
 
 type PuppeteerLaunchOptions = puppeteer.LaunchOptions &
   puppeteer.BrowserLaunchArgumentOptions &

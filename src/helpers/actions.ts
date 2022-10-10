@@ -36,14 +36,18 @@ export const openNetworkDropdown = async (page: Page): Promise<void> => {
 };
 
 export const openProfileDropdown = async (page: Page): Promise<void> => {
-  const accountSwitcher = await page.waitForSelector(".identicon");
+  const accountSwitcher = await page.waitForSelector(".identicon", {
+    visible: true,
+  });
   await accountSwitcher.click();
 };
 
 export const openAccountDropdown = async (page: Page): Promise<void> => {
   const accMenu = await getAccountMenuButton(page);
   await accMenu.click();
-  await page.waitForSelector(".menu__container.account-options-menu");
+  await page.waitForSelector(".menu__container.account-options-menu", {
+    visible: true,
+  });
 };
 
 export const clickOnElement = async (
@@ -64,7 +68,9 @@ export const clickOnButton = async (
 };
 
 export const clickOnLogo = async (page: Page): Promise<void> => {
-  const header = await page.waitForSelector(".app-header__logo-container");
+  const header = await page.waitForSelector(".app-header__logo-container", {
+    visible: true,
+  });
   await header.click();
 };
 
