@@ -11,6 +11,7 @@ import {
   TestContext,
 } from "./constant";
 import {
+  deployContract,
   startLocalEthereum,
   startSnapServers,
   startTestServer,
@@ -36,8 +37,8 @@ export const mochaHooks = {
       seed: LOCAL_PREFUNDED_MNEMONIC,
       password: PASSWORD,
     });
-    // // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    // const contract = await deployContract(ethereum.provider);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const contract = await deployContract(ethereum.provider);
 
     const context: InjectableContext = {
       ethereum: ethereum,
@@ -48,7 +49,7 @@ export const mochaHooks = {
       metamask,
       flask: true,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      contract: null,
+      contract,
     };
 
     Object.assign(this, context);

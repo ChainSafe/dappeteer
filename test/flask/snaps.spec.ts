@@ -12,6 +12,7 @@ describe.only("snaps", function () {
   });
 
   beforeEach(function (this: TestContext) {
+    //skip those tests for non flask metamask
     if (this.browser.flask == null) {
       this.skip();
     }
