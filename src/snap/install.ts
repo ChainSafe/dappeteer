@@ -26,9 +26,9 @@ export async function installSnap(
   //need to open page to access window.ethereum
   const installPage = await page.browser().newPage();
   await installPage.goto("https://google.com");
-  await installPage.evaluate(
-    (opts: { snapId: string; version?: string }) => {
-      void window.ethereum.request({
+  const installAction = installPage.evaluate(
+    (opts: { snapId: string; version?: string }) =>
+      window.ethereum.request({
         method: "wallet_enable",
         params: [
           {
@@ -37,11 +37,10 @@ export async function installSnap(
             },
           },
         ],
-      });
-    },
+      }),
     { snapId, version: opts.version }
   );
-  await installPage.close({ runBeforeUnload: true });
+
   await page.bringToFront();
   await page.reload();
   await clickOnButton(page, "Connect");
@@ -57,6 +56,10 @@ export async function installSnap(
   } else {
     await clickOnButton(page, "Install");
   }
+
+  await installAction;
+  await installPage.close({ runBeforeUnload: true });
+
   for (const step of opts.customSteps ?? []) {
     await step(page);
   }
