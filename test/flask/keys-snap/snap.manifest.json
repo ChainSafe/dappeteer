@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0",
+  "description": "An example Snap written in TypeScript.",
+  "proposedName": "Keys Snap\n",
+  "source": {
+    "shasum": "sApNS/DJjjs8psniSQzWlOdkzJ75IsbtlpdipfKarRI=",
+    "location": {
+      "npm": {
+        "filePath": "dist/bundle.js",
+        "packageName": "keys-snap",
+        "registry": "https://registry.npmjs.org/"
+      }
+    }
+  },
+  "initialPermissions": {
+    "snap_getBip44Entropy_1": {}
+  },
+  "manifestVersion": "0.1"
+}

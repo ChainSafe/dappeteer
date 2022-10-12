@@ -10,7 +10,12 @@ import {
   PASSWORD,
   TestContext,
 } from "./constant";
-import { deployContract, startLocalEthereum, startTestServer } from "./deploy";
+import {
+  deployContract,
+  startLocalEthereum,
+  startSnapServers,
+  startTestServer,
+} from "./deploy";
 
 export const mochaHooks = {
   async beforeAll(this: Mocha.Context): Promise<void> {
@@ -26,6 +31,7 @@ export const mochaHooks = {
       metaMaskFlask: true,
     });
     const server = await startTestServer();
+    const snapServers = await startSnapServers();
     const metamask = await dappeteer.setupMetaMask(browser, {
       // optional, else it will use a default seed
       seed: LOCAL_PREFUNDED_MNEMONIC,
@@ -39,6 +45,7 @@ export const mochaHooks = {
       provider: ethereum.provider,
       browser,
       testPageServer: server,
+      snapServers: snapServers,
       metamask,
       flask: true,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -50,6 +57,9 @@ export const mochaHooks = {
 
   async afterAll(this: TestContext): Promise<void> {
     this.testPageServer.close();
+    (Object.entries(this.snapServers) ?? []).forEach(([, server]) => {
+      server.close();
+    });
     await this.browser.close();
     await this.ethereum.close();
   },
