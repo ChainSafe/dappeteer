@@ -1,6 +1,7 @@
 import fs from "fs";
 import * as http from "http";
 import * as path from "path";
+import { exec } from "child_process";
 
 import ganache, { Provider, Server, ServerOptions } from "ganache";
 import handler from "serve-handler";
@@ -94,6 +95,16 @@ export async function startSnapServers(): Promise<Record<Snaps, http.Server>> {
 }
 
 async function startSnapServer(snap: Snaps): Promise<http.Server> {
+  console.log(`Building ${snap}...`);
+  await new Promise((resolve, reject) => {
+    exec(`cd ./test/flask/${snap} && npx mm-snap build`, (error, stdout) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(stdout);
+    });
+  });
   console.log(`Starting ${snap} server...`);
   const server = http.createServer((req, res) => {
     void handler(req, res, {
