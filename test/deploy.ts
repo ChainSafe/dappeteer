@@ -1,12 +1,14 @@
 import fs from "fs";
 import * as http from "http";
 import * as path from "path";
+import { exec } from "child_process";
 
 import ganache, { Provider, Server, ServerOptions } from "ganache";
 import handler from "serve-handler";
 import Web3 from "web3";
 
 import { compileContracts } from "./contract";
+import { toUrl } from "./utils/utils";
 
 const counterContract: { address: string } | null = null;
 
@@ -72,6 +74,62 @@ export async function startTestServer(): Promise<http.Server> {
   await new Promise<void>((resolve) => {
     server.listen(8080, () => {
       console.log("Server running at http://localhost:8080");
+      resolve();
+    });
+  });
+  return server;
+}
+
+export enum Snaps {
+  BASE_SNAP = "base-snap",
+  KEYS_SNAP = "keys-snap",
+  PERMISSIONS_SNAP = "permissions-snap",
+}
+
+export async function startSnapServers(): Promise<Record<Snaps, http.Server>> {
+  return {
+    [Snaps.BASE_SNAP]: await startSnapServer(Snaps.BASE_SNAP),
+    [Snaps.KEYS_SNAP]: await startSnapServer(Snaps.KEYS_SNAP),
+    [Snaps.PERMISSIONS_SNAP]: await startSnapServer(Snaps.PERMISSIONS_SNAP),
+  };
+}
+
+async function startSnapServer(snap: Snaps): Promise<http.Server> {
+  console.log(`Building ${snap}...`);
+  await new Promise((resolve, reject) => {
+    exec(`cd ./test/flask/${snap} && npx mm-snap build`, (error, stdout) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(stdout);
+    });
+  });
+  console.log(`Starting ${snap} server...`);
+  const server = http.createServer((req, res) => {
+    void handler(req, res, {
+      public: path.resolve(__dirname, `./flask/${snap}`),
+      headers: [
+        {
+          source: "**/*",
+          headers: [
+            {
+              key: "Cache-Control",
+              value: "no-cache",
+            },
+            {
+              key: "Access-Control-Allow-Origin",
+              value: "*",
+            },
+          ],
+        },
+      ],
+    });
+  });
+
+  await new Promise<void>((resolve) => {
+    server.listen(0, () => {
+      console.log(`Server for ${snap} running at `, toUrl(server.address()));
       resolve();
     });
   });

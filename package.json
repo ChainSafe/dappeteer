@@ -39,6 +39,7 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "@metamask/providers": "^9.1.0",
     "@types/chai-as-promised": "^7.1.5",
     "chai-as-promised": "^7.1.1",
     "node-stream-zip": "^1.13.0"
@@ -46,6 +47,8 @@
   "devDependencies": {
     "@chainsafe/eslint-config": "^1.0.0",
     "@jest/types": "^27.1.1",
+    "@metamask/snap-types": "^0.22.0",
+    "@metamask/snaps-cli": "^0.22.0",
     "@rushstack/eslint-patch": "^1.2.0",
     "@types/chai": "^4.2.22",
     "@types/mocha": "^9.1.1",
