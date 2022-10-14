@@ -39,6 +39,12 @@ export const clickOnLogo = async (page: Page): Promise<void> => {
   await header.click();
 };
 
+export const clickOnLittleDownArrow = async (page: Page): Promise<void> => {
+  const selector = '.signature-request-message__scroll-button';
+  await page.waitForSelector(selector);
+  await page.click(selector);
+};
+
 /**
  *
  * @param page
