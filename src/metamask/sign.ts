@@ -24,7 +24,7 @@ export const signTypedData = (page: Page, getSingedIn: GetSingedIn, version?: st
   await page.reload();
 
   await page.waitForTimeout(300);
-  
+
   await clickOnLittleDownArrow(page);
 
   await page.waitForTimeout(300);
