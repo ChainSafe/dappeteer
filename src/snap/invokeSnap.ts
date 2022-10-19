@@ -2,12 +2,12 @@ import { Page } from "puppeteer";
 import { SnapInstallationParamNames } from "../types";
 import { flaskOnly } from "./utils";
 
-export async function invokeSnap(
+export async function invokeSnap<R = unknown>(
   page: Page,
   snapId: string,
   method: string,
   params: Record<SnapInstallationParamNames, any> = {}
-): Promise<Partial<any>> {
+): Promise<Partial<R>> {
   flaskOnly(page);
   return page.evaluate(
     async (opts: {
@@ -21,7 +21,7 @@ export async function invokeSnap(
           `${opts.snapId}`,
           {
             method: opts.method,
-            ...opts.params,
+            params: opts.params,
           },
         ],
       });
