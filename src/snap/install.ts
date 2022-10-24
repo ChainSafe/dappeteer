@@ -29,7 +29,7 @@ export async function installSnap(
   await installPage.goto(installationSnapUrl);
   const installAction = installPage.evaluate(
     (opts: { snapId: string; version?: string }) =>
-      window.ethereum.request({
+      window.ethereum.request<{ snaps: { [snapId: string]: {} } }>({
         method: "wallet_enable",
         params: [
           {
@@ -58,14 +58,15 @@ export async function installSnap(
     await clickOnButton(page, "Install");
   }
 
-  await installAction;
-  await installPage.close({ runBeforeUnload: true });
-
   for (const step of opts.customSteps ?? []) {
     await step(page);
   }
-  if (!(await isSnapInstalled(page, snapId))) {
-    throw new Error("Failed to install snap " + snapId);
+
+  const result = await installAction;
+  await installPage.close({ runBeforeUnload: true });
+
+  if (snapId in result.snaps) {
+    throw new Error("Failed to install snap");
   }
 }
 

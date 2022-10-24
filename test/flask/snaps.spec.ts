@@ -9,7 +9,7 @@ function getSnapIdByName(testContext: TestContext, snapName: Snaps): string {
   return `local:${toUrl(testContext.snapServers[snapName].address())}`;
 }
 
-describe.only("snaps", function () {
+describe("snaps", function () {
   let metamask: dappeteer.Dappeteer;
 
   before(function (this: TestContext) {
