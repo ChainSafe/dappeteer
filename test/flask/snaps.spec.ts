@@ -4,7 +4,7 @@ import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
 import { toUrl } from "../utils/utils";
 
-describe.only("snaps", function () {
+describe("snaps", function () {
   let metamask: dappeteer.Dappeteer;
 
   before(function (this: TestContext) {
