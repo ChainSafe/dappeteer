@@ -63,8 +63,7 @@ export async function installSnap(
 
   const result = await installAction;
   await installPage.close({ runBeforeUnload: true });
-
-  if (snapId in result.snaps) {
+  if (!(snapId in result.snaps)) {
     throw new Error("Failed to install snap");
   }
 }
