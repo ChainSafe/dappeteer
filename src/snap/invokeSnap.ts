@@ -1,12 +1,12 @@
 import { JSONArray, JSONObject, Page } from "puppeteer";
 import { flaskOnly } from "./utils";
 
-export async function invokeSnap<R = unknown>(
+export async function invokeSnap<R>(
   page: Page,
   snapId: string,
   method: string,
   params: JSONArray | JSONObject = {}
-): Promise<Partial<R>> {
+): ReturnType<typeof window.ethereum.request<R>> {
   flaskOnly(page);
   return page.evaluate(
     async (opts: {
@@ -14,7 +14,7 @@ export async function invokeSnap<R = unknown>(
       method: string;
       params: JSONArray | JSONObject;
     }) => {
-      return window.ethereum.request({
+      return window.ethereum.request<R>({
         method: "wallet_invokeSnap",
         params: [
           `${opts.snapId}`,
