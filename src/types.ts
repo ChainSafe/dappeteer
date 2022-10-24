@@ -60,8 +60,6 @@ export type TransactionOptions = {
   priority?: number;
 };
 
-export type SnapInstallationParamNames = "version" | string;
-
 export type Dappeteer = {
   lock: () => Promise<void>;
   unlock: (password: string) => Promise<void>;
