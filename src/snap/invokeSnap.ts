@@ -1,19 +1,15 @@
-import { JSONArray, JSONObject, Page } from "puppeteer";
+import { Page, Serializable } from "puppeteer";
 import { flaskOnly } from "./utils";
 
-export async function invokeSnap<R>(
+export async function invokeSnap<R, P extends Serializable = Serializable>(
   page: Page,
   snapId: string,
   method: string,
-  params: JSONArray | JSONObject = {}
+  params: P
 ): ReturnType<typeof window.ethereum.request<R>> {
   flaskOnly(page);
   return page.evaluate(
-    async (opts: {
-      snapId: string;
-      method: string;
-      params: JSONArray | JSONObject;
-    }) => {
+    async (opts: { snapId: string; method: string; params: P }) => {
       return window.ethereum.request<R>({
         method: "wallet_invokeSnap",
         params: [
