@@ -1,7 +1,10 @@
 import { Page, Serializable } from "puppeteer";
 import { flaskOnly } from "./utils";
 
-export async function invokeSnap<R, P extends Serializable = Serializable>(
+export async function invokeSnap<
+  R = unknown,
+  P extends Serializable = Serializable
+>(
   page: Page,
   snapId: string,
   method: string,

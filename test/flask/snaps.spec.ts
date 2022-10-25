@@ -1,3 +1,4 @@
+import { assert, expect } from "chai";
 import * as dappeteer from "../../src";
 import { installSnap, invokeSnap } from "../../src/snap";
 import { TestContext } from "../constant";
@@ -75,6 +76,6 @@ describe.only("snaps", function () {
 
     await clickOnButton(metamask.page, "Approve");
 
-    await invokeAction;
+    expect(await invokeAction).to.equal(true);
   });
 });
