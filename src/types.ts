@@ -1,8 +1,15 @@
 import * as puppeteer from "puppeteer";
 
+import { MetaMaskInpageProvider } from "@metamask/providers";
 import { Path } from "./setup/metaMaskDownloader";
 
 import { RECOMMENDED_METAMASK_VERSION } from "./index";
+
+declare global {
+  interface Window {
+    ethereum: MetaMaskInpageProvider;
+  }
+}
 
 export type LaunchOptions = (OfficialOptions | CustomOptions) & {
   //install flask (canary) version of metamask.
