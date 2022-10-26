@@ -1,4 +1,4 @@
-import { assert, expect } from "chai";
+import { expect } from "chai";
 import * as dappeteer from "../../src";
 import { installSnap, invokeSnap } from "../../src/snap";
 import { TestContext } from "../constant";
