@@ -20,12 +20,13 @@ export async function installSnap(
     hasKeyPermissions: boolean;
     customSteps?: InstallStep[];
     version?: string;
-  }
+  },
+  installationSnapUrl: string = "https://google.com"
 ): Promise<void> {
   flaskOnly(page);
   //need to open page to access window.ethereum
   const installPage = await page.browser().newPage();
-  await installPage.goto("https://google.com");
+  await installPage.goto(installationSnapUrl);
   const installAction = installPage.evaluate(
     (opts: { snapId: string; version?: string }) =>
       window.ethereum.request<{ snaps: { [snapId: string]: {} } }>({
