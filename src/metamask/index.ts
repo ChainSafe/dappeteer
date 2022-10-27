@@ -23,14 +23,14 @@ export const getMetaMask = (page: Page): Promise<Dappeteer> => {
   // modified window object to kep state between tests
   const setSignedIn = async (state: boolean): Promise<void> => {
     await page.evaluate((s: boolean) => {
-      ((window as unknown) as { signedIn: boolean }).signedIn = s;
+      (window as unknown as { signedIn: boolean }).signedIn = s;
     }, state);
   };
   const getSingedIn = (): Promise<boolean> =>
     page.evaluate(() =>
-      ((window as unknown) as { signedIn: boolean | undefined }).signedIn !==
+      (window as unknown as { signedIn: boolean | undefined }).signedIn !==
       undefined
-        ? ((window as unknown) as { signedIn: boolean }).signedIn
+        ? (window as unknown as { signedIn: boolean }).signedIn
         : true
     );
 
