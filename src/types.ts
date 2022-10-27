@@ -76,5 +76,9 @@ export type Dappeteer = {
     deleteAccount: (accountNumber: number) => Promise<void>;
     deleteNetwork: (name: string) => Promise<void>;
   };
+  snaps: {
+    acceptDialog: () => Promise<void>;
+    rejectDialog: () => Promise<void>;
+  };
   page: puppeteer.Page;
 };
