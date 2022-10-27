@@ -1,8 +1,10 @@
 import * as puppeteer from "puppeteer";
 
 import { MetaMaskInpageProvider } from "@metamask/providers";
+import { Page, Serializable } from "puppeteer";
 import { Path } from "./setup/metaMaskDownloader";
 
+import { InstallStep } from "./snap/install";
 import { RECOMMENDED_METAMASK_VERSION } from "./index";
 
 declare global {
@@ -77,6 +79,23 @@ export type Dappeteer = {
     deleteNetwork: (name: string) => Promise<void>;
   };
   snaps: {
+    invokeSnap: <R = unknown, P extends Serializable = Serializable>(
+      page: Page,
+      snapId: string,
+      method: string,
+      params: P
+    ) => Promise<Partial<R>>;
+    installSnap: (
+      page: Page,
+      snapId: string,
+      opts: {
+        hasPermissions: boolean;
+        hasKeyPermissions: boolean;
+        customSteps?: InstallStep[];
+        version?: string;
+      },
+      installationSnapUrl?: string
+    ) => Promise<void>;
     acceptDialog: () => Promise<void>;
     rejectDialog: () => Promise<void>;
   };
