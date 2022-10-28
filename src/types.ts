@@ -6,7 +6,6 @@ import { Path } from "./setup/utils/metaMaskDownloader";
 import { InstallStep } from "./snap/install";
 import { NotificationList } from "./snap/types";
 import { RECOMMENDED_METAMASK_VERSION } from "./index";
-import { InstallSnapResult } from "./snap/types";
 
 export type DappeteerLaunchOptions = {
   metaMaskVersion?:
