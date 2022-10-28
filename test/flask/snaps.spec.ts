@@ -12,27 +12,6 @@ function getSnapIdByName(testContext: TestContext, snapName: Snaps): string {
 describe("snaps", function () {
   let metamask: dappeteer.Dappeteer;
 
-  async function installPermissionSnap(
-    testContext: TestContext,
-    snapAddress: string
-  ): Promise<void> {
-    await metamask.snaps.installSnap(
-      metamask.page,
-      getSnapIdByName(testContext, Snaps.PERMISSIONS_SNAP),
-      {
-        hasPermissions: true,
-        hasKeyPermissions: false,
-      },
-      snapAddress
-    );
-  }
-
-  async function getTestPage(snapAddress: string): Promise<Page> {
-    const testPage = await metamask.page.browser().newPage();
-    await testPage.goto(snapAddress);
-    return testPage;
-  }
-
   before(function (this: TestContext) {
     metamask = this.metamask;
   });
@@ -56,7 +35,14 @@ describe("snaps", function () {
   });
 
   it("should install permissions snap from npm", async function (this: TestContext) {
-    await installPermissionSnap(this, "https://google.com");
+    await metamask.snaps.installSnap(
+      metamask.page,
+      getSnapIdByName(this, Snaps.PERMISSIONS_SNAP),
+      {
+        hasPermissions: true,
+        hasKeyPermissions: false,
+      }
+    );
   });
 
   it("should install keys snap from npm", async function (this: TestContext) {
@@ -70,35 +56,46 @@ describe("snaps", function () {
     );
   });
 
-  it("should invoke provided snap method and ACCEPT the dialog", async function (this: TestContext) {
-    const snapAddress = "http://localhost:8545";
-    await installPermissionSnap(this, snapAddress);
-    const testPage = await getTestPage(snapAddress);
-    const invokeAction = metamask.snaps.invokeSnap(
-      testPage,
-      getSnapIdByName(this, Snaps.PERMISSIONS_SNAP),
-      "hello",
-      { version: "latest" }
-    );
+  describe("should test snap methods", function () {
+    let testPage: Page;
 
-    await metamask.snaps.acceptDialog();
+    before(async function (this: TestContext) {
+      await metamask.snaps.installSnap(
+        metamask.page,
+        getSnapIdByName(this, Snaps.METHODS_SNAP),
+        {
+          hasPermissions: true,
+          hasKeyPermissions: false,
+        }
+      );
 
-    expect(await invokeAction).to.equal(true);
-  });
+      testPage = await metamask.page.browser().newPage();
+      await testPage.goto("https://google.com");
+      return testPage;
+    });
 
-  it("should invoke provided snap method and REJECT the dialog", async function (this: TestContext) {
-    const snapAddress = "http://localhost:8080";
-    await installPermissionSnap(this, snapAddress);
-    const testPage = await getTestPage(snapAddress);
-    const invokeAction = metamask.snaps.invokeSnap(
-      testPage,
-      getSnapIdByName(this, Snaps.PERMISSIONS_SNAP),
-      "hello",
-      { version: "latest" }
-    );
+    it("should invoke provided snap method and ACCEPT the dialog", async function (this: TestContext) {
+      const invokeAction = metamask.snaps.invokeSnap(
+        testPage,
+        getSnapIdByName(this, Snaps.METHODS_SNAP),
+        "confirm"
+      );
 
-    await metamask.snaps.rejectDialog();
+      await metamask.snaps.acceptDialog();
 
-    expect(await invokeAction).to.equal(false);
+      expect(await invokeAction).to.equal(true);
+    });
+
+    it("should invoke provided snap method and REJECT the dialog", async function (this: TestContext) {
+      const invokeAction = metamask.snaps.invokeSnap(
+        testPage,
+        getSnapIdByName(this, Snaps.METHODS_SNAP),
+        "confirm"
+      );
+
+      await metamask.snaps.rejectDialog();
+
+      expect(await invokeAction).to.equal(false);
+    });
   });
 });

@@ -84,6 +84,7 @@ export enum Snaps {
   BASE_SNAP = "base-snap",
   KEYS_SNAP = "keys-snap",
   PERMISSIONS_SNAP = "permissions-snap",
+  METHODS_SNAP = "methods-snap",
 }
 
 export async function startSnapServers(): Promise<Record<Snaps, http.Server>> {
@@ -91,6 +92,7 @@ export async function startSnapServers(): Promise<Record<Snaps, http.Server>> {
     [Snaps.BASE_SNAP]: await startSnapServer(Snaps.BASE_SNAP),
     [Snaps.KEYS_SNAP]: await startSnapServer(Snaps.KEYS_SNAP),
     [Snaps.PERMISSIONS_SNAP]: await startSnapServer(Snaps.PERMISSIONS_SNAP),
+    [Snaps.METHODS_SNAP]: await startSnapServer(Snaps.METHODS_SNAP),
   };
 }
 

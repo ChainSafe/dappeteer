@@ -6,6 +6,7 @@ import { Path } from "./setup/metaMaskDownloader";
 
 import { InstallStep } from "./snap/install";
 import { RECOMMENDED_METAMASK_VERSION } from "./index";
+import { InstallSnapResult } from "./snap/types";
 
 declare global {
   interface Window {
@@ -83,7 +84,7 @@ export type Dappeteer = {
       page: Page,
       snapId: string,
       method: string,
-      params: P
+      params?: P
     ) => Promise<Partial<R>>;
     installSnap: (
       page: Page,
@@ -95,7 +96,7 @@ export type Dappeteer = {
         version?: string;
       },
       installationSnapUrl?: string
-    ) => Promise<void>;
+    ) => Promise<InstallSnapResult>;
     acceptDialog: () => Promise<void>;
     rejectDialog: () => Promise<void>;
   };
