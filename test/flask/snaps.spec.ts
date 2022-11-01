@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import * as dappeteer from "../../src";
-import { DappeteerPage } from "../../src/page";
+import { DappeteerPage } from "../../src";
 import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
 
