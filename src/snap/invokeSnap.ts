@@ -8,7 +8,7 @@ export async function invokeSnap<
   page: Page,
   snapId: string,
   method: string,
-  params: P
+  params?: P
 ): ReturnType<typeof window.ethereum.request<R>> {
   flaskOnly(page);
   return page.evaluate(

@@ -2,6 +2,9 @@ import { Browser, Page } from "puppeteer";
 
 import { Dappeteer } from "..";
 
+import { acceptDialog } from "../snap/acceptDialog";
+import { rejectDialog } from "../snap/rejectDialog";
+import { installSnap, invokeSnap } from "../snap";
 import { addNetwork } from "./addNetwork";
 import { addToken } from "./addToken";
 import { approve } from "./approve";
@@ -32,7 +35,7 @@ export const getMetaMask = (page: Page): Promise<Dappeteer> => {
         : true
     );
 
-  return new Promise<Dappeteer>((resolve) =>
+  return new Promise<Dappeteer>((resolve) => {
     resolve({
       addNetwork: addNetwork(page),
       approve: approve(page),
@@ -49,9 +52,15 @@ export const getMetaMask = (page: Page): Promise<Dappeteer> => {
         deleteAccount: deleteAccount(page),
         deleteNetwork: deleteNetwork(page),
       },
+      snaps: {
+        acceptDialog: acceptDialog(page),
+        rejectDialog: rejectDialog(page),
+        invokeSnap,
+        installSnap,
+      },
       page,
-    })
-  );
+    });
+  });
 };
 
 /**
