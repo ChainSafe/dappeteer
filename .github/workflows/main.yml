@@ -16,7 +16,7 @@ jobs:
     strategy:
       matrix:
         mm-version: [mm, flask]
-        automation: [playwright, metamask]
+        automation: [playwright, puppeteer]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
