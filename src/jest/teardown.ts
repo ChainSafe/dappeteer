@@ -1,4 +1,4 @@
-export default async function (): Promise<void> {
-  // close the browser instance
-  await global.browser.close();
-}
+// export default async function (): Promise<void> {
+//   // close the browser instance
+//   await global.browser.close();
+// }

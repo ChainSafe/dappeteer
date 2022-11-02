@@ -1,5 +1,3 @@
-import { Page } from "puppeteer";
-
 import {
   clickOnButton,
   getErrorMessage,
@@ -7,9 +5,10 @@ import {
   typeOnInputField,
 } from "../helpers";
 import { AddNetwork } from "../index";
+import { DappeteerPage } from "../page";
 
 export const addNetwork =
-  (page: Page) =>
+  (page: DappeteerPage) =>
   async ({ networkName, rpc, chainId, symbol }: AddNetwork): Promise<void> => {
     await page.bringToFront();
     await openNetworkDropdown(page);

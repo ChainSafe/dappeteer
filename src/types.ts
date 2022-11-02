@@ -1,31 +1,24 @@
-import * as puppeteer from "puppeteer";
-
-import { Path } from "./setup/metaMaskDownloader";
-
+import type { LaunchOptions as PlaywrightLaunchOptions } from "playwright";
+import type { launch as puppeteerLaunch } from "puppeteer";
+import { DappeteerPage } from "./page";
+import { Path } from "./setup/utils/metaMaskDownloader";
 import { RECOMMENDED_METAMASK_VERSION } from "./index";
 
-export type LaunchOptions = (OfficialOptions | CustomOptions) & {
+export type DappeteerLaunchOptions = {
+  metaMaskVersion?:
+    | typeof RECOMMENDED_METAMASK_VERSION
+    | "latest"
+    | "local"
+    | string;
+  metaMaskLocation?: Path;
+  metaMaskPath?: string;
   //install flask (canary) version of metamask.
   metaMaskFlask?: boolean;
-};
-
-type PuppeteerLaunchOptions = puppeteer.LaunchOptions &
-  puppeteer.BrowserLaunchArgumentOptions &
-  puppeteer.BrowserConnectOptions & {
-    product?: puppeteer.Product;
-    extraPrefsFirefox?: Record<string, unknown>;
-  };
-
-type DappeteerLaunchOptions = Omit<PuppeteerLaunchOptions, "headless">;
-
-export type OfficialOptions = DappeteerLaunchOptions & {
-  metaMaskVersion: typeof RECOMMENDED_METAMASK_VERSION | "latest" | string;
-  metaMaskLocation?: Path;
-};
-
-export type CustomOptions = DappeteerLaunchOptions & {
-  metaMaskVersion?: string;
-  metaMaskPath: string;
+  //fallbacks to installed dependency and prefers playwright if both are installed
+  automation?: "puppeteer" | "playwright";
+  browser: "chrome";
+  puppeteerOptions?: Omit<Parameters<typeof puppeteerLaunch>[0], "headless">;
+  playwrightOptions?: Omit<PlaywrightLaunchOptions, "headless">;
 };
 
 export type MetaMaskOptions = {
@@ -69,5 +62,5 @@ export type Dappeteer = {
     deleteAccount: (accountNumber: number) => Promise<void>;
     deleteNetwork: (name: string) => Promise<void>;
   };
-  page: puppeteer.Page;
+  page: DappeteerPage;
 };

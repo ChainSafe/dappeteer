@@ -1,5 +1,3 @@
-import { Page } from "puppeteer";
-
 import {
   clickOnButton,
   clickOnElement,
@@ -7,9 +5,10 @@ import {
   openProfileDropdown,
   typeOnInputField,
 } from "../helpers";
+import { DappeteerPage } from "../page";
 
 export const importPk =
-  (page: Page) =>
+  (page: DappeteerPage) =>
   async (privateKey: string): Promise<void> => {
     await page.bringToFront();
     await openProfileDropdown(page);

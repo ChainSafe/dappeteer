@@ -2,8 +2,9 @@ import http from "http";
 
 import { Provider, Server } from "ganache";
 
-import { Dappeteer, DappeteerBrowser } from "../src";
+import { Dappeteer } from "../src";
 
+import { DappeteerBrowser } from "../src/browser";
 import { Contract, Snaps } from "./deploy";
 
 export type InjectableContext = Readonly<{

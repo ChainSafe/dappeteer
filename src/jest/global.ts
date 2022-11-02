@@ -1,19 +1,19 @@
-import { Browser, Page } from "puppeteer";
-
-import { Dappeteer, LaunchOptions, MetaMaskOptions } from "..";
+import { Dappeteer, DappeteerLaunchOptions, MetaMaskOptions } from "..";
+import { DappeteerBrowser } from "../browser";
+import { DappeteerPage } from "../page";
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
     interface Global {
-      page: Page;
-      browser: Browser;
+      page: DappeteerPage;
+      browser: DappeteerBrowser;
       metaMask: Dappeteer;
     }
   }
 }
 
 export type DapeteerJestConfig = Partial<{
-  dappeteer: LaunchOptions;
+  dappeteer: DappeteerLaunchOptions;
   metaMask: MetaMaskOptions;
 }>;

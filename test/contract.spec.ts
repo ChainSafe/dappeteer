@@ -1,7 +1,7 @@
 import { expect } from "chai";
-import { Page } from "puppeteer";
 
 import { Dappeteer } from "../src";
+import { DappeteerPage } from "../src/page";
 
 import { TestContext } from "./constant";
 import { Contract } from "./deploy";
@@ -9,7 +9,7 @@ import { clickElement, pause } from "./utils/utils";
 
 describe("contract interactions", function () {
   let contract: Contract;
-  let testPage: Page;
+  let testPage: DappeteerPage;
   let metamask: Dappeteer;
 
   before(async function (this: TestContext) {
@@ -40,7 +40,7 @@ describe("contract interactions", function () {
     await pause(1);
     // submit tx
     await metamask.confirmTransaction();
-    await testPage.waitForSelector("#txSent");
+    await testPage.waitForSelector("#txSent", { visible: false });
     await pause(1);
 
     const counterAfter = await getCounterNumber(contract);

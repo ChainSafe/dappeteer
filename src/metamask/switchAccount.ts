@@ -1,10 +1,9 @@
-import { Page } from "puppeteer";
-
 import { clickOnElement, openProfileDropdown } from "../helpers";
+import { DappeteerPage } from "../page";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const switchAccount =
-  (page: Page) =>
+  (page: DappeteerPage) =>
   async (accountNumber: number): Promise<void> => {
     await page.bringToFront();
     await openProfileDropdown(page);

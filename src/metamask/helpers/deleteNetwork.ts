@@ -1,14 +1,13 @@
-import { Page } from "puppeteer";
-
 import {
   clickOnButton,
   clickOnLogo,
   getElementByContent,
   openNetworkDropdown,
 } from "../../helpers";
+import { DappeteerPage } from "../../page";
 
 export const deleteNetwork =
-  (page: Page) =>
+  (page: DappeteerPage) =>
   async (name: string): Promise<void> => {
     await page.bringToFront();
 

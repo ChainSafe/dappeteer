@@ -4,7 +4,7 @@ import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
 import { toUrl } from "../utils/utils";
 
-describe.only("snaps", function () {
+describe("snaps", function () {
   let metamask: dappeteer.Dappeteer;
 
   before(function (this: TestContext) {
@@ -13,7 +13,7 @@ describe.only("snaps", function () {
 
   beforeEach(function (this: TestContext) {
     //skip those tests for non flask metamask
-    if (this.browser.flask == null) {
+    if (!this.browser.isMetaMaskFlask()) {
       this.skip();
     }
   });

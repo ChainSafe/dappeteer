@@ -8,9 +8,10 @@ import {
   typeOnInputField,
 } from "../helpers";
 import { AddToken } from "../index";
+import { DappeteerPage } from "../page";
 
 export const addToken =
-  (page: Page) =>
+  (page: DappeteerPage) =>
   async ({ tokenAddress, symbol, decimals = 0 }: AddToken): Promise<void> => {
     await page.bringToFront();
     await clickOnButton(page, "Assets");
