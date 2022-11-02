@@ -1,7 +1,10 @@
 import type { LaunchOptions as PlaywrightLaunchOptions } from "playwright";
 import type { launch as puppeteerLaunch } from "puppeteer";
-import { DappeteerPage } from "./page";
+import { MetaMaskInpageProvider } from "@metamask/providers";
+import { DappeteerPage, Serializable } from "./page";
 import { Path } from "./setup/utils/metaMaskDownloader";
+import { InstallStep } from "./snap/install";
+import { InstallSnapResult } from "./snap/types";
 import { RECOMMENDED_METAMASK_VERSION } from "./index";
 
 export type DappeteerLaunchOptions = {
@@ -20,6 +23,12 @@ export type DappeteerLaunchOptions = {
   puppeteerOptions?: Omit<Parameters<typeof puppeteerLaunch>[0], "headless">;
   playwrightOptions?: Omit<PlaywrightLaunchOptions, "headless">;
 };
+
+declare global {
+  interface Window {
+    ethereum: MetaMaskInpageProvider;
+  }
+}
 
 export type MetaMaskOptions = {
   seed?: string;
@@ -63,4 +72,25 @@ export type Dappeteer = {
     deleteNetwork: (name: string) => Promise<void>;
   };
   page: DappeteerPage;
+  snaps: {
+    invokeSnap: <R = unknown, P extends Serializable = Serializable>(
+      page: DappeteerPage,
+      snapId: string,
+      method: string,
+      params?: P
+    ) => Promise<Partial<R>>;
+    installSnap: (
+      page: DappeteerPage,
+      snapId: string,
+      opts: {
+        hasPermissions: boolean;
+        hasKeyPermissions: boolean;
+        customSteps?: InstallStep[];
+        version?: string;
+      },
+      installationSnapUrl?: string
+    ) => Promise<InstallSnapResult>;
+    acceptDialog: () => Promise<void>;
+    rejectDialog: () => Promise<void>;
+  };
 };

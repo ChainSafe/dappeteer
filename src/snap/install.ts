@@ -7,6 +7,7 @@ import {
 } from "../helpers";
 import { DappeteerPage } from "../page";
 import { flaskOnly } from "./utils";
+import { InstallSnapResult } from "./types";
 
 declare let window: { ethereum: MetaMaskInpageProvider };
 
@@ -20,15 +21,16 @@ export async function installSnap(
     hasKeyPermissions: boolean;
     customSteps?: InstallStep[];
     version?: string;
-  }
-): Promise<void> {
+  },
+  installationSnapUrl: string = "https://google.com"
+): Promise<InstallSnapResult> {
   flaskOnly(page);
   //need to open page to access window.ethereum
   const installPage = await page.browser().newPage();
-  await installPage.goto("https://google.com");
+  await installPage.goto(installationSnapUrl);
   const installAction = installPage.evaluate(
     (opts: { snapId: string; version?: string }) =>
-      window.ethereum.request({
+      window.ethereum.request<{ snaps: { [snapId: string]: {} } }>({
         method: "wallet_enable",
         params: [
           {
@@ -57,15 +59,17 @@ export async function installSnap(
     await clickOnButton(page, "Install");
   }
 
-  await installAction;
-  await installPage.close({ runBeforeUnload: true });
-
   for (const step of opts.customSteps ?? []) {
     await step(page);
   }
-  if (!(await isSnapInstalled(page, snapId))) {
-    throw new Error("Failed to install snap " + snapId);
+
+  const result = await installAction;
+  await installPage.close({ runBeforeUnload: true });
+  if (!(snapId in result.snaps)) {
+    throw new Error("Failed to install snap");
   }
+
+  return result as InstallSnapResult;
 }
 
 export async function isSnapInstalled(
