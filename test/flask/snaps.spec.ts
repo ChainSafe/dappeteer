@@ -59,7 +59,18 @@ describe("snaps", function () {
   describe("should test snap methods", function () {
     let testPage: DappeteerPage;
 
+    beforeEach(function (this: TestContext) {
+      //skip those tests for non flask metamask
+      if (!this.browser.isMetaMaskFlask()) {
+        this.skip();
+      }
+    });
+
     before(async function (this: TestContext) {
+      if (!this.browser.isMetaMaskFlask()) {
+        this.skip();
+        return;
+      }
       await metamask.snaps.installSnap(
         metamask.page,
         getSnapIdByName(this, Snaps.METHODS_SNAP),
