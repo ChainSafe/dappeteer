@@ -7,6 +7,7 @@ import {
   openProfileDropdown,
 } from "../helpers";
 import { flaskOnly } from "./utils";
+import { InstallSnapResult } from "./types";
 
 declare let window: { ethereum: MetaMaskInpageProvider };
 
@@ -22,7 +23,7 @@ export async function installSnap(
     version?: string;
   },
   installationSnapUrl: string = "https://google.com"
-): Promise<void> {
+): Promise<InstallSnapResult> {
   flaskOnly(page);
   //need to open page to access window.ethereum
   const installPage = await page.browser().newPage();
@@ -67,6 +68,8 @@ export async function installSnap(
   if (!(snapId in result.snaps)) {
     throw new Error("Failed to install snap");
   }
+
+  return result as InstallSnapResult;
 }
 
 export async function isSnapInstalled(
