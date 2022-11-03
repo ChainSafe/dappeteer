@@ -25,7 +25,12 @@ export class DPuppeteerElementHandle
     return this.element;
   }
 
-  type(value: string): Promise<void> {
+  async type(value: string): Promise<void> {
+    if (value === "") {
+      //hack as there is no clear method in puppeteer
+      await this.element.click({ clickCount: 3 });
+      await this.element.press("Backspace");
+    }
     return this.element.type(value);
   }
   click(): Promise<void> {

@@ -1,4 +1,4 @@
-import { DappeteerPage, Serializable } from "../page";
+import { DappeteerPage, Serializable, Unboxed } from "../page";
 import { flaskOnly } from "./utils";
 
 export async function invokeSnap<
@@ -12,8 +12,7 @@ export async function invokeSnap<
 ): ReturnType<typeof window.ethereum.request<R>> {
   flaskOnly(page);
   return page.evaluate(
-    //@ts-expect-error
-    async (opts: { snapId: string; method: string; params: P }) => {
+    async (opts: { snapId: string; method: string; params: Unboxed<P> }) => {
       return window.ethereum.request<R>({
         method: "wallet_invokeSnap",
         params: [

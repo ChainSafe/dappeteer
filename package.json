@@ -73,5 +73,13 @@
   "peerDependencies": {
     "puppeteer": ">13",
     "playwright": ">=1"
+  },
+  "peerDependenciesMeta": {
+    "soy-puppeteer": {
+      "optional": true
+    },
+    "playwright": {
+      "optional": true
+    }
   }
 }

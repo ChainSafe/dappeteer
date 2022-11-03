@@ -26,6 +26,9 @@ export class DPlaywrightElementHandle
   }
 
   type(value: string): Promise<void> {
+    if (value === "") {
+      return this.element.fill("");
+    }
     return this.element.type(value);
   }
   click(): Promise<void> {
