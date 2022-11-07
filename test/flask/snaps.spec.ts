@@ -97,6 +97,9 @@ describe("snaps", function () {
 
       const notifications = await metamask.snaps.getAllNotifications();
 
+      expect(metamask.page.url()).to.match(
+        /chrome-extension:\/\/[a-z]+\/home\.html#/i
+      );
       expect(notifications[0].message).to.equal("Hello, in App notification");
     });
   });
