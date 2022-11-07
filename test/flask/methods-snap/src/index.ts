@@ -25,6 +25,16 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
           },
         ],
       });
+    case "notify_inApp_update":
+      return wallet.request({
+        method: "snap_notify",
+        params: [
+          {
+            type: "inApp",
+            message: `Update notification`,
+          },
+        ],
+      });
     default:
       throw new Error("Method not found.");
   }

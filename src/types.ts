@@ -5,7 +5,7 @@ import { Page, Serializable } from "puppeteer";
 import { Path } from "./setup/metaMaskDownloader";
 
 import { InstallStep } from "./snap/install";
-import { InstallSnapResult } from "./snap/types";
+import { InstallSnapResult, NotificationList } from "./snap/types";
 import { RECOMMENDED_METAMASK_VERSION } from "./index";
 
 declare global {
@@ -80,6 +80,7 @@ export type Dappeteer = {
     deleteNetwork: (name: string) => Promise<void>;
   };
   snaps: {
+    getAllNotifications: () => Promise<NotificationList>;
     invokeSnap: <R = unknown, P extends Serializable = Serializable>(
       page: Page,
       snapId: string,

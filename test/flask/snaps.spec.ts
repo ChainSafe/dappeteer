@@ -4,7 +4,6 @@ import * as dappeteer from "../../src";
 import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
 import { toUrl } from "../utils/utils";
-import { clickOnElement, openProfileDropdown } from "../../src/helpers";
 
 function getSnapIdByName(testContext: TestContext, snapName: Snaps): string {
   return `local:${toUrl(testContext.snapServers[snapName].address())}`;
@@ -99,43 +98,25 @@ describe("snaps", function () {
       expect(await invokeAction).to.equal(false);
     });
 
-    it("should invoke IN APP NOTIFICATION method and show text", async function (this: TestContext) {
+    it("should invoke IN APP NOTIFICATIONS and check for a text", async function (this: TestContext) {
       await metamask.snaps.invokeSnap(
         testPage,
         getSnapIdByName(this, Snaps.METHODS_SNAP),
         "notify_inApp"
       );
-
-      await metamask.page.bringToFront();
-      await openProfileDropdown(metamask.page);
-      await clickOnElement(metamask.page, "Notifications");
-
-      const notificationItem = await metamask.page.waitForSelector(
-        ".notifications__item"
-      );
-      const notificationText = await notificationItem.$eval(
-        ".notifications__item__details__message",
-        (el) => el.textContent
-      );
-      const unreadDot = await notificationItem.$eval(
-        ".notifications__item__unread-dot",
-        (el) => el.className
+      // Metamask doesn't allow to invoke two notifications in a row,
+      // so some delay should persist before calling the next notification
+      await metamask.page.waitForTimeout(5000);
+      await metamask.snaps.invokeSnap(
+        testPage,
+        getSnapIdByName(this, Snaps.METHODS_SNAP),
+        "notify_inApp_update"
       );
 
-      expect(notificationText).to.equal("Hello, in App notification");
-      expect(unreadDot).to.equal("notifications__item__unread-dot unread");
+      const notifications = await metamask.snaps.getAllNotifications();
 
-      await notificationItem.click();
-      const notificationItemUpdated = await metamask.page.waitForSelector(
-        ".notifications__item"
-      );
-
-      expect(
-        await notificationItemUpdated.$eval(
-          ".notifications__item__unread-dot",
-          (el) => el.className
-        )
-      ).to.equal("notifications__item__unread-dot");
+      expect(notifications[0].message).to.equal("Update notification");
+      expect(notifications[1].message).to.equal("Hello, in App notification");
     });
   });
 });
