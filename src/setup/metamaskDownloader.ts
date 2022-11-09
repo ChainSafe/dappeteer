@@ -72,7 +72,7 @@ const downloadMetamaskReleases = (name: string, url: string, location: string): 
   });
 
 type MetamaskReleases = { downloadUrl: string; filename: string; tag: string };
-const metamaskReleasesUrl = 'https://api.github.com/repos/metamask/metamask-extension/releases';
+const metamaskReleasesUrl = 'https://api.github.com/repos/metamask/metamask-extension/releases?per_page=50';
 const getMetamaskReleases = (version: string): Promise<MetamaskReleases> =>
   new Promise((resolve, reject) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
