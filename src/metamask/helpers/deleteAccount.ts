@@ -1,14 +1,13 @@
-import { Page } from "puppeteer";
-
 import {
   clickOnButton,
   clickOnElement,
   openAccountDropdown,
 } from "../../helpers";
+import { DappeteerPage } from "../../page";
 import { switchAccount } from "../switchAccount";
 
 export const deleteAccount =
-  (page: Page) =>
+  (page: DappeteerPage) =>
   async (accountNumber: number): Promise<void> => {
     await page.bringToFront();
 

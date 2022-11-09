@@ -1,9 +1,9 @@
 import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
-import { Page } from "puppeteer";
 
 import * as dappeteer from "../src";
 import { openProfileDropdown } from "../src/helpers";
+import { DappeteerPage } from "../src/page";
 
 import { PASSWORD, TestContext } from "./constant";
 import { clickElement } from "./utils/utils";
@@ -12,12 +12,12 @@ use(chaiAsPromised);
 
 describe("basic interactions", function () {
   let metamask: dappeteer.Dappeteer;
-  let testPage: Page;
+  let testPage: DappeteerPage;
 
   before(async function (this: TestContext) {
     testPage = await this.browser.newPage();
     await testPage.goto("http://localhost:8080/", {
-      waitUntil: "networkidle0",
+      waitUntil: "networkidle",
     });
     metamask = this.metamask;
     try {
@@ -41,7 +41,7 @@ describe("basic interactions", function () {
 
     await metamask.sign();
 
-    await testPage.waitForSelector("#signed");
+    await testPage.waitForSelector("#signed", { visible: false });
   });
 
   it("should switch network", async () => {

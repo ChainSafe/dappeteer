@@ -1,22 +1,23 @@
-import { ElementHandle, Page } from "puppeteer";
+import { DappeteerElementHandle } from "../element";
+import { DappeteerPage, Serializable } from "../page";
 
 // TODO: change text() with '.';
 export const getElementByContent = (
-  page: Page,
+  page: DappeteerPage,
   text: string,
   type = "*"
-): Promise<ElementHandle | null> =>
+): Promise<DappeteerElementHandle | null> =>
   page.waitForXPath(`//${type}[contains(text(), '${text}')]`, {
     timeout: 20000,
     visible: true,
   });
 
 export const getInputByLabel = (
-  page: Page,
+  page: DappeteerPage,
   text: string,
   excludeSpan = false,
   timeout = 1000
-): Promise<ElementHandle> =>
+): Promise<DappeteerElementHandle> =>
   page.waitForXPath(
     [
       `//label[contains(.,'${text}')]/following-sibling::textarea`,
@@ -34,9 +35,9 @@ export const getInputByLabel = (
   );
 
 export const getSettingsSwitch = (
-  page: Page,
+  page: DappeteerPage,
   text: string
-): Promise<ElementHandle | null> =>
+): Promise<DappeteerElementHandle | null> =>
   page.waitForXPath(
     [
       `//span[contains(.,'${text}')]/parent::div/following-sibling::div/div/div/div`,
@@ -45,22 +46,30 @@ export const getSettingsSwitch = (
     { visible: true }
   );
 
-export const getErrorMessage = async (page: Page): Promise<string | false> => {
-  const options: Parameters<Page["waitForSelector"]>[1] = { timeout: 1000 };
+export const getErrorMessage = async (
+  page: DappeteerPage
+): Promise<string | false> => {
+  const options: Parameters<DappeteerPage["waitForSelector"]>[1] = {
+    timeout: 1000,
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const errorElement: ElementHandle<HTMLElement> | null = await Promise.race([
-    page.waitForSelector(`span.error`, options),
-    page.waitForSelector(`.typography--color-error-1`, options),
-    page.waitForSelector(`.typography--color-error-default`, options),
-  ]).catch(() => null);
+  const errorElement: DappeteerElementHandle<Serializable> | null =
+    await Promise.race([
+      page.waitForSelector(`span.error`, options),
+      page.waitForSelector(`.typography--color-error-1`, options),
+      page.waitForSelector(`.typography--color-error-default`, options),
+    ]).catch(() => null);
   if (!errorElement) return false;
-  return page.evaluate((node: HTMLElement) => node.textContent, errorElement);
+  return page.evaluate(
+    (node) => (node as unknown as HTMLElement).textContent,
+    errorElement.getSource()
+  );
 };
 
 export const getAccountMenuButton = (
-  page: Page
-): Promise<ElementHandle | null> =>
+  page: DappeteerPage
+): Promise<DappeteerElementHandle | null> =>
   page.waitForXPath(`//button[contains(@title,'Account options')]`, {
     visible: true,
   });

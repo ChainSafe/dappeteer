@@ -1,23 +1,23 @@
-import puppeteer, { Browser, Page } from "puppeteer";
-
-import { Dappeteer, MetaMaskOptions, OfficialOptions } from "../types";
-
+import { DappeteerBrowser } from "../browser";
+import { DappeteerPage } from "../page";
+import { Dappeteer, DappeteerLaunchOptions, MetaMaskOptions } from "../types";
 import { launch } from "./launch";
 import { setupMetaMask } from "./setupMetaMask";
 
 export * from "./launch";
 export * from "./setupMetaMask";
 
-export const bootstrap = async (
-  puppeteerLib: typeof puppeteer,
-  {
-    seed,
-    password,
-    showTestNets,
-    ...launchOptions
-  }: OfficialOptions & MetaMaskOptions
-): Promise<[Dappeteer, Page, Browser]> => {
-  const browser = await launch(puppeteerLib, launchOptions);
+export const bootstrap = async ({
+  seed,
+  password,
+  showTestNets,
+  ...launchOptions
+}: DappeteerLaunchOptions & MetaMaskOptions): Promise<{
+  dappeteer: Dappeteer;
+  browser: DappeteerBrowser;
+  page: DappeteerPage;
+}> => {
+  const browser = await launch(launchOptions);
   const dappeteer = await setupMetaMask(browser, {
     seed,
     password,
@@ -25,5 +25,9 @@ export const bootstrap = async (
   });
   const pages = await browser.pages();
 
-  return [dappeteer, pages[0], browser];
+  return {
+    dappeteer,
+    browser,
+    page: pages[0],
+  };
 };

@@ -1,9 +1,5 @@
 import path from "path";
-
-import puppeteer from "puppeteer";
-
 import * as dappeteer from "../src";
-
 import {
   InjectableContext,
   LOCAL_PREFUNDED_MNEMONIC,
@@ -25,7 +21,10 @@ export const mochaHooks = {
         defaultBalance: 100,
       },
     });
-    const browser = await dappeteer.launch(puppeteer, {
+    const browser = await dappeteer.launch({
+      browser: "chrome",
+      automation:
+        (process.env.AUTOMATION as "puppeteer" | "playwright") ?? "puppeteer",
       metaMaskVersion:
         process.env.METAMASK_VERSION || dappeteer.RECOMMENDED_METAMASK_VERSION,
       metaMaskFlask: true,
@@ -66,10 +65,9 @@ export const mochaHooks = {
 
   async afterEach(this: TestContext): Promise<void> {
     if (this.currentTest.state === "failed") {
-      await this.metamask.page.screenshot({
-        path: path.resolve(__dirname, `../${this.currentTest.fullTitle()}.png`),
-        fullPage: true,
-      });
+      await this.metamask.page.screenshot(
+        path.resolve(__dirname, `../${this.currentTest.fullTitle()}.png`)
+      );
     }
   },
 };

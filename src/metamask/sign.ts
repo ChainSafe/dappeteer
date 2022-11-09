@@ -1,11 +1,11 @@
-import { Page } from "puppeteer";
-
 import { clickOnButton } from "../helpers";
 
+import { DappeteerPage } from "../page";
 import { GetSingedIn } from ".";
 
 export const sign =
-  (page: Page, getSingedIn: GetSingedIn) => async (): Promise<void> => {
+  (page: DappeteerPage, getSingedIn: GetSingedIn) =>
+  async (): Promise<void> => {
     await page.bringToFront();
     if (!(await getSingedIn())) {
       throw new Error("You haven't signed in yet");

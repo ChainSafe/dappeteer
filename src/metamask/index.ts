@@ -1,6 +1,6 @@
-import { Browser, Page } from "puppeteer";
-
 import { Dappeteer } from "..";
+import { DappeteerBrowser } from "../browser";
+import { DappeteerPage } from "../page";
 
 import { acceptDialog } from "../snap/acceptDialog";
 import { rejectDialog } from "../snap/rejectDialog";
@@ -9,7 +9,7 @@ import { addNetwork } from "./addNetwork";
 import { addToken } from "./addToken";
 import { approve } from "./approve";
 import { confirmTransaction } from "./confirmTransaction";
-import { deleteAccount, getTokenBalance, deleteNetwork } from "./helpers";
+import { deleteAccount, deleteNetwork, getTokenBalance } from "./helpers";
 import { importPk } from "./importPk";
 import { lock } from "./lock";
 import { sign } from "./sign";
@@ -20,20 +20,22 @@ import { unlock } from "./unlock";
 export type SetSignedIn = (state: boolean) => Promise<void>;
 export type GetSingedIn = () => Promise<boolean>;
 
-export const getMetaMask = (page: Page): Promise<Dappeteer> => {
+export const getMetaMask = (page: DappeteerPage): Promise<Dappeteer> => {
   // modified window object to kep state between tests
   const setSignedIn = async (state: boolean): Promise<void> => {
-    await page.evaluate((s: boolean) => {
+    const evaluateFn = (s: boolean): void => {
       (window as unknown as { signedIn: boolean }).signedIn = s;
-    }, state);
+    };
+    await page.evaluate(evaluateFn, state);
   };
-  const getSingedIn = (): Promise<boolean> =>
-    page.evaluate(() =>
+  const getSingedIn = (): Promise<boolean> => {
+    const evaluateFn = (): boolean =>
       (window as unknown as { signedIn: boolean | undefined }).signedIn !==
       undefined
         ? (window as unknown as { signedIn: boolean }).signedIn
-        : true
-    );
+        : true;
+    return page.evaluate(evaluateFn);
+  };
 
   return new Promise<Dappeteer>((resolve) => {
     resolve({
@@ -66,8 +68,10 @@ export const getMetaMask = (page: Page): Promise<Dappeteer> => {
 /**
  * Return MetaMask instance
  * */
-export async function getMetaMaskWindow(browser: Browser): Promise<Dappeteer> {
-  const metaMaskPage = await new Promise<Page>((resolve, reject) => {
+export async function getMetaMaskWindow(
+  browser: DappeteerBrowser
+): Promise<Dappeteer> {
+  const metaMaskPage = await new Promise<DappeteerPage>((resolve, reject) => {
     browser
       .pages()
       .then((pages) => {
