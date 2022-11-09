@@ -3,13 +3,13 @@ import path from "path";
 import { existsSync } from "node:fs";
 import { cwd } from "node:process";
 
-import { RECOMMENDED_METAMASK_VERSION } from "../index";
-import { LaunchOptions } from "../types";
+import { DappeteerLaunchOptions, RECOMMENDED_METAMASK_VERSION } from "../index";
 
 import { DapeteerJestConfig } from "./global";
 
-export const DAPPETEER_DEFAULT_CONFIG: LaunchOptions = {
+export const DAPPETEER_DEFAULT_CONFIG: DappeteerLaunchOptions = {
   metaMaskVersion: RECOMMENDED_METAMASK_VERSION,
+  browser: "chrome",
 };
 
 export async function getDappeteerConfig(): Promise<DapeteerJestConfig> {

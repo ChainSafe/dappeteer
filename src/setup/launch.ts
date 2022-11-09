@@ -1,40 +1,23 @@
-import puppeteer from "puppeteer";
-
-import {
-  CustomOptions,
-  OfficialOptions,
-  RECOMMENDED_METAMASK_VERSION,
-} from "../index";
-import { LaunchOptions } from "../types";
-
-import { isNewerVersion } from "./isNewerVersion";
-import downloader from "./metaMaskDownloader";
-
-export type DappeteerBrowser = puppeteer.Browser & { flask?: boolean };
+import { RECOMMENDED_METAMASK_VERSION } from "..";
+import { DappeteerBrowser } from "../browser";
+import { DappeteerLaunchOptions } from "../types";
+import { launchPlaywright } from "./playwright";
+import { launchPuppeteer } from "./puppeteer";
+import { isNewerVersion } from "./utils/isNewerVersion";
+import downloader from "./utils/metaMaskDownloader";
 
 /**
  * Launch Puppeteer chromium instance with MetaMask plugin installed
  * */
 export async function launch(
-  puppeteerLib: typeof puppeteer,
-  options: LaunchOptions
+  options: DappeteerLaunchOptions
 ): Promise<DappeteerBrowser> {
-  if (
-    !options ||
-    (!options.metaMaskVersion && !(options as CustomOptions).metaMaskPath)
-  )
-    throw new Error(
-      `Please provide "metaMaskVersion" (recommended "${RECOMMENDED_METAMASK_VERSION}" or "latest" to always get latest release of MetaMask)`
-    );
-
-  const { args, ...rest } = options;
-
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  let METAMASK_PATH: string;
+  if (!options.metaMaskVersion && !options.metaMaskPath) {
+    options.metaMaskVersion = RECOMMENDED_METAMASK_VERSION;
+  }
+  let metamaskPath: string;
   if (options.metaMaskVersion) {
-    const { metaMaskVersion, metaMaskLocation } = rest as OfficialOptions;
-    /* eslint-disable no-console */
-    console.log(); // new line
+    const { metaMaskVersion, metaMaskLocation } = options;
     if (metaMaskVersion === "latest")
       console.warn(
         "\x1b[33m%s\x1b[0m",
@@ -59,31 +42,38 @@ export async function launch(
         )})`
       );
 
-    console.log(); // new line
+    console.warn(); // new line
 
-    METAMASK_PATH = await downloader(metaMaskVersion, {
+    metamaskPath = await downloader(metaMaskVersion, {
       location: metaMaskLocation,
       flask: options.metaMaskFlask,
     });
   } else {
     console.log(`Running tests on local MetaMask build`);
 
-    METAMASK_PATH = (rest as CustomOptions).metaMaskPath;
-    /* eslint-enable no-console */
+    metamaskPath = options.metaMaskPath;
   }
 
-  const browser = await puppeteerLib.launch({
-    headless: false,
-    args: [
-      `--disable-extensions-except=${METAMASK_PATH}`,
-      `--load-extension=${METAMASK_PATH}`,
-      ...(args || []),
-    ],
-    ...rest,
-  });
-
-  if (options.metaMaskFlask) {
-    Object.assign(browser, { flask: true });
+  if (options.automation) {
+    switch (options.automation) {
+      case "playwright":
+        return await launchPlaywright(metamaskPath, options);
+      case "puppeteer":
+        return await launchPuppeteer(metamaskPath, options);
+      default:
+        throw new Error(
+          "Unsupported automation tool. Use playwright or puppeteer"
+        );
+    }
+  } else {
+    try {
+      return await launchPlaywright(metamaskPath, options);
+      // eslint-disable-next-line no-empty
+    } catch (ignored) {}
+    try {
+      return await launchPuppeteer(metamaskPath, options);
+    } catch (error) {
+      throw new Error("Failed to launch both playwright and puppeteer");
+    }
   }
-  return browser;
 }

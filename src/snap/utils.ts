@@ -1,8 +1,7 @@
-import { Page } from "puppeteer";
-import { DappeteerBrowser } from "../setup";
+import { DappeteerPage } from "../page";
 
-export function flaskOnly(page: Page): void {
-  if ((page.browser() as DappeteerBrowser).flask == null) {
+export function flaskOnly(page: DappeteerPage): void {
+  if (!page.browser().isMetaMaskFlask()) {
     throw new Error(
       "This method is only available when running Metamask Flask"
     );

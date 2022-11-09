@@ -16,6 +16,7 @@ jobs:
     strategy:
       matrix:
         mm-version: [mm, flask]
+        automation: [playwright, puppeteer]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -28,7 +29,7 @@ jobs:
       - name: Lint
         run: yarn run lint
       - name: Tests
-        run: 'xvfb-run --auto-servernum yarn run test:${{ matrix.mm-version }} --timeout 50000'
+        run: 'xvfb-run --auto-servernum yarn run test:${{matrix.automation}}:${{ matrix.mm-version }} --timeout 50000'
       - uses: actions/upload-artifact@v3
         if: always()
         with:

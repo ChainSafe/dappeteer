@@ -1,12 +1,12 @@
 import { AddressInfo } from "net";
-import { Page } from "puppeteer";
+import { DappeteerPage } from "../../src/page";
 
 export function pause(seconds: number): Promise<void> {
   return new Promise((res) => setTimeout(res, 1000 * seconds));
 }
 
 export async function clickElement(
-  page: Page,
+  page: DappeteerPage,
   selector: string
 ): Promise<void> {
   await page.bringToFront();

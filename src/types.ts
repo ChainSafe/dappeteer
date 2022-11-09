@@ -1,42 +1,34 @@
-import * as puppeteer from "puppeteer";
-
+import type { LaunchOptions as PlaywrightLaunchOptions } from "playwright";
+import type { launch as puppeteerLaunch } from "puppeteer";
 import { MetaMaskInpageProvider } from "@metamask/providers";
-import { Page, Serializable } from "puppeteer";
-import { Path } from "./setup/metaMaskDownloader";
-
+import { DappeteerPage, Serializable } from "./page";
+import { Path } from "./setup/utils/metaMaskDownloader";
 import { InstallStep } from "./snap/install";
 import { InstallSnapResult } from "./snap/types";
 import { RECOMMENDED_METAMASK_VERSION } from "./index";
+
+export type DappeteerLaunchOptions = {
+  metaMaskVersion?:
+    | typeof RECOMMENDED_METAMASK_VERSION
+    | "latest"
+    | "local"
+    | string;
+  metaMaskLocation?: Path;
+  metaMaskPath?: string;
+  //install flask (canary) version of metamask.
+  metaMaskFlask?: boolean;
+  //fallbacks to installed dependency and prefers playwright if both are installed
+  automation?: "puppeteer" | "playwright";
+  browser: "chrome";
+  puppeteerOptions?: Omit<Parameters<typeof puppeteerLaunch>[0], "headless">;
+  playwrightOptions?: Omit<PlaywrightLaunchOptions, "headless">;
+};
 
 declare global {
   interface Window {
     ethereum: MetaMaskInpageProvider;
   }
 }
-
-export type LaunchOptions = (OfficialOptions | CustomOptions) & {
-  //install flask (canary) version of metamask.
-  metaMaskFlask?: boolean;
-};
-
-type PuppeteerLaunchOptions = puppeteer.LaunchOptions &
-  puppeteer.BrowserLaunchArgumentOptions &
-  puppeteer.BrowserConnectOptions & {
-    product?: puppeteer.Product;
-    extraPrefsFirefox?: Record<string, unknown>;
-  };
-
-type DappeteerLaunchOptions = Omit<PuppeteerLaunchOptions, "headless">;
-
-export type OfficialOptions = DappeteerLaunchOptions & {
-  metaMaskVersion: typeof RECOMMENDED_METAMASK_VERSION | "latest" | string;
-  metaMaskLocation?: Path;
-};
-
-export type CustomOptions = DappeteerLaunchOptions & {
-  metaMaskVersion?: string;
-  metaMaskPath: string;
-};
 
 export type MetaMaskOptions = {
   seed?: string;
@@ -79,15 +71,16 @@ export type Dappeteer = {
     deleteAccount: (accountNumber: number) => Promise<void>;
     deleteNetwork: (name: string) => Promise<void>;
   };
+  page: DappeteerPage;
   snaps: {
     invokeSnap: <R = unknown, P extends Serializable = Serializable>(
-      page: Page,
+      page: DappeteerPage,
       snapId: string,
       method: string,
       params?: P
     ) => Promise<Partial<R>>;
     installSnap: (
-      page: Page,
+      page: DappeteerPage,
       snapId: string,
       opts: {
         hasPermissions: boolean;
@@ -100,5 +93,4 @@ export type Dappeteer = {
     acceptDialog: () => Promise<void>;
     rejectDialog: () => Promise<void>;
   };
-  page: puppeteer.Page;
 };
