@@ -1,9 +1,9 @@
-import { Page } from "puppeteer";
 import { clickOnElement, openProfileDropdown } from "../helpers";
+import { DappeteerPage } from "../page";
 import { NotificationList } from "./types";
 
 export const getAllNotifications =
-  (page: Page) => async (): Promise<NotificationList> => {
+  (page: DappeteerPage) => async (): Promise<NotificationList> => {
     await page.bringToFront();
     await openProfileDropdown(page);
     await clickOnElement(page, "Notifications");
