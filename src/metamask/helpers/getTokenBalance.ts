@@ -1,9 +1,8 @@
-import { Page } from "puppeteer";
-
 import { clickOnButton } from "../../helpers";
+import { DappeteerPage, Serializable } from "../../page";
 
 export const getTokenBalance =
-  (page: Page) =>
+  (page: DappeteerPage) =>
   async (tokenSymbol: string): Promise<number> => {
     await page.bringToFront();
     await clickOnButton(page, "Assets");
@@ -14,8 +13,8 @@ export const getTokenBalance =
       const assetListItem = assetListItems[index];
 
       const titleAttributeValue: string = await page.evaluate(
-        (item: HTMLButtonElement) => item.getAttribute("title"),
-        assetListItem
+        (item) => (item as unknown as HTMLButtonElement).getAttribute("title"),
+        assetListItem.getSource() as Serializable
       );
 
       if (

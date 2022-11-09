@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import { Page } from "puppeteer";
 import * as dappeteer from "../../src";
+import { DappeteerPage } from "../../src/page";
 import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
 import { toUrl } from "../utils/utils";
@@ -18,7 +18,7 @@ describe("snaps", function () {
 
   beforeEach(function (this: TestContext) {
     //skip those tests for non flask metamask
-    if (this.browser.flask == null) {
+    if (!this.browser.isMetaMaskFlask()) {
       this.skip();
     }
   });
@@ -57,9 +57,20 @@ describe("snaps", function () {
   });
 
   describe("should test snap methods", function () {
-    let testPage: Page;
+    let testPage: DappeteerPage;
+
+    beforeEach(function (this: TestContext) {
+      //skip those tests for non flask metamask
+      if (!this.browser.isMetaMaskFlask()) {
+        this.skip();
+      }
+    });
 
     before(async function (this: TestContext) {
+      if (!this.browser.isMetaMaskFlask()) {
+        this.skip();
+        return;
+      }
       await metamask.snaps.installSnap(
         metamask.page,
         getSnapIdByName(this, Snaps.METHODS_SNAP),

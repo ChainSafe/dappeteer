@@ -5,6 +5,7 @@ build
 dist
 .vscode/
 /metamask
+/.metamask
 .idea
 *.log
 test/dapp/data.js

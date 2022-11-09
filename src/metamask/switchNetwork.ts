@@ -1,10 +1,9 @@
-import { Page } from "puppeteer";
-
 import { openNetworkDropdown } from "../helpers";
+import { DappeteerPage } from "../page";
 
 // TODO: validate - for now works fine as it is.
 export const switchNetwork =
-  (page: Page) =>
+  (page: DappeteerPage) =>
   async (network: string = "main"): Promise<void> => {
     await page.bringToFront();
     await openNetworkDropdown(page);

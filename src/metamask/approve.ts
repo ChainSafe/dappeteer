@@ -1,9 +1,8 @@
-import { Page } from "puppeteer";
-
 import { clickOnButton } from "../helpers";
+import { DappeteerPage } from "../page";
 
 // TODO: thing about renaming this method?
-export const approve = (page: Page) => async (): Promise<void> => {
+export const approve = (page: DappeteerPage) => async (): Promise<void> => {
   await page.bringToFront();
   await page.reload();
 

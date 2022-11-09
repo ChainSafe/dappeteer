@@ -1,11 +1,10 @@
-import { Page } from "puppeteer";
-
 import { clickOnButton, openProfileDropdown } from "../helpers";
+import { DappeteerPage } from "../page";
 
 import { GetSingedIn, SetSignedIn } from "./index";
 
 export const lock =
-  (page: Page, setSignedIn: SetSignedIn, getSingedIn: GetSingedIn) =>
+  (page: DappeteerPage, setSignedIn: SetSignedIn, getSingedIn: GetSingedIn) =>
   async (): Promise<void> => {
     if (!(await getSingedIn())) {
       throw new Error("You can't sign out because you haven't signed in yet");
