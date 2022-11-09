@@ -1,6 +1,9 @@
 import { OnRpcRequestHandler } from "@metamask/snap-types";
 
-export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
+export const onRpcRequest: OnRpcRequestHandler = async ({
+  origin,
+  request,
+}) => {
   switch (request.method) {
     case "confirm":
       return wallet.request({
@@ -16,25 +19,18 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
         ],
       });
     case "notify_inApp":
-      return wallet.request({
-        method: "snap_notify",
-        params: [
-          {
-            type: "inApp",
-            message: `Hello, in App notification`,
-          },
-        ],
-      });
-    case "notify_inApp_update":
-      return wallet.request({
-        method: "snap_notify",
-        params: [
-          {
-            type: "inApp",
-            message: `Update notification`,
-          },
-        ],
-      });
+      {
+        await wallet.request({
+          method: "snap_notify",
+          params: [
+            {
+              type: "inApp",
+              message: `Hello, in App notification`,
+            },
+          ],
+        });
+      }
+      break;
     default:
       throw new Error("Method not found.");
   }

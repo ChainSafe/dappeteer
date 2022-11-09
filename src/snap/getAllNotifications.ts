@@ -7,7 +7,7 @@ export const getAllNotifications =
     await page.bringToFront();
     await openProfileDropdown(page);
     await clickOnElement(page, "Notifications");
-    await page.waitForTimeout(300);
+    await page.waitForSelector(".notifications__item__details__message");
     const notificationList: NotificationList = await page.$$eval(
       ".notifications__item__details__message",
       (elements) =>

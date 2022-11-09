@@ -104,22 +104,10 @@ describe("snaps", function () {
         getSnapIdByName(this, Snaps.METHODS_SNAP),
         "notify_inApp"
       );
-      // Metamask doesn't allow to invoke two notifications in a row,
-      // so some delay should persist before calling the next notification
-      await metamask.page.waitForTimeout(5000);
-      await metamask.snaps.invokeSnap(
-        testPage,
-        getSnapIdByName(this, Snaps.METHODS_SNAP),
-        "notify_inApp_update"
-      );
 
       const notifications = await metamask.snaps.getAllNotifications();
 
-      expect(metamask.page.url()).to.match(
-        /chrome-extension:\/\/[a-z]+\/home\.html#/i
-      );
-      expect(notifications[0].message).to.equal("Update notification");
-      expect(notifications[1].message).to.equal("Hello, in App notification");
+      expect(notifications[0].message).to.equal("Hello, in App notification");
     });
   });
 });
