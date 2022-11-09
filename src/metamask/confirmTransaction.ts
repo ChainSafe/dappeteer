@@ -1,14 +1,13 @@
-import { Page } from "puppeteer";
-
 import { TransactionOptions } from "..";
 import { clickOnButton, typeOnInputField } from "../helpers";
+import { DappeteerPage } from "../page";
 
 import { GetSingedIn } from "./index";
 
 const MIN_GAS = 21000;
 
 export const confirmTransaction =
-  (page: Page, getSingedIn: GetSingedIn) =>
+  (page: DappeteerPage, getSingedIn: GetSingedIn) =>
   async (options?: TransactionOptions): Promise<void> => {
     await page.bringToFront();
     if (!(await getSingedIn())) {

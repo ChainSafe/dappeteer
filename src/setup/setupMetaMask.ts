@@ -1,9 +1,8 @@
-import { Browser, BrowserContext, Page, Target } from "puppeteer";
-
+import { DappeteerBrowser } from "../browser";
 import { getMetaMask } from "../metamask";
+import { DappeteerPage } from "../page";
 import { Dappeteer, MetaMaskOptions } from "../types";
 
-import { DappeteerBrowser } from "./launch";
 import {
   acceptTheRisks,
   closePortfolioTooltip,
@@ -17,7 +16,10 @@ import {
 /**
  * Setup MetaMask with base account
  * */
-type Step<Options> = (page: Page, options?: Options) => void | Promise<void>;
+type Step<Options> = (
+  page: DappeteerPage,
+  options?: Options
+) => void | Promise<void>;
 const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [
   confirmWelcomeScreen,
   declineAnalytics,
@@ -37,13 +39,13 @@ const flaskMetaMaskSteps: Step<MetaMaskOptions>[] = [
 ];
 
 export async function setupMetaMask<Options = MetaMaskOptions>(
-  browser: Browser | BrowserContext | DappeteerBrowser,
+  browser: DappeteerBrowser,
   options?: Options,
   steps?: Step<Options>[]
 ): Promise<Dappeteer> {
   const page = await getMetamaskPage(browser);
   steps = steps ?? defaultMetaMaskSteps;
-  if ((browser as DappeteerBrowser).flask) {
+  if (browser.isMetaMaskFlask()) {
     steps = flaskMetaMaskSteps;
   }
   await page.setViewport({ height: 800, width: 800 });
@@ -56,8 +58,8 @@ export async function setupMetaMask<Options = MetaMaskOptions>(
 }
 
 async function getMetamaskPage(
-  browser: Browser | BrowserContext
-): Promise<Page> {
+  browser: DappeteerBrowser
+): Promise<DappeteerPage> {
   const pages = await browser.pages();
   for (const page of pages) {
     if (page.url().match("chrome-extension://[a-z]+/home.html")) {
@@ -66,11 +68,16 @@ async function getMetamaskPage(
   }
   return new Promise((resolve, reject) => {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    browser.on("targetcreated", async (target: Target) => {
+    browser.on("targetcreated", async (target: any) => {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       if (target.url().match("chrome-extension://[a-z]+/home.html")) {
         try {
-          const page = await target.page();
-          resolve(page);
+          const pages = await browser.pages();
+          for (const page of pages) {
+            if (page.url().match("chrome-extension://[a-z]+/home.html")) {
+              resolve(page);
+            }
+          }
         } catch (e) {
           reject(e);
         }

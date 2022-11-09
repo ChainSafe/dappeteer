@@ -1,11 +1,10 @@
-import { Page } from "puppeteer";
-
 import { clickOnButton, typeOnInputField } from "../helpers";
 
+import { DappeteerPage } from "../page";
 import { GetSingedIn, SetSignedIn } from ".";
 
 export const unlock =
-  (page: Page, setSignedIn: SetSignedIn, getSingedIn: GetSingedIn) =>
+  (page: DappeteerPage, setSignedIn: SetSignedIn, getSingedIn: GetSingedIn) =>
   async (password = "password1234"): Promise<void> => {
     if (await getSingedIn()) {
       throw new Error("You can't sign in because you are already signed in");

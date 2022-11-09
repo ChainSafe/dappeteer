@@ -1,5 +1,5 @@
-import { ElementHandle, Page } from "puppeteer";
-
+import { DappeteerElementHandle } from "../element";
+import { DappeteerPage } from "../page";
 import {
   getAccountMenuButton,
   getElementByContent,
@@ -8,14 +8,16 @@ import {
 } from "./selectors";
 
 export const clickOnSettingsSwitch = async (
-  page: Page,
+  page: DappeteerPage,
   text: string
 ): Promise<void> => {
   const button = await getSettingsSwitch(page, text);
   await button.click();
 };
 
-export const openNetworkDropdown = async (page: Page): Promise<void> => {
+export const openNetworkDropdown = async (
+  page: DappeteerPage
+): Promise<void> => {
   const networkSwitcher = await page.waitForSelector(".network-display", {
     visible: true,
   });
@@ -35,14 +37,18 @@ export const openNetworkDropdown = async (page: Page): Promise<void> => {
   }
 };
 
-export const openProfileDropdown = async (page: Page): Promise<void> => {
+export const openProfileDropdown = async (
+  page: DappeteerPage
+): Promise<void> => {
   const accountSwitcher = await page.waitForSelector(".identicon", {
     visible: true,
   });
   await accountSwitcher.click();
 };
 
-export const openAccountDropdown = async (page: Page): Promise<void> => {
+export const openAccountDropdown = async (
+  page: DappeteerPage
+): Promise<void> => {
   const accMenu = await getAccountMenuButton(page);
   await accMenu.click();
   await page.waitForSelector(".menu__container.account-options-menu", {
@@ -51,7 +57,7 @@ export const openAccountDropdown = async (page: Page): Promise<void> => {
 };
 
 export const clickOnElement = async (
-  page: Page,
+  page: DappeteerPage,
   text: string,
   type?: string
 ): Promise<void> => {
@@ -60,14 +66,14 @@ export const clickOnElement = async (
 };
 
 export const clickOnButton = async (
-  page: Page,
+  page: DappeteerPage,
   text: string
 ): Promise<void> => {
   const button = await getElementByContent(page, text, "button");
   await button.click();
 };
 
-export const clickOnLogo = async (page: Page): Promise<void> => {
+export const clickOnLogo = async (page: DappeteerPage): Promise<void> => {
   const header = await page.waitForSelector(".app-header__logo-container", {
     visible: true,
   });
@@ -85,14 +91,14 @@ export const clickOnLogo = async (page: Page): Promise<void> => {
  * @returns true if found and updated, false otherwise
  */
 export const typeOnInputField = async (
-  page: Page,
+  page: DappeteerPage,
   label: string,
   text: string,
   clear = false,
   excludeSpan = false,
   optional = false
 ): Promise<boolean> => {
-  let input: ElementHandle<HTMLInputElement>;
+  let input: DappeteerElementHandle;
   try {
     input = await getInputByLabel(page, label, excludeSpan, 1000);
   } catch (e) {
@@ -100,10 +106,9 @@ export const typeOnInputField = async (
     throw e;
   }
 
-  if (clear)
-    await page.evaluate((node: HTMLInputElement) => {
-      node.value = "";
-    }, input);
+  if (clear) {
+    await input.type("");
+  }
   await input.type(text);
   return true;
 };

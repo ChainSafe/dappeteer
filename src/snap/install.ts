@@ -1,20 +1,20 @@
 import { MetaMaskInpageProvider } from "@metamask/providers";
-import { Page } from "puppeteer";
 import {
   clickOnButton,
   clickOnElement,
   clickOnLogo,
   openProfileDropdown,
 } from "../helpers";
+import { DappeteerPage } from "../page";
 import { flaskOnly } from "./utils";
 import { InstallSnapResult } from "./types";
 
 declare let window: { ethereum: MetaMaskInpageProvider };
 
-export type InstallStep = (page: Page) => Promise<void>;
+export type InstallStep = (page: DappeteerPage) => Promise<void>;
 
 export async function installSnap(
-  page: Page,
+  page: DappeteerPage,
   snapId: string,
   opts: {
     hasPermissions: boolean;
@@ -73,7 +73,7 @@ export async function installSnap(
 }
 
 export async function isSnapInstalled(
-  page: Page,
+  page: DappeteerPage,
   snapId: string
 ): Promise<boolean> {
   await page.bringToFront();
