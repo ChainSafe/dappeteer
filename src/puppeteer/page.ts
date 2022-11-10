@@ -1,4 +1,5 @@
-import { Browser, ElementHandle, Page } from "puppeteer";
+import { Browser, ElementHandle, JSHandle, Page } from "puppeteer";
+import { FrameWaitForFunctionOptions } from "puppeteer/lib/esm/puppeteer/common/FrameManager";
 import { DappeteerBrowser } from "../browser";
 import { DappeteerElementHandle } from "../element";
 import { DappeteerPage, Response, Serializable, Unboxed } from "../page";
@@ -9,6 +10,14 @@ export class DPupeteerPage implements DappeteerPage<Page> {
     protected page: Page,
     protected browserSource: DappeteerBrowser<Browser, Page>
   ) {}
+
+  async waitForFunction(
+    pageFunction: string | Function,
+    options?: FrameWaitForFunctionOptions,
+    ...args: any[]
+  ): Promise<JSHandle> {
+    return this.page.waitForFunction(pageFunction, options, args);
+  }
 
   async screenshot(path: string): Promise<void> {
     await this.page.screenshot({

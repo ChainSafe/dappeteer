@@ -1,21 +1,34 @@
-import { DappeteerBrowser } from "./browser";
+import {
+  FrameWaitForFunctionOptions,
+  JSHandle,
+  SerializableOrJSHandle,
+} from "puppeteer";
 import { DappeteerElementHandle } from "./element";
+import { DappeteerBrowser } from "./browser";
 
 export interface DappeteerPage<P = unknown> {
   $(selector: string): Promise<DappeteerElementHandle | null>;
+
   $eval<T>(
     selector: string,
     evalFn: (e: HTMLElement) => Promise<T> | T
   ): Promise<T>;
+
   $$eval<T>(
     selector: string,
     evalFn: (e: HTMLElement[]) => Promise<T[]> | T[]
   ): Promise<T[]>;
+
   $$(selector: string): Promise<DappeteerElementHandle[]>;
+
   getSource(): P;
+
   url(): string;
+
   browser(): DappeteerBrowser;
+
   bringToFront(): Promise<void>;
+
   goto(
     url: string,
     options?: {
@@ -23,30 +36,46 @@ export interface DappeteerPage<P = unknown> {
       waitUntil?: "load" | "domcontentloaded" | "networkidle" | "commit";
     }
   ): Promise<void>;
+
   title(): Promise<string>;
+
   close(options?: { runBeforeUnload?: boolean }): Promise<void>;
+
   reload(): Promise<void>;
+
   setViewport(opts: { height: number; width: number }): Promise<void>;
+
   waitForResponse(
     urlOrPredicate: string | ((res: Response) => boolean | Promise<boolean>),
     options?: {
       timeout?: number;
     }
   ): Promise<Response>;
+
   waitForSelector(
     selector: string,
     opts?: Partial<{ visible: boolean; timeout: number }>
   ): Promise<DappeteerElementHandle>;
+
   waitForXPath(
     xpath: string,
     opts?: Partial<{ visible: boolean; timeout: number }>
   ): Promise<DappeteerElementHandle>;
+
   waitForTimeout(timeout: number): Promise<void>;
+
   evaluate<Params extends Serializable, Result>(
     evaluateFn: (params: Unboxed<Params>) => Result,
     params?: Params
   ): Promise<Result>;
+
   screenshot(path: string): Promise<void>;
+
+  waitForFunction(
+    pageFunction: Function | string,
+    options?: FrameWaitForFunctionOptions,
+    ...args: SerializableOrJSHandle[]
+  ): Promise<JSHandle>;
 }
 
 export type Unboxed<Arg> = Arg extends DappeteerElementHandle<any, infer T>
