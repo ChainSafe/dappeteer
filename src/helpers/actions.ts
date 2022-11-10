@@ -32,7 +32,7 @@ export const openNetworkDropdown = async (
     await networkSwitcher.click();
     await page.waitForSelector(".network-dropdown-list", {
       visible: true,
-      timeout: 1000,
+      timeout: 3000,
     });
   }
 };

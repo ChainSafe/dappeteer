@@ -68,7 +68,7 @@ describe("basic interactions", function () {
   });
 
   // TODO: Metamask UI is flaky there
-  it.skip("should add token", async () => {
+  it("should add token", async () => {
     await metamask.switchNetwork("mainnet");
     await metamask.addToken({
       tokenAddress: "0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa",
@@ -78,17 +78,17 @@ describe("basic interactions", function () {
 
   it("should add network with required params", async () => {
     await metamask.addNetwork({
-      networkName: "Binance Smart Chain",
-      rpc: "https://data-seed-prebsc-1-s1.binance.org:8545/",
-      chainId: 97,
-      symbol: "BNB",
+      networkName: "Optimism",
+      rpc: "https://mainnet.optimism.io",
+      chainId: 10,
+      symbol: "OP",
     });
 
     const selectedNetwork = await metamask.page.evaluate(
       () =>
         document.querySelector(".network-display > span:nth-child(2)").innerHTML
     );
-    expect(selectedNetwork).to.be.equal("Binance Smart Chain");
+    expect(selectedNetwork).to.be.equal("Optimism");
     await metamask.switchNetwork("local");
   });
 
