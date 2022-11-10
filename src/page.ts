@@ -3,10 +3,14 @@ import { DappeteerElementHandle } from "./element";
 
 export interface DappeteerPage<P = unknown> {
   $(selector: string): Promise<DappeteerElementHandle | null>;
-  $eval(
+  $eval<T>(
     selector: string,
-    evalFn: (e: HTMLElement) => Promise<void> | void
-  ): Promise<void>;
+    evalFn: (e: HTMLElement) => Promise<T> | T
+  ): Promise<T>;
+  $$eval<T>(
+    selector: string,
+    evalFn: (e: HTMLElement[]) => Promise<T[]> | T[]
+  ): Promise<T[]>;
   $$(selector: string): Promise<DappeteerElementHandle[]>;
   getSource(): P;
   url(): string;

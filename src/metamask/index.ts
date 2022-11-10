@@ -4,7 +4,7 @@ import { DappeteerPage } from "../page";
 
 import { acceptDialog } from "../snap/acceptDialog";
 import { rejectDialog } from "../snap/rejectDialog";
-import { installSnap, invokeSnap } from "../snap";
+import { getAllNotifications, installSnap, invokeSnap } from "../snap";
 import { addNetwork } from "./addNetwork";
 import { addToken } from "./addToken";
 import { approve } from "./approve";
@@ -55,6 +55,7 @@ export const getMetaMask = (page: DappeteerPage): Promise<Dappeteer> => {
         deleteNetwork: deleteNetwork(page),
       },
       snaps: {
+        getAllNotifications: getAllNotifications(page),
         acceptDialog: acceptDialog(page),
         rejectDialog: rejectDialog(page),
         invokeSnap,
