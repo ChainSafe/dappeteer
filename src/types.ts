@@ -4,7 +4,7 @@ import { MetaMaskInpageProvider } from "@metamask/providers";
 import { DappeteerPage, Serializable } from "./page";
 import { Path } from "./setup/utils/metaMaskDownloader";
 import { InstallStep } from "./snap/install";
-import { InstallSnapResult } from "./snap/types";
+import { InstallSnapResult, NotificationList } from "./snap/types";
 import { RECOMMENDED_METAMASK_VERSION } from "./index";
 
 export type DappeteerLaunchOptions = {
@@ -73,6 +73,7 @@ export type Dappeteer = {
   };
   page: DappeteerPage;
   snaps: {
+    getAllNotifications: () => Promise<NotificationList>;
     invokeSnap: <R = unknown, P extends Serializable = Serializable>(
       page: DappeteerPage,
       snapId: string,

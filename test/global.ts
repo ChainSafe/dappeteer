@@ -12,6 +12,7 @@ import { deployContract, startLocalEthereum, startTestServer } from "./deploy";
 
 export const mochaHooks = {
   async beforeAll(this: Mocha.Context): Promise<void> {
+    this.timeout(100000);
     const ethereum = await startLocalEthereum({
       wallet: {
         mnemonic: LOCAL_PREFUNDED_MNEMONIC,

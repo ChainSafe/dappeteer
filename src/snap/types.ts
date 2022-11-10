@@ -18,3 +18,5 @@ export interface InstallSnapResult {
     };
   };
 }
+
+export type NotificationList = { message: string }[];

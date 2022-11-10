@@ -108,5 +108,17 @@ describe("snaps", function () {
 
       expect(await invokeAction).to.equal(false);
     });
+
+    it("should invoke IN APP NOTIFICATIONS and check for a text", async function (this: TestContext) {
+      await metamask.snaps.invokeSnap(
+        testPage,
+        getSnapIdByName(this, Snaps.METHODS_SNAP),
+        "notify_inApp"
+      );
+
+      const notifications = await metamask.snaps.getAllNotifications();
+
+      expect(notifications[0].message).to.equal("Hello, in App notification");
+    });
   });
 });

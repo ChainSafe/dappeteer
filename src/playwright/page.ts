@@ -23,14 +23,18 @@ export class DPlaywrightPage implements DappeteerPage<Page> {
     );
   }
 
-  $eval(
+  $eval<T>(
     selector: string,
-    evalFn: (e: HTMLElement) => void | Promise<void>
-  ): Promise<void> {
-    return this.page.$eval(
-      selector,
-      async (e) => await evalFn(e as HTMLElement)
-    );
+    evalFn: (e: HTMLElement) => T | Promise<T>
+  ): Promise<T> {
+    return this.page.$eval(selector, evalFn);
+  }
+
+  $$eval<T>(
+    selector: string,
+    evalFn: (e: HTMLElement[]) => T[] | Promise<T[]>
+  ): Promise<T[]> {
+    return this.page.$$eval(selector, evalFn);
   }
 
   async $$(selector: string): Promise<DappeteerElementHandle<ElementHandle>[]> {
