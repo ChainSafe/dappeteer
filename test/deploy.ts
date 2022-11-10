@@ -8,7 +8,6 @@ import handler from "serve-handler";
 import Web3 from "web3";
 
 import { compileContracts } from "./contract";
-import { toUrl } from "./utils/utils";
 
 const counterContract: { address: string } | null = null;
 
@@ -87,16 +86,16 @@ export enum Snaps {
   METHODS_SNAP = "methods-snap",
 }
 
-export async function startSnapServers(): Promise<Record<Snaps, http.Server>> {
+export async function buildSnaps(): Promise<Record<Snaps, string>> {
   return {
-    [Snaps.BASE_SNAP]: await startSnapServer(Snaps.BASE_SNAP),
-    [Snaps.KEYS_SNAP]: await startSnapServer(Snaps.KEYS_SNAP),
-    [Snaps.PERMISSIONS_SNAP]: await startSnapServer(Snaps.PERMISSIONS_SNAP),
-    [Snaps.METHODS_SNAP]: await startSnapServer(Snaps.METHODS_SNAP),
+    [Snaps.BASE_SNAP]: await buildSnap(Snaps.BASE_SNAP),
+    [Snaps.KEYS_SNAP]: await buildSnap(Snaps.KEYS_SNAP),
+    [Snaps.PERMISSIONS_SNAP]: await buildSnap(Snaps.PERMISSIONS_SNAP),
+    [Snaps.METHODS_SNAP]: await buildSnap(Snaps.METHODS_SNAP),
   };
 }
 
-async function startSnapServer(snap: Snaps): Promise<http.Server> {
+async function buildSnap(snap: Snaps): Promise<string> {
   console.log(`Building ${snap}...`);
   await new Promise((resolve, reject) => {
     exec(`cd ./test/flask/${snap} && npx mm-snap build`, (error, stdout) => {
@@ -107,33 +106,5 @@ async function startSnapServer(snap: Snaps): Promise<http.Server> {
       resolve(stdout);
     });
   });
-  console.log(`Starting ${snap} server...`);
-  const server = http.createServer((req, res) => {
-    void handler(req, res, {
-      public: path.resolve(__dirname, `./flask/${snap}`),
-      headers: [
-        {
-          source: "**/*",
-          headers: [
-            {
-              key: "Cache-Control",
-              value: "no-cache",
-            },
-            {
-              key: "Access-Control-Allow-Origin",
-              value: "*",
-            },
-          ],
-        },
-      ],
-    });
-  });
-
-  await new Promise<void>((resolve) => {
-    server.listen(0, () => {
-      console.log(`Server for ${snap} running at `, toUrl(server.address()));
-      resolve();
-    });
-  });
-  return server;
+  return `${path.resolve("./test/flask", snap)}`;
 }

@@ -1,10 +1,10 @@
+import { MetaMaskInpageProvider } from "@metamask/providers";
 import type { LaunchOptions as PlaywrightLaunchOptions } from "playwright";
 import type { launch as puppeteerLaunch } from "puppeteer";
-import { MetaMaskInpageProvider } from "@metamask/providers";
 import { DappeteerPage, Serializable } from "./page";
 import { Path } from "./setup/utils/metaMaskDownloader";
 import { InstallStep } from "./snap/install";
-import { InstallSnapResult, NotificationList } from "./snap/types";
+import { NotificationList } from "./snap/types";
 import { RECOMMENDED_METAMASK_VERSION } from "./index";
 
 export type DappeteerLaunchOptions = {
@@ -80,6 +80,9 @@ export type Dappeteer = {
       method: string,
       params?: P
     ) => Promise<Partial<R>>;
+    /**
+     *
+     */
     installSnap: (
       page: DappeteerPage,
       snapId: string,
@@ -90,7 +93,7 @@ export type Dappeteer = {
         version?: string;
       },
       installationSnapUrl?: string
-    ) => Promise<InstallSnapResult>;
+    ) => Promise<string>;
     acceptDialog: () => Promise<void>;
     rejectDialog: () => Promise<void>;
   };
