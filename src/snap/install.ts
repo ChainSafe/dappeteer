@@ -16,21 +16,23 @@ declare let window: { ethereum: MetaMaskInpageProvider };
 
 export type InstallStep = (page: DappeteerPage) => Promise<void>;
 
+export type InstallSnapOptions = {
+  hasPermissions: boolean;
+  hasKeyPermissions: boolean;
+  customSteps?: InstallStep[];
+  version?: string;
+  installationSnapUrl?: string;
+};
+
 export async function installSnap(
   page: DappeteerPage,
   snapIdOrLocation: string,
-  opts: {
-    hasPermissions: boolean;
-    hasKeyPermissions: boolean;
-    customSteps?: InstallStep[];
-    version?: string;
-  },
-  installationSnapUrl: string = "https://google.com"
+  opts: InstallSnapOptions
 ): Promise<string> {
   flaskOnly(page);
   //need to open page to access window.ethereum
   const installPage = await page.browser().newPage();
-  await installPage.goto(installationSnapUrl);
+  await installPage.goto(opts.installationSnapUrl ?? "https://google.com");
   let snapServer: http.Server | undefined;
   if (fs.existsSync(snapIdOrLocation)) {
     //snap dist location
