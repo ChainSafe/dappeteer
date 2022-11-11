@@ -11,7 +11,7 @@ export type InjectableContext = Readonly<{
   provider: Provider;
   ethereum: Server<"ethereum">;
   testPageServer: http.Server;
-  snapServers?: Record<Snaps, http.Server>;
+  snapServers?: Record<Snaps, string>;
   browser: DappeteerBrowser;
   metamask: Dappeteer;
   contract: Contract;
