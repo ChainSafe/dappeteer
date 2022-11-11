@@ -9,7 +9,7 @@ import {
 import {
   deployContract,
   startLocalEthereum,
-  startSnapServers,
+  buildSnaps,
   startTestServer,
 } from "./deploy";
 
@@ -31,7 +31,7 @@ export const mochaHooks = {
       metaMaskFlask: true,
     });
     const server = await startTestServer();
-    const snapServers = await startSnapServers();
+    const snapServers = await buildSnaps();
     const metamask = await dappeteer.setupMetaMask(browser, {
       // optional, else it will use a default seed
       seed: LOCAL_PREFUNDED_MNEMONIC,
@@ -57,9 +57,6 @@ export const mochaHooks = {
 
   async afterAll(this: TestContext): Promise<void> {
     this.testPageServer.close();
-    (Object.entries(this.snapServers) ?? []).forEach(([, server]) => {
-      server.close();
-    });
     await this.browser.close();
     await this.ethereum.close();
   },

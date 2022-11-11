@@ -11,19 +11,28 @@ export async function invokeSnap<
   params?: P
 ): ReturnType<typeof window.ethereum.request<R>> {
   flaskOnly(page);
-  return page.evaluate(
+  const result = await page.evaluate(
     async (opts: { snapId: string; method: string; params: Unboxed<P> }) => {
-      return window.ethereum.request<R>({
-        method: "wallet_invokeSnap",
-        params: [
-          `${opts.snapId}`,
-          {
-            method: opts.method,
-            params: opts.params,
-          },
-        ],
-      });
+      try {
+        return await window.ethereum.request<R>({
+          method: "wallet_invokeSnap",
+          params: [
+            `${opts.snapId}`,
+            {
+              method: opts.method,
+              params: opts.params,
+            },
+          ],
+        });
+      } catch (e) {
+        return e as Error;
+      }
     },
     { snapId, method, params }
   );
+  if (result instanceof Error) {
+    throw result;
+  } else {
+    return result;
+  }
 }
