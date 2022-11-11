@@ -1,3 +1,5 @@
+import fs from "fs";
+import http from "http";
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import {
   clickOnButton,
@@ -6,6 +8,7 @@ import {
   openProfileDropdown,
 } from "../helpers";
 import { DappeteerPage } from "../page";
+import { startSnapServer, toUrl } from "./install-utils";
 import { flaskOnly } from "./utils";
 import { InstallSnapResult } from "./types";
 
@@ -13,24 +16,32 @@ declare let window: { ethereum: MetaMaskInpageProvider };
 
 export type InstallStep = (page: DappeteerPage) => Promise<void>;
 
+export type InstallSnapOptions = {
+  hasPermissions: boolean;
+  hasKeyPermissions: boolean;
+  customSteps?: InstallStep[];
+  version?: string;
+  installationSnapUrl?: string;
+};
+
 export async function installSnap(
   page: DappeteerPage,
-  snapId: string,
-  opts: {
-    hasPermissions: boolean;
-    hasKeyPermissions: boolean;
-    customSteps?: InstallStep[];
-    version?: string;
-  },
-  installationSnapUrl: string = "https://google.com"
-): Promise<InstallSnapResult> {
+  snapIdOrLocation: string,
+  opts: InstallSnapOptions
+): Promise<string> {
   flaskOnly(page);
   //need to open page to access window.ethereum
   const installPage = await page.browser().newPage();
-  await installPage.goto(installationSnapUrl);
+  await installPage.goto(opts.installationSnapUrl ?? "https://google.com");
+  let snapServer: http.Server | undefined;
+  if (fs.existsSync(snapIdOrLocation)) {
+    //snap dist location
+    snapServer = await startSnapServer(snapIdOrLocation);
+    snapIdOrLocation = `local:${toUrl(snapServer.address())}`;
+  }
   const installAction = installPage.evaluate(
     (opts: { snapId: string; version?: string }) =>
-      window.ethereum.request<{ snaps: { [snapId: string]: {} } }>({
+      window.ethereum.request<InstallSnapResult>({
         method: "wallet_enable",
         params: [
           {
@@ -40,7 +51,7 @@ export async function installSnap(
           },
         ],
       }),
-    { snapId, version: opts.version }
+    { snapId: snapIdOrLocation, version: opts.version }
   );
 
   await page.bringToFront();
@@ -65,11 +76,11 @@ export async function installSnap(
 
   const result = await installAction;
   await installPage.close({ runBeforeUnload: true });
-  if (!(snapId in result.snaps)) {
+  if (!(snapIdOrLocation in result.snaps)) {
     throw new Error("Failed to install snap");
   }
-
-  return result as InstallSnapResult;
+  snapServer.close();
+  return snapIdOrLocation;
 }
 
 export async function isSnapInstalled(

@@ -3,11 +3,6 @@ import * as dappeteer from "../../src";
 import { DappeteerPage } from "../../src/page";
 import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
-import { toUrl } from "../utils/utils";
-
-function getSnapIdByName(testContext: TestContext, snapName: Snaps): string {
-  return `local:${toUrl(testContext.snapServers[snapName].address())}`;
-}
 
 describe("snaps", function () {
   let metamask: dappeteer.Dappeteer;
@@ -23,10 +18,10 @@ describe("snaps", function () {
     }
   });
 
-  it("should install base snap from npm", async function (this: TestContext) {
+  it("should install base snap from local server", async function (this: TestContext) {
     await metamask.snaps.installSnap(
       metamask.page,
-      getSnapIdByName(this, Snaps.BASE_SNAP),
+      this.snapServers[Snaps.BASE_SNAP],
       {
         hasPermissions: false,
         hasKeyPermissions: false,
@@ -34,10 +29,10 @@ describe("snaps", function () {
     );
   });
 
-  it("should install permissions snap from npm", async function (this: TestContext) {
+  it("should install permissions snap local server", async function (this: TestContext) {
     await metamask.snaps.installSnap(
       metamask.page,
-      getSnapIdByName(this, Snaps.PERMISSIONS_SNAP),
+      this.snapServers[Snaps.PERMISSIONS_SNAP],
       {
         hasPermissions: true,
         hasKeyPermissions: false,
@@ -45,10 +40,10 @@ describe("snaps", function () {
     );
   });
 
-  it("should install keys snap from npm", async function (this: TestContext) {
+  it("should install keys snap from local server", async function (this: TestContext) {
     await metamask.snaps.installSnap(
       metamask.page,
-      getSnapIdByName(this, Snaps.KEYS_SNAP),
+      this.snapServers[Snaps.KEYS_SNAP],
       {
         hasPermissions: true,
         hasKeyPermissions: true,
@@ -58,6 +53,7 @@ describe("snaps", function () {
 
   describe("should test snap methods", function () {
     let testPage: DappeteerPage;
+    let snapId: string;
 
     beforeEach(function (this: TestContext) {
       //skip those tests for non flask metamask
@@ -71,9 +67,9 @@ describe("snaps", function () {
         this.skip();
         return;
       }
-      await metamask.snaps.installSnap(
+      snapId = await metamask.snaps.installSnap(
         metamask.page,
-        getSnapIdByName(this, Snaps.METHODS_SNAP),
+        this.snapServers[Snaps.METHODS_SNAP],
         {
           hasPermissions: true,
           hasKeyPermissions: false,
@@ -88,7 +84,7 @@ describe("snaps", function () {
     it("should invoke provided snap method and ACCEPT the dialog", async function (this: TestContext) {
       const invokeAction = metamask.snaps.invokeSnap(
         testPage,
-        getSnapIdByName(this, Snaps.METHODS_SNAP),
+        snapId,
         "confirm"
       );
 
@@ -100,7 +96,7 @@ describe("snaps", function () {
     it("should invoke provided snap method and REJECT the dialog", async function (this: TestContext) {
       const invokeAction = metamask.snaps.invokeSnap(
         testPage,
-        getSnapIdByName(this, Snaps.METHODS_SNAP),
+        snapId,
         "confirm"
       );
 
@@ -110,11 +106,7 @@ describe("snaps", function () {
     });
 
     it("should invoke IN APP NOTIFICATIONS and check for a text", async function (this: TestContext) {
-      await metamask.snaps.invokeSnap(
-        testPage,
-        getSnapIdByName(this, Snaps.METHODS_SNAP),
-        "notify_inApp"
-      );
+      await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
 
       const notifications = await metamask.snaps.getAllNotifications();
 
