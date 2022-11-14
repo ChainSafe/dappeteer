@@ -106,11 +106,7 @@ describe("snaps", function () {
       // the time between showing next notification should be minimum 5 seconds
       await metamask.page.waitForTimeout(5000);
 
-      await metamask.snaps.invokeSnap(
-        testPage,
-        getSnapIdByName(this, Snaps.METHODS_SNAP),
-        "notify_inApp"
-      );
+      await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
 
       await metamask.snaps.waitForAmountOfNotifications(2);
 
