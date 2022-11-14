@@ -11,14 +11,6 @@ export class DPupeteerPage implements DappeteerPage<Page> {
     protected browserSource: DappeteerBrowser<Browser, Page>
   ) {}
 
-  async waitForFunction(
-    pageFunction: string | Function,
-    options?: FrameWaitForFunctionOptions,
-    ...args: any[]
-  ): Promise<JSHandle> {
-    return this.page.waitForFunction(pageFunction, options, args);
-  }
-
   async screenshot(path: string): Promise<void> {
     await this.page.screenshot({
       path: path,
@@ -128,9 +120,11 @@ export class DPupeteerPage implements DappeteerPage<Page> {
       await this.page.waitForXPath(xpath, opts)
     );
   }
+
   waitForTimeout(timeout: number): Promise<void> {
     return this.page.waitForTimeout(timeout);
   }
+
   evaluate<Params extends Serializable, Result>(
     evaluateFn: (params?: Unboxed<Params>) => Result | Promise<Result>,
     params?: Params
@@ -139,5 +133,16 @@ export class DPupeteerPage implements DappeteerPage<Page> {
       evaluateFn,
       params
     ) as Promise<Result>;
+  }
+
+  async waitForFunction<Params extends Serializable>(
+    pageFunction: (params?: Unboxed<Params>) => void | string,
+    params?: Params
+  ): Promise<void> {
+    await this.page.waitForFunction(pageFunction, {}, params);
+  }
+
+  exposeFunction(name: string, callback: Function): Promise<void> {
+    return this.page.exposeFunction(name, callback);
   }
 }

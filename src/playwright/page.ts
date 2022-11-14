@@ -1,6 +1,4 @@
 import { BrowserContext, ElementHandle, Page } from "playwright";
-import { FrameWaitForFunctionOptions } from "puppeteer/lib/esm/puppeteer/common/FrameManager";
-import { JSHandle } from "puppeteer";
 import { DappeteerBrowser } from "../browser";
 import { DappeteerElementHandle } from "../element";
 import { DappeteerPage, Response, Unboxed } from "../page";
@@ -106,9 +104,11 @@ export class DPlaywrightPage implements DappeteerPage<Page> {
   ): Promise<DappeteerElementHandle<ElementHandle>> {
     return this.waitForSelector(xpath, opts);
   }
+
   waitForTimeout(timeout: number): Promise<void> {
     return this.page.waitForTimeout(timeout);
   }
+
   evaluate<Params, Result>(
     evaluateFn: (params?: Unboxed<Params>) => Result | Promise<Result>,
     params?: Params
@@ -117,7 +117,17 @@ export class DPlaywrightPage implements DappeteerPage<Page> {
     return this.page.evaluate(evaluateFn, params);
   }
 
-  waitForFunction(): Promise<any> {
-    return Promise.resolve(undefined);
+  async waitForFunction<Args>(
+    pageFunction: (params?: Unboxed<Args>) => void | string,
+    params?: Args
+  ): Promise<void> {
+    await this.page.waitForFunction(pageFunction, {}, params);
+  }
+
+  exposeFunction(
+    name: string,
+    puppeteerFunction: Function | { default: Function }
+  ): Promise<void> {
+    return this.page.exposeFunction(name, <Function>puppeteerFunction);
   }
 }

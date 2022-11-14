@@ -1,6 +1,3 @@
-import { EventEmitter } from "events";
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-import pEvent = require("p-event");
 import { expect } from "chai";
 import * as dappeteer from "../../src";
 import { DappeteerPage } from "../../src";
@@ -98,46 +95,15 @@ describe("snaps", function () {
       expect(await invokeAction).to.equal(false);
     });
 
-    it("should invoke IN APP NOTIFICATIONS and check for a text", async function (this: TestContext) {
+    it("should invoke IN APP NOTIFICATIONS", async function (this: TestContext) {
+      const notifications = await metamask.snaps.notificationObserver();
+
       await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
 
-      const notifications = await metamask.snaps.getAllNotifications();
+      await metamask.snaps.waitForAmountOfNotifications(1);
 
-      expect(notifications[0].message).to.equal("Hello, in App notification");
-    });
-
-    // const notificationList: NotificationList = await page.$$eval(
-    //   ".notifications__item__details__message",
-    //   (elements) =>
-    //     elements.map((element) => ({ message: element.textContent }))
-    // );
-
-    xit("should emmit IN APP NOTIFICATIONS and check for a text", async function (this: TestContext) {
-      // const emitter: EventEmitter = await metamask.snaps.notificationEmitter();
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      // const newNotificationPromise = pEvent(emitter, "newNotification");
-
-      // await metamask.snaps.invokeSnap(
-      //   testPage,
-      //   getSnapIdByName(this, Snaps.METHODS_SNAP),
-      //   "notify_inApp"
-      // );
-
-      await metamask.page.bringToFront();
-      await openProfileDropdown(metamask.page);
-      await clickOnElement(metamask.page, "Notifications");
-
-      await Promise.race([
-        metamask.page.waitForFunction(() => {
-          const curLength = document.querySelectorAll(
-            ".notifications__item__details__message"
-          ).length;
-
-          return curLength !== 0;
-        }),
-        new Promise((r) => setTimeout(r, 1000)),
-      ]);
-
+      // Metamask doesn't allow to invoke more than one notification right away
+      // the time between showing next notification should be minimum 5 seconds
       await metamask.page.waitForTimeout(5000);
 
       await metamask.snaps.invokeSnap(
@@ -146,81 +112,9 @@ describe("snaps", function () {
         "notify_inApp"
       );
 
-      await metamask.page.waitForTimeout(5000);
+      await metamask.snaps.waitForAmountOfNotifications(2);
 
-      await metamask.snaps.invokeSnap(
-        testPage,
-        getSnapIdByName(this, Snaps.METHODS_SNAP),
-        "notify_inApp"
-      );
-
-      await metamask.page.reload();
-
-      await Promise.race([
-        metamask.page.waitForFunction(() => {
-          const curLength = document.querySelectorAll(
-            ".notifications__item__details__message"
-          ).length;
-
-          return curLength !== 0;
-        }),
-        new Promise((r) => setTimeout(r, 1000)),
-      ]);
-
-      const notificationList2: NotificationList = await metamask.page.$$eval(
-        ".notifications__item__details__message",
-        (elements) =>
-          elements.map((element) => ({ message: element.textContent }))
-      );
-
-      console.log(notificationList2);
-
-      await metamask.page.waitForTimeout(1000000);
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      // const result = await newNotificationPromise;
-      //
-      // // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      // const notification = await newNotificationPromise;
-      // console.log("notification length", result);
-      // expect(notifications[0].message).to.equal("Hello, in App notification");
-    });
-
-    it("should emmit IN APP NOTIFICATIONS", async function (this: TestContext) {
-      let notifications: NotificationList = [];
-      const emitter: EventEmitter = await metamask.snaps.notificationEmitter();
-      console.log(emitter);
-
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      emitter.on("newNotification", async () => {
-        notifications = await metamask.snaps.getAllNotifications();
-      });
-
-      const newNotificationPromise = pEvent(emitter, "newNotification");
-
-      await metamask.snaps.invokeSnap(
-        testPage,
-        getSnapIdByName(this, Snaps.METHODS_SNAP),
-        "notify_inApp"
-      );
-
-      // await Promise.race([
-      //   metamask.page.waitForFunction(() => {
-      //     const messages = document.querySelectorAll(
-      //       ".notifications__item__details__message"
-      //     );
-      //
-      //     emitter.emit("newNotification", messages);
-      //
-      //     return messages.length !== 0;
-      //   }),
-      //   new Promise((r) => setTimeout(r, 1000)),
-      // ]);
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      await newNotificationPromise;
-
-      console.log(notifications);
+      expect(notifications).to.have.length(2);
     });
   });
 });

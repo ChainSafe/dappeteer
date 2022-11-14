@@ -77,21 +77,23 @@ export type Dappeteer = {
      * Returns all notifications in Metamask notifications page
      */
     getAllNotifications: () => Promise<NotificationList>;
+    notificationObserver: () => Promise<NotificationList>;
+    waitForAmountOfNotifications: (amount: number) => Promise<void>;
     /**
      * Invoke Metamask snap method. Function will throw if there is an error while invoking snap.
      * Use generic params to override result and parameter types.
      * @param page Browser page where injected Metamask provider will be available.
      * For most snaps, openning google.com will suffice.
      * @param snapId id of your installed snap (result of invoking `installSnap` method)
-     * @param method snap method you wan't to invoke
+     * @param method snap method you want to invoke
      * @param params required parameters of snap method
      */
-    invokeSnap: <Result = unknown, Params extends Serializable = Serializable>(
+    invokeSnap: <R = unknown, P extends Serializable = Serializable>(
       page: DappeteerPage,
       snapId: string,
       method: string,
-      params?: Params
-    ) => Promise<Partial<Result>>;
+      params?: P
+    ) => Promise<Partial<R>>;
 
     /**
      * Installs snap. Function will throw if there is an error while installing snap.

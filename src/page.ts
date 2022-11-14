@@ -1,8 +1,3 @@
-import {
-  FrameWaitForFunctionOptions,
-  JSHandle,
-  SerializableOrJSHandle,
-} from "puppeteer";
 import { DappeteerElementHandle } from "./element";
 import { DappeteerBrowser } from "./browser";
 
@@ -71,11 +66,15 @@ export interface DappeteerPage<P = unknown> {
 
   screenshot(path: string): Promise<void>;
 
-  waitForFunction(
+  waitForFunction<Params extends Serializable>(
     pageFunction: Function | string,
-    options?: FrameWaitForFunctionOptions,
-    ...args: SerializableOrJSHandle[]
-  ): Promise<JSHandle>;
+    params?: Params
+  ): Promise<void>;
+
+  exposeFunction(
+    name: string,
+    puppeteerFunction: Function | { default: Function }
+  ): Promise<void>;
 }
 
 export type Unboxed<Arg> = Arg extends DappeteerElementHandle<any, infer T>

@@ -17,7 +17,7 @@
     "lint": "eslint --color --ext .ts src/ test/",
     "lint:fix": "yarn run lint --fix",
     "test:mm": "mocha --require ts-node/register --require test/global.ts",
-    "test:flask": "mocha --require ts-node/register --require test/global_flask.ts",
+    "test:flask": "mocha --require ts-node/register --require jsdom-global/register --require test/global_flask.ts",
     "test:puppeteer:mm": "AUTOMATION=puppeteer yarn run test:mm",
     "test:puppeteer:flask": "AUTOMATION=puppeteer yarn run test:flask",
     "test:playwright:mm": "AUTOMATION=playwright yarn run test:mm",
@@ -42,6 +42,8 @@
   "license": "MIT",
   "dependencies": {
     "@metamask/providers": "^9.1.0",
+    "jsdom": "^20.0.2",
+    "jsdom-global": "^3.0.2",
     "node-stream-zip": "^1.13.0",
     "serve-handler": "5.0.8"
   },
