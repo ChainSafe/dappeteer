@@ -58,6 +58,7 @@ describe("basic interactions", function () {
     await metamask.switchNetwork("localhost");
     const tokenBalance: number = await metamask.helpers.getTokenBalance("ETH");
     expect(tokenBalance).to.be.greaterThan(0);
+    await metamask.switchNetwork("mainnet");
   });
 
   it("should return 0 token balance when token not found", async () => {
@@ -67,13 +68,16 @@ describe("basic interactions", function () {
     expect(tokenBalance).to.be.equal(0);
   });
 
-  // TODO: Metamask UI is flaky there
+  it("should not add token", async () => {
+    await clickElement(testPage, ".add-token-button");
+    await metamask.rejectAddToken();
+    await testPage.waitForSelector("#addTokenResultFail");
+  });
+
   it("should add token", async () => {
-    await metamask.switchNetwork("mainnet");
-    await metamask.addToken({
-      tokenAddress: "0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa",
-      symbol: "KAKI",
-    });
+    await clickElement(testPage, ".add-token-button");
+    await metamask.acceptAddToken();
+    await testPage.waitForSelector("#addTokenResultSuccess");
   });
 
   it("should add network with required params", async () => {

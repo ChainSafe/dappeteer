@@ -43,12 +43,6 @@ export type AddNetwork = {
   symbol: string;
 };
 
-export type AddToken = {
-  tokenAddress: string;
-  symbol?: string;
-  decimals?: number;
-};
-
 export type TransactionOptions = {
   gas?: number;
   gasLimit?: number;
@@ -59,7 +53,8 @@ export type Dappeteer = {
   lock: () => Promise<void>;
   unlock: (password: string) => Promise<void>;
   addNetwork: (options: AddNetwork) => Promise<void>;
-  addToken: (options: AddToken) => Promise<void>;
+  acceptAddToken: () => Promise<void>;
+  rejectAddToken: () => Promise<void>;
   importPK: (pk: string) => Promise<void>;
   switchAccount: (accountNumber: number) => Promise<void>;
   switchNetwork: (network: string) => Promise<void>;

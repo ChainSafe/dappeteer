@@ -6,7 +6,6 @@ import { acceptDialog } from "../snap/acceptDialog";
 import { rejectDialog } from "../snap/rejectDialog";
 import { getAllNotifications, installSnap, invokeSnap } from "../snap";
 import { addNetwork } from "./addNetwork";
-import { addToken } from "./addToken";
 import { approve } from "./approve";
 import { confirmTransaction } from "./confirmTransaction";
 import { deleteAccount, deleteNetwork, getTokenBalance } from "./helpers";
@@ -16,6 +15,7 @@ import { sign } from "./sign";
 import { switchAccount } from "./switchAccount";
 import { switchNetwork } from "./switchNetwork";
 import { unlock } from "./unlock";
+import { acceptAddToken, rejectAddToken } from "./addToken";
 
 export type SetSignedIn = (state: boolean) => Promise<void>;
 export type GetSingedIn = () => Promise<boolean>;
@@ -48,7 +48,8 @@ export const getMetaMask = (page: DappeteerPage): Promise<Dappeteer> => {
       switchAccount: switchAccount(page),
       switchNetwork: switchNetwork(page),
       unlock: unlock(page, setSignedIn, getSingedIn),
-      addToken: addToken(page),
+      acceptAddToken: acceptAddToken(page),
+      rejectAddToken: rejectAddToken(page),
       helpers: {
         getTokenBalance: getTokenBalance(page),
         deleteAccount: deleteAccount(page),
