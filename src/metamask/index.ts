@@ -59,7 +59,7 @@ export const getMetaMask = (page: DappeteerPage): Promise<Dappeteer> => {
         acceptDialog: acceptDialog(page),
         rejectDialog: rejectDialog(page),
         invokeSnap,
-        installSnap,
+        installSnap: installSnap(page),
       },
       page,
     });
