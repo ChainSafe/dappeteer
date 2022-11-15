@@ -10,7 +10,7 @@
     "dist"
   ],
   "engines": {
-    "node": "16"
+    "node": ">=16"
   },
   "scripts": {
     "prebuild": "rimraf dist",
