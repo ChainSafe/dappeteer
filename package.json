@@ -6,7 +6,6 @@
   "typings": "dist/index.d.ts",
   "files": [
     "jest-preset.js",
-    "metamask",
     "dist"
   ],
   "engines": {
