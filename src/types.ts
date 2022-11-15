@@ -36,13 +36,6 @@ export type MetaMaskOptions = {
   showTestNets?: boolean;
 };
 
-export type AddNetwork = {
-  networkName: string;
-  rpc: string;
-  chainId: number;
-  symbol: string;
-};
-
 export type TransactionOptions = {
   gas?: number;
   gasLimit?: number;
@@ -52,7 +45,8 @@ export type TransactionOptions = {
 export type Dappeteer = {
   lock: () => Promise<void>;
   unlock: (password: string) => Promise<void>;
-  addNetwork: (options: AddNetwork) => Promise<void>;
+  acceptAddNetwork: (shouldSwitch?: boolean) => Promise<void>;
+  rejectAddNetwork: () => Promise<void>;
   acceptAddToken: () => Promise<void>;
   rejectAddToken: () => Promise<void>;
   importPK: (pk: string) => Promise<void>;

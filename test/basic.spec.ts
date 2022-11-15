@@ -80,20 +80,19 @@ describe("basic interactions", function () {
     await testPage.waitForSelector("#addTokenResultSuccess");
   });
 
-  it("should add network with required params", async () => {
-    await metamask.addNetwork({
-      networkName: "Optimism",
-      rpc: "https://mainnet.optimism.io",
-      chainId: 10,
-      symbol: "OP",
-    });
+  it("should not add network", async () => {
+    await clickElement(testPage, ".add-network-button");
+    await metamask.page.waitForTimeout(500);
+    await metamask.rejectAddNetwork();
+    await testPage.waitForSelector("#addNetworkResultFail");
+  });
 
-    const selectedNetwork = await metamask.page.evaluate(
-      () =>
-        document.querySelector(".network-display > span:nth-child(2)").innerHTML
-    );
-    expect(selectedNetwork).to.be.equal("Optimism");
-    await metamask.switchNetwork("local");
+  it("should add network and switch", async () => {
+    await clickElement(testPage, ".add-network-button");
+    await metamask.page.waitForTimeout(500);
+    await metamask.acceptAddNetwork(true);
+    await testPage.waitForSelector("#addNetworkResultSuccess");
+    await metamask.switchNetwork("mainnet");
   });
 
   it("should import private key", async () => {

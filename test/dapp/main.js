@@ -69,10 +69,36 @@ async function start() {
         },
       });
       resultElem.id = "addTokenResultSuccess";
-    } catch(e) {
+    } catch (e) {
       resultElem.id = "addTokenResultFail";
     }
-    document.body.appendChild(resultElem);    
+    document.body.appendChild(resultElem);
+  });
+
+  const addNetworkButton = document.querySelector(".add-network-button");
+  addNetworkButton.addEventListener("click", async function () {
+    const resultElem = document.createElement("div");
+    try {
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: "0xa",
+            chainName: "Optimism",
+            nativeCurrency: {
+              name: "ETH",
+              symbol: "ETH", // 2-6 characters long
+              decimals: 18,
+            },
+            rpcUrls: ["https://mainnet.optimism.io"],
+          },
+        ],
+      });
+      resultElem.id = "addNetworkResultSuccess";
+    } catch (e) {
+      resultElem.id = "addNetworkResultFail";
+    }
+    document.body.appendChild(resultElem);
   });
 }
 
