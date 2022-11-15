@@ -19,36 +19,24 @@ describe("snaps", function () {
   });
 
   it("should install base snap from local server", async function (this: TestContext) {
-    await metamask.snaps.installSnap(
-      metamask.page,
-      this.snapServers[Snaps.BASE_SNAP],
-      {
-        hasPermissions: false,
-        hasKeyPermissions: false,
-      }
-    );
+    await metamask.snaps.installSnap(this.snapServers[Snaps.BASE_SNAP], {
+      hasPermissions: false,
+      hasKeyPermissions: false,
+    });
   });
 
   it("should install permissions snap local server", async function (this: TestContext) {
-    await metamask.snaps.installSnap(
-      metamask.page,
-      this.snapServers[Snaps.PERMISSIONS_SNAP],
-      {
-        hasPermissions: true,
-        hasKeyPermissions: false,
-      }
-    );
+    await metamask.snaps.installSnap(this.snapServers[Snaps.PERMISSIONS_SNAP], {
+      hasPermissions: true,
+      hasKeyPermissions: false,
+    });
   });
 
   it("should install keys snap from local server", async function (this: TestContext) {
-    await metamask.snaps.installSnap(
-      metamask.page,
-      this.snapServers[Snaps.KEYS_SNAP],
-      {
-        hasPermissions: true,
-        hasKeyPermissions: true,
-      }
-    );
+    await metamask.snaps.installSnap(this.snapServers[Snaps.KEYS_SNAP], {
+      hasPermissions: true,
+      hasKeyPermissions: true,
+    });
   });
 
   describe("should test snap methods", function () {
@@ -68,7 +56,6 @@ describe("snaps", function () {
         return;
       }
       snapId = await metamask.snaps.installSnap(
-        metamask.page,
         this.snapServers[Snaps.METHODS_SNAP],
         {
           hasPermissions: true,

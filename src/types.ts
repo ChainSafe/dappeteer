@@ -73,19 +73,37 @@ export type Dappeteer = {
   };
   page: DappeteerPage;
   snaps: {
+    /**
+     * Returns all notifications in Metamask notifications page
+     */
     getAllNotifications: () => Promise<NotificationList>;
-    invokeSnap: <R = unknown, P extends Serializable = Serializable>(
+    /**
+     * Invoke Metamask snap method. Function will throw if there is an error while invoking snap.
+     * Use generic params to override result and parameter types.
+     * @param page Browser page where injected Metamask provider will be available.
+     * For most snaps, openning google.com will suffice.
+     * @param snapId id of your installed snap (result of invoking `installSnap` method)
+     * @param method snap method you wan't to invoke
+     * @param params required parameters of snap method
+     */
+    invokeSnap: <Result = unknown, Params extends Serializable = Serializable>(
       page: DappeteerPage,
       snapId: string,
       method: string,
-      params?: P
-    ) => Promise<Partial<R>>;
+      params?: Params
+    ) => Promise<Partial<Result>>;
+
     /**
-     *
+     * Installs snap. Function will throw if there is an error while installing snap.
+     * @param snapIdOrLocation either pass in snapId or full path to your snap directory
+     * where we can find bundled snap (you need to ensure snap is built)
+     * @param opts {Object} snap method you wan't to invoke
+     * @param opts.hasPermissions Set to true if snap uses some permissions
+     * @param opts.hasKeyPermissions Set to true if snap uses key permissions
+     * @param installationSnapUrl url of your dapp. Defaults to google.com
      */
     installSnap: (
-      page: DappeteerPage,
-      snapId: string,
+      snapIdOrLocation: string,
       opts: {
         hasPermissions: boolean;
         hasKeyPermissions: boolean;
@@ -94,7 +112,14 @@ export type Dappeteer = {
       },
       installationSnapUrl?: string
     ) => Promise<string>;
+    /**
+     * Accepts snap_confirm dialog
+     */
     acceptDialog: () => Promise<void>;
+
+    /**
+     * Rejects snap_confirm dialog
+     */
     rejectDialog: () => Promise<void>;
   };
 };
