@@ -24,64 +24,65 @@ export type InstallSnapOptions = {
   installationSnapUrl?: string;
 };
 
-export async function installSnap(
-  page: DappeteerPage,
-  snapIdOrLocation: string,
-  opts: InstallSnapOptions
-): Promise<string> {
-  flaskOnly(page);
-  //need to open page to access window.ethereum
-  const installPage = await page.browser().newPage();
-  await installPage.goto(opts.installationSnapUrl ?? "https://google.com");
-  let snapServer: http.Server | undefined;
-  if (fs.existsSync(snapIdOrLocation)) {
-    //snap dist location
-    snapServer = await startSnapServer(snapIdOrLocation);
-    snapIdOrLocation = `local:${toUrl(snapServer.address())}`;
-  }
-  const installAction = installPage.evaluate(
-    (opts: { snapId: string; version?: string }) =>
-      window.ethereum.request<InstallSnapResult>({
-        method: "wallet_enable",
-        params: [
-          {
-            [`wallet_snap_${opts.snapId}`]: {
-              version: opts.version ?? "latest",
-            },
-          },
-        ],
-      }),
-    { snapId: snapIdOrLocation, version: opts.version }
-  );
-
-  await page.bringToFront();
-  await page.reload();
-  await clickOnButton(page, "Connect");
-  if (opts.hasPermissions) {
-    await clickOnButton(page, "Approve & install");
-    if (opts.hasKeyPermissions) {
-      const checkbox = await page.waitForSelector(".checkbox-label", {
-        visible: true,
-      });
-      await checkbox.click();
-      await clickOnButton(page, "Confirm");
+export const installSnap =
+  (page: DappeteerPage) =>
+  async (
+    snapIdOrLocation: string,
+    opts: InstallSnapOptions
+  ): Promise<string> => {
+    flaskOnly(page);
+    //need to open page to access window.ethereum
+    const installPage = await page.browser().newPage();
+    await installPage.goto(opts.installationSnapUrl ?? "https://google.com");
+    let snapServer: http.Server | undefined;
+    if (fs.existsSync(snapIdOrLocation)) {
+      //snap dist location
+      snapServer = await startSnapServer(snapIdOrLocation);
+      snapIdOrLocation = `local:${toUrl(snapServer.address())}`;
     }
-  } else {
-    await clickOnButton(page, "Install");
-  }
+    const installAction = installPage.evaluate(
+      (opts: { snapId: string; version?: string }) =>
+        window.ethereum.request<InstallSnapResult>({
+          method: "wallet_enable",
+          params: [
+            {
+              [`wallet_snap_${opts.snapId}`]: {
+                version: opts.version ?? "latest",
+              },
+            },
+          ],
+        }),
+      { snapId: snapIdOrLocation, version: opts.version }
+    );
 
-  for (const step of opts.customSteps ?? []) {
-    await step(page);
-  }
+    await page.bringToFront();
+    await page.reload();
+    await clickOnButton(page, "Connect");
+    if (opts.hasPermissions) {
+      await clickOnButton(page, "Approve & install");
+      if (opts.hasKeyPermissions) {
+        const checkbox = await page.waitForSelector(".checkbox-label", {
+          visible: true,
+        });
+        await checkbox.click();
+        await clickOnButton(page, "Confirm");
+      }
+    } else {
+      await clickOnButton(page, "Install");
+    }
 
-  const result = await installAction;
-  await installPage.close({ runBeforeUnload: true });
-  if (!(snapIdOrLocation in result.snaps)) {
-    throw new Error("Failed to install snap");
-  }
-  snapServer.close();
-  return snapIdOrLocation;
-}
+    for (const step of opts.customSteps ?? []) {
+      await step(page);
+    }
+
+    const result = await installAction;
+    await installPage.close({ runBeforeUnload: true });
+    if (!(snapIdOrLocation in result.snaps)) {
+      throw new Error("Failed to install snap");
+    }
+    snapServer.close();
+    return snapIdOrLocation;
+  };
 
 export async function isSnapInstalled(
   page: DappeteerPage,

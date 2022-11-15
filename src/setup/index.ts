@@ -55,11 +55,7 @@ export const initSnapEnv = async (
   });
   const page = dappeteer.page;
 
-  const snapId = await dappeteer.snaps.installSnap(
-    page,
-    snapIdOrLocation,
-    opts
-  );
+  const snapId = await dappeteer.snaps.installSnap(snapIdOrLocation, opts);
 
   return {
     dappeteer,
