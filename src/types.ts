@@ -19,7 +19,7 @@ export type DappeteerLaunchOptions = {
   metaMaskFlask?: boolean;
   //fallbacks to installed dependency and prefers playwright if both are installed
   automation?: "puppeteer" | "playwright";
-  browser: "chrome";
+  browser: "chrome" | "firefox";
   puppeteerOptions?: Omit<Parameters<typeof puppeteerLaunch>[0], "headless">;
   playwrightOptions?: Omit<PlaywrightLaunchOptions, "headless">;
 };

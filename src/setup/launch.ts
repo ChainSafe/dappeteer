@@ -44,7 +44,7 @@ export async function launch(
 
     console.warn(); // new line
 
-    metamaskPath = await downloader(metaMaskVersion, {
+    metamaskPath = await downloader(metaMaskVersion, options.browser, {
       location: metaMaskLocation,
       flask: options.metaMaskFlask,
     });
