@@ -13,7 +13,6 @@ describe("snaps", function () {
 
   beforeEach(function (this: TestContext) {
     //skip those tests for non flask metamask
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     if (!this.browser.isMetaMaskFlask()) {
       this.skip();
     }
@@ -46,14 +45,12 @@ describe("snaps", function () {
 
     beforeEach(function (this: TestContext) {
       //skip those tests for non flask metamask
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       if (!this.browser.isMetaMaskFlask()) {
         this.skip();
       }
     });
 
     before(async function (this: TestContext) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       if (!this.browser.isMetaMaskFlask()) {
         this.skip();
         return;

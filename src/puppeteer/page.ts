@@ -1,5 +1,4 @@
-import { Browser, ElementHandle, JSHandle, Page } from "puppeteer";
-import { FrameWaitForFunctionOptions } from "puppeteer/lib/esm/puppeteer/common/FrameManager";
+import { Browser, ElementHandle, Page } from "puppeteer";
 import { DappeteerBrowser } from "../browser";
 import { DappeteerElementHandle } from "../element";
 import { DappeteerPage, Response, Serializable, Unboxed } from "../page";
