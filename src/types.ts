@@ -105,7 +105,6 @@ export type Dappeteer = {
       method: string,
       params?: P
     ) => Promise<Partial<R>>;
-
     /**
      * Installs snap. Function will throw if there is an error while installing snap.
      * @param snapIdOrLocation either pass in snapId or full path to your snap directory

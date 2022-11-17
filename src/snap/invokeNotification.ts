@@ -2,7 +2,7 @@ import { DappeteerPage, Serializable } from "../page";
 import { clickOnElement, openProfileDropdown } from "../helpers";
 import { invokeSnap } from "./invokeSnap";
 
-export function waitForNotification(page: DappeteerPage) {
+function waitForNotification(page: DappeteerPage) {
   return async function (): Promise<any> {
     await page.evaluate(async () => {
       return new Promise((resolve) => {
