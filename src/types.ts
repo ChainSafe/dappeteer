@@ -78,7 +78,7 @@ export type Dappeteer = {
      */
     getAllNotifications: () => Promise<NotificationList>;
     /** Invoke notification snap method. The function will open a notification
-    page, invoke the snap and it will await until notification is rendered
+    page, invoke the snap, and it will wait until notification is rendered
     in the DOM. Can be used in pair with getAllNotifications method f.e:
      await metamask.snaps.invokeNotification(page, "snapid", "method_name")
      const notifications = await metamask.snaps.getAllNotifications()

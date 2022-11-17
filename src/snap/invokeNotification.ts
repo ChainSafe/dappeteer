@@ -2,10 +2,11 @@ import { DappeteerPage, Serializable } from "../page";
 import { clickOnElement, openProfileDropdown } from "../helpers";
 import { invokeSnap } from "./invokeSnap";
 
-function waitForNotification(page: DappeteerPage) {
-  return async function (): Promise<any> {
-    await page.evaluate(async () => {
-      return new Promise((resolve) => {
+async function waitForNotification(page: DappeteerPage): Promise<void> {
+  await page.waitForSelector(".notifications__container");
+  await page.evaluate(
+    () =>
+      new Promise((resolve) => {
         const observer = new MutationObserver((mutations) => {
           for (const mutation of mutations) {
             if (mutation.addedNodes.length) {
@@ -19,9 +20,8 @@ function waitForNotification(page: DappeteerPage) {
           attributes: false,
           childList: true,
         });
-      });
-    });
-  };
+      })
+  );
 }
 
 export const invokeNotification =
@@ -41,7 +41,7 @@ export const invokeNotification =
 
     const snapResult = await invokeSnap<R, P>(testPage, snapId, method, params);
 
-    waitForNotification(newPage);
+    await waitForNotification(newPage);
 
     return snapResult;
   };
