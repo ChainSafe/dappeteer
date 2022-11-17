@@ -77,7 +77,10 @@ export type Dappeteer = {
      * Returns all notifications in Metamask notifications page
      */
     getAllNotifications: () => Promise<NotificationList>;
-    notificationObserver: () => Promise<NotificationList>;
+    notificationObserver: () => Promise<{
+      waitForNotification: () => Promise<any>;
+      notifications: NotificationList;
+    }>;
     waitForAmountOfNotifications: (amount: number) => Promise<void>;
     /**
      * Invoke Metamask snap method. Function will throw if there is an error while invoking snap.

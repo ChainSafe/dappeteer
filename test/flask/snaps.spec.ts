@@ -86,28 +86,26 @@ describe("snaps", function () {
         snapId,
         "confirm"
       );
-
       await metamask.snaps.rejectDialog();
 
       expect(await invokeAction).to.equal(false);
     });
 
     it("should invoke IN APP NOTIFICATIONS", async function (this: TestContext) {
-      const notifications = await metamask.snaps.notificationObserver();
+      const { waitForNotification } =
+        await metamask.snaps.notificationObserver();
 
       await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
+      await waitForNotification();
 
-      await metamask.snaps.waitForAmountOfNotifications(1);
-
-      // Metamask doesn't allow to invoke more than one notification right away
-      // the time between showing next notification should be minimum 5 seconds
       await metamask.page.waitForTimeout(5000);
 
       await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
+      await waitForNotification();
 
-      await metamask.snaps.waitForAmountOfNotifications(2);
-
-      expect(notifications).to.have.length(2);
+      const notifications2 = await metamask.snaps.getAllNotifications();
+      // await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
+      console.log("notifications2", notifications2);
     });
   });
 });

@@ -42,7 +42,10 @@
   "license": "MIT",
   "dependencies": {
     "@metamask/providers": "^9.1.0",
+    "await-event-emitter": "^2.0.2",
     "node-stream-zip": "^1.13.0",
+    "p-event": "4.2.0",
+    "promise-events": "^0.2.4",
     "serve-handler": "5.0.8"
   },
   "devDependencies": {
