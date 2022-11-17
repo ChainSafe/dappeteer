@@ -3,6 +3,7 @@ import * as dappeteer from "../../src";
 import { DappeteerPage } from "../../src";
 import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
+import { clickOnElement, openProfileDropdown } from "../../src/helpers";
 
 describe("snaps", function () {
   let metamask: dappeteer.Dappeteer;
@@ -92,20 +93,38 @@ describe("snaps", function () {
     });
 
     it("should invoke IN APP NOTIFICATIONS", async function (this: TestContext) {
-      const { waitForNotification } =
-        await metamask.snaps.notificationObserver();
+      const permissionSnapId = await metamask.snaps.installSnap(
+        metamask.page,
+        this.snapServers[Snaps.PERMISSIONS_SNAP],
+        {
+          hasPermissions: true,
+          hasKeyPermissions: false,
+        }
+      );
+
+      await metamask.page.bringToFront();
+
+      await openProfileDropdown(metamask.page);
+      await clickOnElement(metamask.page, "Notifications");
 
       await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
-      await waitForNotification();
+      await metamask.snaps.waitForNotification();
 
-      await metamask.page.waitForTimeout(5000);
+      await metamask.snaps.invokeSnap(
+        testPage,
+        permissionSnapId,
+        "notify_inApp"
+      );
+      await metamask.snaps.waitForNotification();
 
-      await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
-      await waitForNotification();
+      const notifications = await metamask.snaps.getAllNotifications();
 
-      const notifications2 = await metamask.snaps.getAllNotifications();
-      // await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
-      console.log("notifications2", notifications2);
+      expect(notifications[0].message).to.have.equal(
+        "Hello from permissions snap in App notification"
+      );
+      expect(notifications[1].message).to.have.equal(
+        "Hello from methods snap in App notification"
+      );
     });
   });
 });
