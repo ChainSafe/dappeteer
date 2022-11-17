@@ -3,7 +3,6 @@ import * as dappeteer from "../../src";
 import { DappeteerPage } from "../../src";
 import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
-import { clickOnElement, openProfileDropdown } from "../../src/helpers";
 
 describe("snaps", function () {
   let metamask: dappeteer.Dappeteer;
@@ -102,20 +101,12 @@ describe("snaps", function () {
         }
       );
 
-      await metamask.page.bringToFront();
-
-      await openProfileDropdown(metamask.page);
-      await clickOnElement(metamask.page, "Notifications");
-
-      await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
-      await metamask.snaps.waitForNotification();
-
-      await metamask.snaps.invokeSnap(
+      await metamask.snaps.invokeNotification(testPage, snapId, "notify_inApp");
+      await metamask.snaps.invokeNotification(
         testPage,
         permissionSnapId,
         "notify_inApp"
       );
-      await metamask.snaps.waitForNotification();
 
       const notifications = await metamask.snaps.getAllNotifications();
 
