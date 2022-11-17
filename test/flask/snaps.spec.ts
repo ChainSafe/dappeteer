@@ -93,7 +93,6 @@ describe("snaps", function () {
 
     it("should invoke IN APP NOTIFICATIONS", async function (this: TestContext) {
       const permissionSnapId = await metamask.snaps.installSnap(
-        metamask.page,
         this.snapServers[Snaps.PERMISSIONS_SNAP],
         {
           hasPermissions: true,
@@ -109,11 +108,10 @@ describe("snaps", function () {
       );
 
       const notifications = await metamask.snaps.getAllNotifications();
-
-      expect(notifications[0].message).to.have.equal(
+      expect(notifications[0].message).to.equal(
         "Hello from permissions snap in App notification"
       );
-      expect(notifications[1].message).to.have.equal(
+      expect(notifications[1].message).to.equal(
         "Hello from methods snap in App notification"
       );
     });
