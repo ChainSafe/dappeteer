@@ -84,12 +84,15 @@ export type Dappeteer = {
      const notifications = await metamask.snaps.getAllNotifications()
      expect(notifications[0].message).to.equal("Notification message")
     */
-    invokeNotification: <R = unknown, P extends Serializable = Serializable>(
+    invokeNotification: <
+      Result = unknown,
+      Params extends Serializable = Serializable
+    >(
       page: DappeteerPage,
       snapId: string,
       method: string,
-      params?: P
-    ) => Promise<Partial<R>>;
+      params?: Params
+    ) => Promise<Partial<Result>>;
     /**
      * Invoke Metamask snap method. Function will throw if there is an error while invoking snap.
      * Use generic params to override result and parameter types.
@@ -99,17 +102,17 @@ export type Dappeteer = {
      * @param method snap method you want to invoke
      * @param params required parameters of snap method
      */
-    invokeSnap: <R = unknown, P extends Serializable = Serializable>(
+    invokeSnap: <Result = unknown, Params extends Serializable = Serializable>(
       page: DappeteerPage,
       snapId: string,
       method: string,
-      params?: P
-    ) => Promise<Partial<R>>;
+      params?: Params
+    ) => Promise<Partial<Result>>;
     /**
      * Installs snap. Function will throw if there is an error while installing snap.
      * @param snapIdOrLocation either pass in snapId or full path to your snap directory
      * where we can find bundled snap (you need to ensure snap is built)
-     * @param opts {Object} snap method you wan't to invoke
+     * @param opts {Object} snap method you want to invoke
      * @param opts.hasPermissions Set to true if snap uses some permissions
      * @param opts.hasKeyPermissions Set to true if snap uses key permissions
      * @param installationSnapUrl url of your dapp. Defaults to google.com
