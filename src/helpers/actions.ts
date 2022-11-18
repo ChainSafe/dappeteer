@@ -112,3 +112,33 @@ export const typeOnInputField = async (
   await input.type(text);
   return true;
 };
+
+/**
+ *
+ * @param page
+ */
+export const clickOnLittleDownArrowIfNeeded = async (
+  page: DappeteerPage
+): Promise<void> => {
+  // Metamask requires users to read all the data
+  // and scroll until the bottom of the message
+  // before enabling the "Sign" button
+
+  const isSignButtonDisabled = await page.$eval(
+    '[data-testid="signature-sign-button"]',
+    (button: HTMLButtonElement) => {
+      return button.disabled;
+    }
+  );
+
+  if (isSignButtonDisabled) {
+    const littleArrowDown = await page.waitForSelector(
+      ".signature-request-message__scroll-button",
+      {
+        visible: true,
+      }
+    );
+
+    await littleArrowDown.click();
+  }
+};

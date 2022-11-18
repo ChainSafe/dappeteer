@@ -44,12 +44,22 @@ describe("basic interactions", function () {
     await testPage.waitForSelector("#signed", { visible: false });
   });
 
-  it.only("should be able to sign typed data", async () => {
+  it("should be able to sign typed data", async () => {
     await clickElement(testPage, ".sign-typedData-button");
 
-    await metamask.sign();
+    await metamask.signTypedData();
 
     await testPage.waitForSelector("#signed-typedData", { visible: false });
+  });
+
+  it.only("should be able to sign short typed data", async () => {
+    await clickElement(testPage, ".sign-short-typedData-button");
+
+    await metamask.signTypedData();
+
+    await testPage.waitForSelector("#signed-short-typedData", {
+      visible: false,
+    });
   });
 
   it("should switch network", async () => {
