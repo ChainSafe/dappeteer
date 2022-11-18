@@ -52,7 +52,7 @@ describe("basic interactions", function () {
     await testPage.waitForSelector("#signed-typedData", { visible: false });
   });
 
-  it.only("should be able to sign short typed data", async () => {
+  it("should be able to sign short typed data", async () => {
     await clickElement(testPage, ".sign-short-typedData-button");
 
     await metamask.signTypedData();

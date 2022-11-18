@@ -1,7 +1,7 @@
 parallel: false
 recursive: true
 color: true
-timeout: 2000000
+timeout: 20000
 exit: true
 spec:
   - 'test/**/*.spec.ts'
