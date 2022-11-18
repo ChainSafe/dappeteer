@@ -44,6 +44,14 @@ describe("basic interactions", function () {
     await testPage.waitForSelector("#signed", { visible: false });
   });
 
+  it.only("should be able to sign typed data", async () => {
+    await clickElement(testPage, ".sign-typedData-button");
+
+    await metamask.sign();
+
+    await testPage.waitForSelector("#signed-typedData", { visible: false });
+  });
+
   it("should switch network", async () => {
     await metamask.switchNetwork("localhost");
 
