@@ -57,24 +57,31 @@ export async function setupMetaMask<Options = MetaMaskOptions>(
   return getMetaMask(page);
 }
 
+const browsersRegex = [
+  "chrome-extension://[a-z]+/home.html",
+  "moz-extension://[a-z0-9-]+/home.html",
+].join("|");
 async function getMetamaskPage(
   browser: DappeteerBrowser
 ): Promise<DappeteerPage> {
   const pages = await browser.pages();
   for (const page of pages) {
-    if (page.url().match("chrome-extension://[a-z]+/home.html")) {
+    console.warn(page.url());
+    await new Promise(r => setTimeout(r, 3000))
+    if (page.url().match(browsersRegex)) {
       return page;
     }
   }
+
   return new Promise((resolve, reject) => {
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     browser.on("targetcreated", async (target: any) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      if (target.url().match("chrome-extension://[a-z]+/home.html")) {
+      if (target.url().match(browsersRegex)) {
         try {
           const pages = await browser.pages();
           for (const page of pages) {
-            if (page.url().match("chrome-extension://[a-z]+/home.html")) {
+            if (page.url().match(browsersRegex)) {
               resolve(page);
             }
           }

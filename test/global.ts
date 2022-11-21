@@ -21,8 +21,8 @@ export const mochaHooks = {
     });
     const browser = await dappeteer.launch({
       automation:
-        (process.env.AUTOMATION as "puppeteer" | "playwright") ?? "puppeteer",
-      browser: "chrome",
+        (process.env.AUTOMATION as "puppeteer" | "playwright") ?? "playwright",
+      browser: "firefox", // TODO: implement env
       metaMaskVersion:
         process.env.METAMASK_VERSION || dappeteer.RECOMMENDED_METAMASK_VERSION,
     });

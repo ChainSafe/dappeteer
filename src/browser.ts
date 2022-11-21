@@ -3,6 +3,8 @@ import { DappeteerPage } from "./page";
 
 export interface DappeteerBrowser<Browser = unknown, Page = unknown>
   extends EventEmitter {
+  firefoxExtension?: string;
+
   isMetaMaskFlask(): boolean;
 
   pages(): Promise<DappeteerPage<Page>[]>;

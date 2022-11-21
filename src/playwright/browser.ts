@@ -9,12 +9,16 @@ export class DPlaywrightBrowser
   extends EventEmitter
   implements DappeteerBrowser<BrowserContext, Page>
 {
+  public firefoxExtension: string;
+
   constructor(
     protected browser: BrowserContext,
     protected tmpDir: string,
-    protected flask: boolean = false
+    protected flask: boolean = false,
+    url?: string
   ) {
     super();
+    if (url) this.firefoxExtension = url;
     this.browser.on("page", (page) => this.emit("targetcreated", page));
   }
   wsEndpoint(): string {
