@@ -115,22 +115,14 @@ async function start() {
     var params = [accounts[0], msgParams];
     var method = "eth_signTypedData_v4";
 
-    web3.currentProvider.sendAsync(
-      {
-        method,
-        params,
-        from: accounts[0],
-      },
-      function (err, result) {
-        if (err) return;
-        if (result.error) {
-          console.error(result.error.message);
-        }
-        const signed = document.createElement("div");
-        signed.id = "signed-typedData";
-        document.body.appendChild(signed);
-      }
-    );
+    await window.ethereum.request({
+      method,
+      params,
+    });
+
+    const signed = document.createElement("div");
+    signed.id = "signed-typedData";
+    document.body.appendChild(signed);
   });
 
   const signShortTypedDataButton = document.querySelector(
@@ -164,22 +156,14 @@ async function start() {
     var params = [accounts[0], msgParams];
     var method = "eth_signTypedData_v4";
 
-    web3.currentProvider.sendAsync(
-      {
-        method,
-        params,
-        from: accounts[0],
-      },
-      function (err, result) {
-        if (err) return;
-        if (result.error) {
-          console.error(result.error.message);
-        }
-        const signed = document.createElement("div");
-        signed.id = "signed-short-typedData";
-        document.body.appendChild(signed);
-      }
-    );
+    await window.ethereum.request({
+      method,
+      params,
+    });
+
+    const signed = document.createElement("div");
+    signed.id = "signed-short-typedData";
+    document.body.appendChild(signed);
   });
 
   const transferButton = document.querySelector(".transfer-button");

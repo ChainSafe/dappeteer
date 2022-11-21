@@ -120,10 +120,14 @@ export const typeOnInputField = async (
 export const clickOnLittleDownArrowIfNeeded = async (
   page: DappeteerPage
 ): Promise<void> => {
+  // wait for the signature page and content to be loaded
+  await page.waitForSelector('[data-testid="signature-cancel-button"]', {
+    visible: true,
+  });
+
   // Metamask requires users to read all the data
   // and scroll until the bottom of the message
   // before enabling the "Sign" button
-
   const isSignButtonDisabled = await page.$eval(
     '[data-testid="signature-sign-button"]',
     (button: HTMLButtonElement) => {
