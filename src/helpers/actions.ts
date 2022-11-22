@@ -1,3 +1,4 @@
+import { pause } from "../../test/utils/utils";
 import { DappeteerElementHandle } from "../element";
 import { DappeteerPage } from "../page";
 import {
@@ -32,18 +33,22 @@ export const openNetworkDropdown = async (
     await networkSwitcher.click();
     await page.waitForSelector(".network-dropdown-list", {
       visible: true,
-      timeout: 3000,
+      timeout: 4000,
     });
   }
 };
 
-export const openProfileDropdown = async (
-  page: DappeteerPage
+export const profileDropdownClick = async (
+  page: DappeteerPage,
+  expectToClose = false
 ): Promise<void> => {
-  const accountSwitcher = await page.waitForSelector(".identicon", {
+  const accountSwitcher = await page.waitForSelector(".account-menu__icon", {
     visible: true,
   });
   await accountSwitcher.click();
+  await page.waitForSelector(".account-menu__accounts", {
+    hidden: expectToClose,
+  });
 };
 
 export const openAccountDropdown = async (
