@@ -10,7 +10,7 @@ on:
       - '**'
 
 jobs:
-  checks:
+  tests:
     name: Tests
     runs-on: ubuntu-latest
     strategy:
@@ -33,6 +33,7 @@ jobs:
         with:
           name: debug_screenshots
           path: ./*.png
+  lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
@@ -45,6 +46,7 @@ jobs:
         run: yarn --prefer-offline --frozen-lockfile
       - name: Lint
         run: yarn run lint
+  build:
     name: Build
     runs-on: ubuntu-latest
     steps:
