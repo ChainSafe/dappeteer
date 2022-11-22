@@ -44,6 +44,7 @@ export const profileDropdownClick = async (
   const accountSwitcher = await page.waitForSelector(".account-menu__icon", {
     visible: true,
   });
+  await page.waitForTimeout(500);
   await accountSwitcher.click();
   await page.waitForSelector(".account-menu__accounts", {
     hidden: expectToClose,
