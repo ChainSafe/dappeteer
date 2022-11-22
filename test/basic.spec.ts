@@ -58,6 +58,7 @@ describe("basic interactions", function () {
     await metamask.switchNetwork("localhost");
     const tokenBalance: number = await metamask.helpers.getTokenBalance("ETH");
     expect(tokenBalance).to.be.greaterThan(0);
+    await metamask.switchNetwork("mainnet");
   });
 
   it("should return 0 token balance when token not found", async () => {
@@ -67,29 +68,31 @@ describe("basic interactions", function () {
     expect(tokenBalance).to.be.equal(0);
   });
 
-  // TODO: Metamask UI is flaky there
-  it("should add token", async () => {
-    await metamask.switchNetwork("mainnet");
-    await metamask.addToken({
-      tokenAddress: "0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa",
-      symbol: "KAKI",
-    });
+  it("should not add token", async () => {
+    await clickElement(testPage, ".add-token-button");
+    await metamask.rejectAddToken();
+    await testPage.waitForSelector("#addTokenResultFail");
   });
 
-  it("should add network with required params", async () => {
-    await metamask.addNetwork({
-      networkName: "Optimism",
-      rpc: "https://mainnet.optimism.io",
-      chainId: 10,
-      symbol: "OP",
-    });
+  it("should add token", async () => {
+    await clickElement(testPage, ".add-token-button");
+    await metamask.acceptAddToken();
+    await testPage.waitForSelector("#addTokenResultSuccess");
+  });
 
-    const selectedNetwork = await metamask.page.evaluate(
-      () =>
-        document.querySelector(".network-display > span:nth-child(2)").innerHTML
-    );
-    expect(selectedNetwork).to.be.equal("Optimism");
-    await metamask.switchNetwork("local");
+  it("should not add network", async () => {
+    await clickElement(testPage, ".add-network-button");
+    await metamask.page.waitForTimeout(500);
+    await metamask.rejectAddNetwork();
+    await testPage.waitForSelector("#addNetworkResultFail");
+  });
+
+  it("should add network and switch", async () => {
+    await clickElement(testPage, ".add-network-button");
+    await metamask.page.waitForTimeout(500);
+    await metamask.acceptAddNetwork(true);
+    await testPage.waitForSelector("#addNetworkResultSuccess");
+    await metamask.switchNetwork("mainnet");
   });
 
   it("should import private key", async () => {
