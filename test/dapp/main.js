@@ -177,6 +177,54 @@ async function start() {
     transfer.id = "transferred";
     document.body.appendChild(transfer);
   });
+
+  const addTokenButton = document.querySelector(".add-token-button");
+  addTokenButton.addEventListener("click", async function () {
+    const resultElem = document.createElement("div");
+    try {
+      await window.ethereum.request({
+        method: "wallet_watchAsset",
+        params: {
+          type: "ERC20",
+          options: {
+            address: "0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa",
+            symbol: "KAKI",
+            decimals: 18,
+          },
+        },
+      });
+      resultElem.id = "addTokenResultSuccess";
+    } catch (e) {
+      resultElem.id = "addTokenResultFail";
+    }
+    document.body.appendChild(resultElem);
+  });
+
+  const addNetworkButton = document.querySelector(".add-network-button");
+  addNetworkButton.addEventListener("click", async function () {
+    const resultElem = document.createElement("div");
+    try {
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            chainId: "0xa",
+            chainName: "Optimism",
+            nativeCurrency: {
+              name: "ETH",
+              symbol: "ETH", // 2-6 characters long
+              decimals: 18,
+            },
+            rpcUrls: ["https://mainnet.optimism.io"],
+          },
+        ],
+      });
+      resultElem.id = "addNetworkResultSuccess";
+    } catch (e) {
+      resultElem.id = "addNetworkResultFail";
+    }
+    document.body.appendChild(resultElem);
+  });
 }
 
 start();
