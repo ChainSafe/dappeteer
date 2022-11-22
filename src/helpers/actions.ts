@@ -1,4 +1,3 @@
-import { pause } from "../../test/utils/utils";
 import { DappeteerElementHandle } from "../element";
 import { DappeteerPage } from "../page";
 import {
