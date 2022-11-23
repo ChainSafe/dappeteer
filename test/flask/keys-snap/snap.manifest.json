@@ -13,7 +13,8 @@
     }
   },
   "initialPermissions": {
-    "snap_getBip44Entropy_1": {}
+    "snap_getBip44Entropy_1": {},
+    "snap_getBip44Entropy_47": {}
   },
   "manifestVersion": "0.1"
 }

@@ -61,10 +61,12 @@ export const installSnap =
     if (opts.hasPermissions) {
       await clickOnButton(page, "Approve & install");
       if (opts.hasKeyPermissions) {
-        const checkbox = await page.waitForSelector(".checkbox-label", {
+        await page.waitForSelector(".checkbox-label", {
           visible: true,
         });
-        await checkbox.click();
+        for await (const checkbox of await page.$$(".checkbox-label")) {
+          await checkbox.click();
+        }
         await clickOnButton(page, "Confirm");
       }
     } else {
