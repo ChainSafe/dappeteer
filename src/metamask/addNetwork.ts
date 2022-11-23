@@ -9,7 +9,7 @@ export const acceptAddNetwork =
       await page.reload();
       await waitForOverlay(page);
 
-      await clickOnButton(page, "Approve", { timeout: 300 });
+      await clickOnButton(page, "Approve", { timeout: 500 });
     }, 5);
     if (shouldSwitch) {
       await clickOnButton(page, "Switch network");
@@ -25,6 +25,6 @@ export const rejectAddNetwork =
       await page.reload();
       await waitForOverlay(page);
 
-      await clickOnButton(page, "Cancel", { timeout: 300 });
+      await clickOnButton(page, "Cancel", { timeout: 500 });
     }, 5);
   };

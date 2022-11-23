@@ -8,7 +8,7 @@ export const acceptAddToken =
       await page.reload();
       await waitForOverlay(page);
 
-      await clickOnButton(page, "Add token", { timeout: 300 });
+      await clickOnButton(page, "Add token", { timeout: 500 });
     }, 5);
   };
 
@@ -19,6 +19,6 @@ export const rejectAddToken =
       await page.reload();
       await waitForOverlay(page);
 
-      await clickOnButton(page, "Cancel", { timeout: 300 });
+      await clickOnButton(page, "Cancel", { timeout: 500 });
     }, 5);
   };
