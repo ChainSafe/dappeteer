@@ -1,4 +1,4 @@
-import { clickOnButton, retry } from "../helpers";
+import { clickOnButton, retry, waitForOverlay } from "../helpers";
 import { DappeteerPage } from "../page";
 
 export const acceptDialog =
@@ -6,6 +6,7 @@ export const acceptDialog =
     await retry(async () => {
       await page.bringToFront();
       await page.reload();
+      await waitForOverlay(page);
       await clickOnButton(page, "Approve", { timeout: 100 });
     }, 5);
   };

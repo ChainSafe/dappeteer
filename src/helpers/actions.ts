@@ -6,6 +6,7 @@ import {
   getInputByLabel,
   getSettingsSwitch,
 } from "./selectors";
+import { retry } from "./utils";
 
 export const clickOnSettingsSwitch = async (
   page: DappeteerPage,
@@ -18,23 +19,16 @@ export const clickOnSettingsSwitch = async (
 export const openNetworkDropdown = async (
   page: DappeteerPage
 ): Promise<void> => {
-  const networkSwitcher = await page.waitForSelector(".network-display", {
-    visible: true,
-  });
-  try {
+  await retry(async () => {
+    const networkSwitcher = await page.waitForSelector(".network-display", {
+      visible: true,
+    });
     await networkSwitcher.click();
     await page.waitForSelector(".network-dropdown-list", {
       visible: true,
       timeout: 1000,
     });
-  } catch (e) {
-    //retry on fail
-    await networkSwitcher.click();
-    await page.waitForSelector(".network-dropdown-list", {
-      visible: true,
-      timeout: 3000,
-    });
-  }
+  }, 3);
 };
 
 export const openProfileDropdown = async (
@@ -113,3 +107,8 @@ export const typeOnInputField = async (
   await input.type(text);
   return true;
 };
+
+export async function waitForOverlay(page: DappeteerPage): Promise<void> {
+  await page.waitForSelectorIsGone(".loading-overlay", { timeout: 10000 });
+  await page.waitForSelectorIsGone(".app-loading-spinner", { timeout: 10000 });
+}

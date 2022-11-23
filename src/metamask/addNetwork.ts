@@ -1,12 +1,16 @@
-import { clickOnButton } from "../helpers";
+import { clickOnButton, retry, waitForOverlay } from "../helpers";
 import { DappeteerPage } from "../page";
 
 export const acceptAddNetwork =
   (page: DappeteerPage) =>
   async (shouldSwitch = false): Promise<void> => {
-    await page.bringToFront();
-    await page.reload();
-    await clickOnButton(page, "Approve");
+    await retry(async () => {
+      await page.bringToFront();
+      await page.reload();
+      await waitForOverlay(page);
+
+      await clickOnButton(page, "Approve", { timeout: 300 });
+    }, 5);
     if (shouldSwitch) {
       await clickOnButton(page, "Switch network");
     } else {
@@ -16,7 +20,11 @@ export const acceptAddNetwork =
 
 export const rejectAddNetwork =
   (page: DappeteerPage) => async (): Promise<void> => {
-    await page.bringToFront();
-    await page.reload();
-    await clickOnButton(page, "Cancel");
+    await retry(async () => {
+      await page.bringToFront();
+      await page.reload();
+      await waitForOverlay(page);
+
+      await clickOnButton(page, "Cancel", { timeout: 300 });
+    }, 5);
   };

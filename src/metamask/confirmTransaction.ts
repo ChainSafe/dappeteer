@@ -4,6 +4,7 @@ import {
   getElementByContent,
   retry,
   typeOnInputField,
+  waitForOverlay,
 } from "../helpers";
 import { DappeteerPage } from "../page";
 
@@ -23,6 +24,7 @@ export const confirmTransaction =
     await retry(async () => {
       await page.bringToFront();
       await page.reload();
+      await waitForOverlay(page);
       await getElementByContent(page, "Edit", "button", {
         timeout: 500,
         visible: false,

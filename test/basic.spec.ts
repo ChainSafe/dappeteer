@@ -2,7 +2,7 @@ import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
 
 import * as dappeteer from "../src";
-import { openProfileDropdown } from "../src/helpers";
+import { openProfileDropdown, waitForOverlay } from "../src/helpers";
 import { DappeteerPage } from "../src/page";
 
 import { PASSWORD, TestContext } from "./constant";
@@ -28,9 +28,10 @@ describe("basic interactions", function () {
     }
   });
 
-  afterEach(async function () {
-    await metamask.page.reload();
-  });
+  // afterEach(async function () {
+  //   await metamask.page.reload();
+  //   await waitForOverlay(metamask.page);
+  // });
 
   after(async function () {
     await testPage.close();
@@ -82,14 +83,12 @@ describe("basic interactions", function () {
 
   it("should not add network", async () => {
     await clickElement(testPage, ".add-network-button");
-    await metamask.page.waitForTimeout(500);
     await metamask.rejectAddNetwork();
     await testPage.waitForSelector("#addNetworkResultFail");
   });
 
   it("should add network and switch", async () => {
     await clickElement(testPage, ".add-network-button");
-    await metamask.page.waitForTimeout(500);
     await metamask.acceptAddNetwork(true);
     await testPage.waitForSelector("#addNetworkResultSuccess");
     await metamask.switchNetwork("mainnet");

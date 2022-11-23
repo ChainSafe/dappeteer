@@ -35,7 +35,17 @@ export interface DappeteerPage<P = unknown> {
   ): Promise<Response>;
   waitForSelector(
     selector: string,
-    opts?: Partial<{ visible: boolean; timeout: number }>
+    opts?: Partial<{
+      visible: boolean;
+      detached: boolean;
+      hidden: boolean;
+      timeout: number;
+    }>
+  ): Promise<DappeteerElementHandle>;
+
+  waitForSelectorIsGone(
+    selector: string,
+    opts?: Partial<{ timeout: number }>
   ): Promise<DappeteerElementHandle>;
   waitForXPath(
     xpath: string,

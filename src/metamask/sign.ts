@@ -1,4 +1,9 @@
-import { clickOnButton, getElementByContent, retry } from "../helpers";
+import {
+  clickOnButton,
+  getElementByContent,
+  retry,
+  waitForOverlay,
+} from "../helpers";
 
 import { DappeteerPage } from "../page";
 import { GetSingedIn } from ".";
@@ -15,7 +20,8 @@ export const sign =
     await retry(async () => {
       await page.bringToFront();
       await page.reload();
-      await getElementByContent(page, "Sign", "button", { timeout: 100 });
+      await waitForOverlay(page);
+      await getElementByContent(page, "Sign", "button", { timeout: 200 });
     }, 5);
 
     await clickOnButton(page, "Sign");
