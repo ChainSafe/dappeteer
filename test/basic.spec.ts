@@ -2,7 +2,7 @@ import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
 
 import * as dappeteer from "../src";
-import { openProfileDropdown, waitForOverlay } from "../src/helpers";
+import { openProfileDropdown } from "../src/helpers";
 import { DappeteerPage } from "../src/page";
 
 import { PASSWORD, TestContext } from "./constant";
@@ -27,11 +27,6 @@ describe("basic interactions", function () {
       //ignored
     }
   });
-
-  // afterEach(async function () {
-  //   await metamask.page.reload();
-  //   await waitForOverlay(metamask.page);
-  // });
 
   after(async function () {
     await testPage.close();
