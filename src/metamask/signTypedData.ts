@@ -13,4 +13,8 @@ export const signTypedData =
     await page.reload();
     await clickOnLittleDownArrowIfNeeded(page);
     await clickOnButton(page, "Sign");
+    // wait for MM to be back in a stable state
+    await page.waitForSelector(".app-header", {
+      visible: true,
+    });
   };

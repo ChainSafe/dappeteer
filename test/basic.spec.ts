@@ -28,15 +28,6 @@ describe("basic interactions", function () {
     }
   });
 
-  afterEach(async function () {
-    await metamask.page.reload();
-    // wait for MM to be back in a normal state (as opposed to any loading state)
-    // with the app header to be visible
-    await metamask.page.waitForSelector(".app-header", {
-      visible: true,
-    });
-  });
-
   after(async function () {
     await testPage.close();
   });
