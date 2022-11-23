@@ -1,5 +1,10 @@
 import { TransactionOptions } from "..";
-import { clickOnButton, typeOnInputField } from "../helpers";
+import {
+  clickOnButton,
+  getElementByContent,
+  retry,
+  typeOnInputField,
+} from "../helpers";
 import { DappeteerPage } from "../page";
 
 import { GetSingedIn } from "./index";
@@ -13,8 +18,16 @@ export const confirmTransaction =
     if (!(await getSingedIn())) {
       throw new Error("You haven't signed in yet");
     }
-    await page.waitForTimeout(500);
-    await page.reload();
+
+    //retry till we get prompt
+    await retry(async () => {
+      await page.bringToFront();
+      await page.reload();
+      await getElementByContent(page, "Edit", "button", {
+        timeout: 500,
+        visible: false,
+      });
+    }, 15);
 
     if (options) {
       await clickOnButton(page, "Edit");

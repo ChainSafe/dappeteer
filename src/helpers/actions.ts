@@ -67,9 +67,10 @@ export const clickOnElement = async (
 
 export const clickOnButton = async (
   page: DappeteerPage,
-  text: string
+  text: string,
+  options?: { timeout?: number; visible?: boolean }
 ): Promise<void> => {
-  const button = await getElementByContent(page, text, "button");
+  const button = await getElementByContent(page, text, "button", options);
   await button.click();
 };
 
