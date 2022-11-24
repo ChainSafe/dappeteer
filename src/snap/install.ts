@@ -5,7 +5,7 @@ import {
   clickOnButton,
   clickOnElement,
   clickOnLogo,
-  openProfileDropdown,
+  profileDropdownClick,
 } from "../helpers";
 import { DappeteerPage } from "../page";
 import { startSnapServer, toUrl } from "./install-utils";
@@ -91,7 +91,7 @@ export async function isSnapInstalled(
   snapId: string
 ): Promise<boolean> {
   await page.bringToFront();
-  await openProfileDropdown(page);
+  await profileDropdownClick(page);
 
   await clickOnElement(page, "Settings");
   await clickOnElement(page, "Snaps");

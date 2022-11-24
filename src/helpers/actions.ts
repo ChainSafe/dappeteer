@@ -31,13 +31,18 @@ export const openNetworkDropdown = async (
   }, 3);
 };
 
-export const openProfileDropdown = async (
-  page: DappeteerPage
+export const profileDropdownClick = async (
+  page: DappeteerPage,
+  expectToClose = false
 ): Promise<void> => {
-  const accountSwitcher = await page.waitForSelector(".identicon", {
+  const accountSwitcher = await page.waitForSelector(".account-menu__icon", {
     visible: true,
   });
+  await page.waitForTimeout(500);
   await accountSwitcher.click();
+  await page.waitForSelector(".account-menu__accounts", {
+    hidden: expectToClose,
+  });
 };
 
 export const openAccountDropdown = async (
@@ -112,3 +117,37 @@ export async function waitForOverlay(page: DappeteerPage): Promise<void> {
   await page.waitForSelectorIsGone(".loading-overlay", { timeout: 10000 });
   await page.waitForSelectorIsGone(".app-loading-spinner", { timeout: 10000 });
 }
+
+/**
+ *
+ * @param page
+ */
+export const clickOnLittleDownArrowIfNeeded = async (
+  page: DappeteerPage
+): Promise<void> => {
+  // wait for the signature page and content to be loaded
+  await page.waitForSelector('[data-testid="signature-cancel-button"]', {
+    visible: true,
+  });
+
+  // Metamask requires users to read all the data
+  // and scroll until the bottom of the message
+  // before enabling the "Sign" button
+  const isSignButtonDisabled = await page.$eval(
+    '[data-testid="signature-sign-button"]',
+    (button: HTMLButtonElement) => {
+      return button.disabled;
+    }
+  );
+
+  if (isSignButtonDisabled) {
+    const littleArrowDown = await page.waitForSelector(
+      ".signature-request-message__scroll-button",
+      {
+        visible: true,
+      }
+    );
+
+    await littleArrowDown.click();
+  }
+};

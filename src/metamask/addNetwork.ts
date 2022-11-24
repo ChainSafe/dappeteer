@@ -8,11 +8,18 @@ export const acceptAddNetwork =
       await page.bringToFront();
       await page.reload();
       await waitForOverlay(page);
-
+      await page.waitForSelector(".confirmation-footer", {
+        visible: true,
+        timeout: 500,
+      });
       await clickOnButton(page, "Approve", { timeout: 500 });
     }, 5);
     if (shouldSwitch) {
       await clickOnButton(page, "Switch network");
+      await page.waitForSelector(".new-network-info__wrapper", {
+        visible: true,
+      });
+      await clickOnButton(page, "Got it");
     } else {
       await clickOnButton(page, "Cancel");
     }

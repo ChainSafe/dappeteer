@@ -12,6 +12,7 @@ import { deleteAccount, deleteNetwork, getTokenBalance } from "./helpers";
 import { importPk } from "./importPk";
 import { lock } from "./lock";
 import { sign } from "./sign";
+import { signTypedData } from "./signTypedData";
 import { switchAccount } from "./switchAccount";
 import { switchNetwork } from "./switchNetwork";
 import { unlock } from "./unlock";
@@ -46,6 +47,7 @@ export const getMetaMask = (page: DappeteerPage): Promise<Dappeteer> => {
       importPK: importPk(page),
       lock: lock(page, setSignedIn, getSingedIn),
       sign: sign(page, getSingedIn),
+      signTypedData: signTypedData(page, getSingedIn),
       switchAccount: switchAccount(page),
       switchNetwork: switchNetwork(page),
       unlock: unlock(page, setSignedIn, getSingedIn),
