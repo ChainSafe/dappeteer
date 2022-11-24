@@ -38,6 +38,8 @@ const flaskMetaMaskSteps: Step<MetaMaskOptions>[] = [
   closeWhatsNewModal,
 ];
 
+const MM_HOME_REGEX = "chrome-extension://[a-z]+/home.html";
+
 export async function setupMetaMask<Options = MetaMaskOptions>(
   browser: DappeteerBrowser,
   options?: Options,
@@ -62,7 +64,7 @@ async function getMetamaskPage(
 ): Promise<DappeteerPage> {
   const pages = await browser.pages();
   for (const page of pages) {
-    if (page.url().match("chrome-extension://[a-z]+/home.html")) {
+    if (page.url().match(MM_HOME_REGEX)) {
       return page;
     }
   }
@@ -70,11 +72,11 @@ async function getMetamaskPage(
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     browser.on("targetcreated", async (target: any) => {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-      if (target.url().match("chrome-extension://[a-z]+/home.html")) {
+      if (target.url().match(MM_HOME_REGEX)) {
         try {
           const pages = await browser.pages();
           for (const page of pages) {
-            if (page.url().match("chrome-extension://[a-z]+/home.html")) {
+            if (page.url().match(MM_HOME_REGEX)) {
               resolve(page);
             }
           }

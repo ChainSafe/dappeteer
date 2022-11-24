@@ -14,9 +14,11 @@ export class DPuppeteerBrowser
       this.emit("targetcreated", page)
     );
   }
+
   wsEndpoint(): string {
     return this.browser.wsEndpoint();
   }
+
   async close(): Promise<void> {
     await this.browser.close();
   }
@@ -26,6 +28,7 @@ export class DPuppeteerBrowser
       return new DPupeteerPage(p, this) as DappeteerPage<Page>;
     });
   }
+
   async newPage(): Promise<DappeteerPage<Page>> {
     return new DPupeteerPage(
       await this.browser.newPage(),
