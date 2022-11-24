@@ -2,7 +2,7 @@ import {
   clickOnButton,
   clickOnElement,
   getErrorMessage,
-  openProfileDropdown,
+  profileDropdownClick,
   typeOnInputField,
 } from "../helpers";
 import { DappeteerPage } from "../page";
@@ -11,7 +11,7 @@ export const importPk =
   (page: DappeteerPage) =>
   async (privateKey: string): Promise<void> => {
     await page.bringToFront();
-    await openProfileDropdown(page);
+    await profileDropdownClick(page);
 
     await clickOnElement(page, "Import account");
     await typeOnInputField(page, "your private key", privateKey);
