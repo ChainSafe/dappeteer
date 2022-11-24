@@ -6,9 +6,16 @@ export const acceptAddNetwork =
   async (shouldSwitch = false): Promise<void> => {
     await page.bringToFront();
     await page.reload();
+    await page.waitForSelector(".confirmation-footer", {
+      visible: true,
+    });
     await clickOnButton(page, "Approve");
     if (shouldSwitch) {
       await clickOnButton(page, "Switch network");
+      await page.waitForSelector(".new-network-info__wrapper", {
+        visible: true,
+      });
+      await clickOnButton(page, "Got it");
     } else {
       await clickOnButton(page, "Cancel");
     }

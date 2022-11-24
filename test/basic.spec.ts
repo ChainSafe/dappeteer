@@ -2,7 +2,7 @@ import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
 
 import * as dappeteer from "../src";
-import { openProfileDropdown } from "../src/helpers";
+import { profileDropdownClick } from "../src/helpers";
 import { DappeteerPage } from "../src/page";
 
 import { PASSWORD, TestContext } from "./constant";
@@ -28,10 +28,6 @@ describe("basic interactions", function () {
     }
   });
 
-  afterEach(async function () {
-    await metamask.page.reload();
-  });
-
   after(async function () {
     await testPage.close();
   });
@@ -42,6 +38,24 @@ describe("basic interactions", function () {
     await metamask.sign();
 
     await testPage.waitForSelector("#signed", { visible: false });
+  });
+
+  it("should be able to sign typed data", async () => {
+    await clickElement(testPage, ".sign-typedData-button");
+
+    await metamask.signTypedData();
+
+    await testPage.waitForSelector("#signed-typedData", { visible: false });
+  });
+
+  it("should be able to sign short typed data", async () => {
+    await clickElement(testPage, ".sign-short-typedData-button");
+
+    await metamask.signTypedData();
+
+    await testPage.waitForSelector("#signed-short-typedData", {
+      visible: false,
+    });
   });
 
   it("should switch network", async () => {
@@ -89,18 +103,17 @@ describe("basic interactions", function () {
 
   it("should add network and switch", async () => {
     await clickElement(testPage, ".add-network-button");
-    await metamask.page.waitForTimeout(500);
+    await metamask.page.waitForTimeout(1000);
     await metamask.acceptAddNetwork(true);
     await testPage.waitForSelector("#addNetworkResultSuccess");
-    await metamask.switchNetwork("mainnet");
   });
 
   it("should import private key", async () => {
     const countAccounts = async (): Promise<number> => {
-      await openProfileDropdown(metamask.page);
+      await profileDropdownClick(metamask.page, false);
       const container = await metamask.page.$(".account-menu__accounts");
       const count = (await container.$$(".account-menu__account")).length;
-      await openProfileDropdown(metamask.page);
+      await profileDropdownClick(metamask.page, true);
       return count;
     };
 

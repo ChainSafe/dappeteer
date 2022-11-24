@@ -54,6 +54,7 @@ export type Dappeteer = {
   switchNetwork: (network: string) => Promise<void>;
   confirmTransaction: (options?: TransactionOptions) => Promise<void>;
   sign: () => Promise<void>;
+  signTypedData: () => Promise<void>;
   approve: () => Promise<void>;
   helpers: {
     getTokenBalance: (tokenSymbol: string) => Promise<number>;
