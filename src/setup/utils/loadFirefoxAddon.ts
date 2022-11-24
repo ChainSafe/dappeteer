@@ -18,7 +18,7 @@ export const loadFirefoxAddon = (
     let addonId: string;
     let metamaskURL: string;
 
-    socket.once("error", () => {});
+    socket.once("error", console.error);
     socket.once("close", () => {
       resolve({ success, metamaskURL });
     });
@@ -31,9 +31,11 @@ export const loadFirefoxAddon = (
       socket.write(raw);
     };
 
-    send({
-      to: "root",
-      type: "getRoot",
+    socket.on("connect", () => {
+      send({
+        to: "root",
+        type: "getRoot",
+      });
     });
 
     const onMessage = (message: any): void => {
@@ -52,10 +54,6 @@ export const loadFirefoxAddon = (
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-assignment
         addonId = message.addon.id;
         success = true;
-        // send({
-        //   to: "root",
-        //   type: "listTabs",
-        // });
         send({
           to: "root",
           type: "listAddons",

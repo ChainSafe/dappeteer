@@ -49,13 +49,14 @@ export async function launchPlaywright(
     });
 
     browser = await client.newContext();
-    await browser.newPage();
-    const addon = await loadFirefoxAddon(
+    const { metamaskURL } = await loadFirefoxAddon(
       firefoxDebugPort,
       "localhost",
       metamaskPath
     );
-    firefoxExtension = addon.metamaskURL;
+    firefoxExtension = metamaskURL;
+
+    await browser.newPage();
   }
   const { DPlaywrightBrowser } = await import("../playwright");
   return new DPlaywrightBrowser(

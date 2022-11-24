@@ -66,8 +66,6 @@ async function getMetamaskPage(
 ): Promise<DappeteerPage> {
   const pages = await browser.pages();
   for (const page of pages) {
-    console.warn(page.url());
-    await new Promise(r => setTimeout(r, 3000))
     if (page.url().match(browsersRegex)) {
       return page;
     }
