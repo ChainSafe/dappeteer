@@ -7,6 +7,8 @@ import { DappeteerPage } from "../src/page";
 
 import { PASSWORD, TestContext } from "./constant";
 import { clickElement } from "./utils/utils";
+import { EXPECTED_SIGNATURE } from "./dapp/sharedConst.json";
+import { sign } from "./testPageFunctions";
 
 use(chaiAsPromised);
 
@@ -33,11 +35,10 @@ describe("basic interactions", function () {
   });
 
   it("should be able to sign", async () => {
-    await clickElement(testPage, ".sign-button");
-
+    const sigPromise = testPage.evaluate(sign);
     await metamask.sign();
-
-    await testPage.waitForSelector("#signed", { visible: false });
+    const sig = await sigPromise;
+    expect(sig).to.be.equal(EXPECTED_SIGNATURE);
   });
 
   it("should be able to sign typed data", async () => {

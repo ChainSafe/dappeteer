@@ -7,6 +7,13 @@
     <title>Local MetaMask test</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="web3.min.js"></script>
+    <script>
+        fetch('./sharedConst.json')
+            .then(async response => 
+                window.sharedConst = await response.json()
+            )
+            .catch(error => console.log(error));
+    </script>
 </head>
 
 <body>
