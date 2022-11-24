@@ -100,13 +100,11 @@ export class DPlaywrightPage implements DappeteerPage<Page> {
   async waitForSelectorIsGone(
     selector: string,
     opts?: Partial<{ timeout: number }>
-  ): Promise<DappeteerElementHandle<ElementHandle<HTMLElement>>> {
-    return new DPlaywrightElementHandle(
-      (await this.page.waitForSelector(selector, {
-        timeout: opts?.timeout,
-        state: "hidden",
-      })) as ElementHandle<HTMLElement>
-    );
+  ): Promise<void> {
+    await this.page.waitForSelector(selector, {
+      timeout: opts?.timeout,
+      state: "hidden",
+    });
   }
 
   waitForXPath(

@@ -114,13 +114,11 @@ export class DPupeteerPage implements DappeteerPage<Page> {
   async waitForSelectorIsGone(
     selector: string,
     opts?: Partial<{ timeout: number }>
-  ): Promise<DappeteerElementHandle<ElementHandle<HTMLElement>>> {
-    return new DPuppeteerElementHandle(
-      (await this.page.waitForSelector(selector, {
-        hidden: true,
-        ...opts,
-      })) as ElementHandle<HTMLElement>
-    );
+  ): Promise<void> {
+    await this.page.waitForSelector(selector, {
+      hidden: true,
+      ...opts,
+    });
   }
 
   async waitForXPath(
