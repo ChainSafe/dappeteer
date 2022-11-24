@@ -9,13 +9,6 @@ export const notificationEmitter = async (
   const notifications: NotificationList = [];
   const emitter: EventEmitter = new EventEmitter();
 
-  await page.exposeFunction(
-    "emitNotification",
-    (notification: NotificationItem) => {
-      emitter.emit("newNotification", notification);
-    }
-  );
-
   emitter.on("newNotification", (notification: NotificationItem) => {
     notifications.push(notification);
   });
@@ -27,8 +20,14 @@ export const notificationEmitter = async (
   const newPage = await page.browser().newPage();
   await newPage.goto(page.url());
 
-  await page.waitForSelector(".notifications__container");
-  await page.evaluate(() => {
+  await newPage.waitForSelector(".notifications__container");
+  await newPage.exposeFunction(
+    "emitNotification",
+    (notification: NotificationItem) => {
+      emitter.emit("newNotification", notification);
+    }
+  );
+  await newPage.evaluate(() => {
     const observer = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
         if (mutation.addedNodes.length) {

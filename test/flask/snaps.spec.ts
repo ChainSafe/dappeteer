@@ -8,6 +8,7 @@ import { Snaps } from "../deploy";
 import { notificationEmitter } from "../../src/snap/notificationEmitter";
 import { NotificationItem } from "../../src/snap/types";
 import { clickOnElement, openProfileDropdown } from "../../src/helpers";
+import NotificationsEmitter from "../../src/snap/NotificationsEmitter";
 
 describe("snaps", function () {
   let metamask: dappeteer.Dappeteer;
@@ -96,7 +97,7 @@ describe("snaps", function () {
       expect(await invokeAction).to.equal(false);
     });
 
-    it("should invoke IN APP NOTIFICATIONS", async function (this: TestContext) {
+    it("should invoke IN APP NOTIFICATIONS observable", async function (this: TestContext) {
       const permissionSnapId = await metamask.snaps.installSnap(
         this.snapServers[Snaps.PERMISSIONS_SNAP],
         {
@@ -136,7 +137,7 @@ describe("snaps", function () {
       );
     });
 
-    it("should invoke IN APP NOTIFICATIONS emitter way", async function (this: TestContext) {
+    it("should invoke IN APP NOTIFICATIONS emitter way functional programming", async function (this: TestContext) {
       const permissionSnapId = await metamask.snaps.installSnap(
         this.snapServers[Snaps.PERMISSIONS_SNAP],
         {
@@ -160,6 +161,72 @@ describe("snaps", function () {
         "notify_inApp"
       );
       await notificationPromise;
+
+      expect(notifications[0].message).to.contain(
+        "Hello from permissions snap in App notification"
+      );
+      expect(notifications[1].message).to.contain(
+        "Hello from methods snap in App notification"
+      );
+    });
+  });
+
+  describe("should test snap methods - Notification class", function () {
+    let testPage: DappeteerPage;
+    let snapId: string;
+    let Notifications: NotificationsEmitter;
+
+    beforeEach(function (this: TestContext) {
+      //skip those tests for non flask metamask
+      if (!this.browser.isMetaMaskFlask()) {
+        this.skip();
+      }
+    });
+
+    before(async function (this: TestContext) {
+      if (!this.browser.isMetaMaskFlask()) {
+        this.skip();
+        return;
+      }
+      snapId = await metamask.snaps.installSnap(
+        this.snapServers[Snaps.METHODS_SNAP],
+        {
+          hasPermissions: true,
+          hasKeyPermissions: false,
+        }
+      );
+      Notifications = new NotificationsEmitter(metamask);
+
+      testPage = await metamask.page.browser().newPage();
+      await testPage.goto("https://google.com");
+      return testPage;
+    });
+
+    after(async () => {
+      await Notifications.cleanup();
+    });
+
+    it("should return all notifications", async function (this: TestContext) {
+      const permissionSnapId = await metamask.snaps.installSnap(
+        this.snapServers[Snaps.PERMISSIONS_SNAP],
+        {
+          hasPermissions: true,
+          hasKeyPermissions: false,
+        }
+      );
+
+      await Notifications.setup();
+      const notificationPromise = Notifications.waitForNotification();
+
+      await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
+      await metamask.snaps.invokeSnap(
+        testPage,
+        permissionSnapId,
+        "notify_inApp"
+      );
+      await notificationPromise;
+
+      const notifications = Notifications.getAllNotifications();
 
       expect(notifications[0].message).to.contain(
         "Hello from permissions snap in App notification"
