@@ -4,7 +4,7 @@ import type { launch as puppeteerLaunch } from "puppeteer";
 import { DappeteerPage, Serializable } from "./page";
 import { Path } from "./setup/utils/metaMaskDownloader";
 import { InstallStep } from "./snap/install";
-import { NotificationList } from "./snap/types";
+import { NotificationItem, NotificationList } from "./snap/types";
 import { RECOMMENDED_METAMASK_VERSION } from "./index";
 
 export type DappeteerLaunchOptions = {
@@ -27,6 +27,7 @@ export type DappeteerLaunchOptions = {
 declare global {
   interface Window {
     ethereum: MetaMaskInpageProvider;
+    emitNotification: (notification: NotificationItem) => void;
   }
 }
 
@@ -76,6 +77,7 @@ export type Dappeteer = {
     /**
      * Returns all notifications in Metamask notifications page
      */
+    waitForNotification: (page: DappeteerPage) => Promise<NotificationItem>;
     getAllNotifications: () => Promise<NotificationList>;
     /** Invoke notification snap method. The function will open a notification
     page, invoke the snap, and it will wait until notification is rendered
@@ -84,15 +86,12 @@ export type Dappeteer = {
      const notifications = await metamask.snaps.getAllNotifications()
      expect(notifications[0].message).to.equal("Notification message")
     */
-    invokeNotification: <
-      Result = unknown,
-      Params extends Serializable = Serializable
-    >(
+    invokeNotification: <Params extends Serializable = Serializable>(
       page: DappeteerPage,
       snapId: string,
       method: string,
       params?: Params
-    ) => Promise<Partial<Result>>;
+    ) => Promise<NotificationItem>;
     /**
      * Invoke Metamask snap method. Function will throw if there is an error while invoking snap.
      * Use generic params to override result and parameter types.

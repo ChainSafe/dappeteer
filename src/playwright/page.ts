@@ -126,8 +126,8 @@ export class DPlaywrightPage implements DappeteerPage<Page> {
 
   exposeFunction(
     name: string,
-    puppeteerFunction: Function | { default: Function }
+    callback: Function | { default: Function }
   ): Promise<void> {
-    return this.page.exposeFunction(name, <Function>puppeteerFunction);
+    return this.page.exposeFunction(name, <Function>callback);
   }
 }

@@ -43,6 +43,7 @@
   "dependencies": {
     "@metamask/providers": "^9.1.0",
     "node-stream-zip": "^1.13.0",
+    "p-event": "4.2.0",
     "serve-handler": "5.0.8"
   },
   "devDependencies": {

@@ -1,8 +1,13 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import pEvent = require("p-event");
 import { expect } from "chai";
 import * as dappeteer from "../../src";
 import { DappeteerPage } from "../../src";
 import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
+import { notificationEmitter } from "../../src/snap/notificationEmitter";
+import { NotificationItem } from "../../src/snap/types";
+import { clickOnElement, openProfileDropdown } from "../../src/helpers";
 
 describe("snaps", function () {
   let metamask: dappeteer.Dappeteer;
@@ -100,18 +105,66 @@ describe("snaps", function () {
         }
       );
 
-      await metamask.snaps.invokeNotification(testPage, snapId, "notify_inApp");
-      await metamask.snaps.invokeNotification(
+      await metamask.page.bringToFront();
+      await openProfileDropdown(metamask.page);
+      await clickOnElement(metamask.page, "Notifications");
+
+      const newPage = await metamask.page.browser().newPage();
+      await newPage.goto(metamask.page.url());
+
+      const waitForNotificationPromise =
+        metamask.snaps.waitForNotification(newPage);
+      await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
+      await waitForNotificationPromise;
+
+      const waitForNotificationPromise2 =
+        metamask.snaps.waitForNotification(newPage);
+      await metamask.snaps.invokeSnap(
         testPage,
         permissionSnapId,
         "notify_inApp"
       );
+      await waitForNotificationPromise2;
 
       const notifications = await metamask.snaps.getAllNotifications();
+
       expect(notifications[0].message).to.equal(
         "Hello from permissions snap in App notification"
       );
       expect(notifications[1].message).to.equal(
+        "Hello from methods snap in App notification"
+      );
+    });
+
+    it("should invoke IN APP NOTIFICATIONS emitter way", async function (this: TestContext) {
+      const permissionSnapId = await metamask.snaps.installSnap(
+        this.snapServers[Snaps.PERMISSIONS_SNAP],
+        {
+          hasPermissions: true,
+          hasKeyPermissions: false,
+        }
+      );
+      const { emitter, notifications } = await notificationEmitter(
+        metamask.page
+      );
+
+      const notificationPromise = pEvent<any, NotificationItem>(
+        emitter,
+        "newNotification"
+      );
+
+      await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
+      await metamask.snaps.invokeSnap(
+        testPage,
+        permissionSnapId,
+        "notify_inApp"
+      );
+      await notificationPromise;
+
+      expect(notifications[0].message).to.contain(
+        "Hello from permissions snap in App notification"
+      );
+      expect(notifications[1].message).to.contain(
         "Hello from methods snap in App notification"
       );
     });
