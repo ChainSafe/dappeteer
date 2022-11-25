@@ -71,8 +71,11 @@ class NotificationsEmitter extends StrictEventEmitter<EventsMap> {
     await this.notificationsTab.close();
   }
 
-  public async waitForNotification(): Promise<void> {
-    await NotificationsEmitter.once(this, "notification");
+  public async waitForNotification(): Promise<NotificationList> {
+    return (await NotificationsEmitter.once(
+      this,
+      "notification"
+    )) as NotificationList;
   }
 
   public async getAllNotifications(): Promise<NotificationList> {
