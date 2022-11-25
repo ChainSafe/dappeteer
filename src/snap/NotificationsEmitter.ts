@@ -1,10 +1,10 @@
 import { StrictEventEmitter } from "strict-event-emitter";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import pEvent = require("p-event");
 import { DappeteerPage } from "../page";
 import * as dappeteer from "../../src";
 import { clickOnElement, openProfileDropdown } from "../helpers";
 import { NotificationItem, NotificationList } from "./types";
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-import pEvent = require("p-event");
 
 interface EventsMap {
   notification: (notification: NotificationItem) => void;
