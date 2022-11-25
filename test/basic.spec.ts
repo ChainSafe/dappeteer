@@ -23,6 +23,7 @@ import {
   signLongTypedData,
   signShortTypedData,
 } from "./testPageFunctions";
+import { pause } from "./utils/utils";
 
 use(chaiAsPromised);
 
@@ -118,7 +119,7 @@ describe("basic interactions", function () {
     expect(res).to.equal(AddTokenStatus.SUCCESS);
   });
 
-  it.only("should not add network", async () => {
+  it("should not add network", async () => {
     const addNetworkPromise = testPage.evaluate(addNetwork, AddNetworkStatus);
     await metamask.page.waitForTimeout(500);
     await metamask.rejectAddNetwork();
@@ -126,7 +127,7 @@ describe("basic interactions", function () {
     expect(res).to.equal(AddNetworkStatus.FAIL);
   });
 
-  it.only("should add network and switch", async () => {
+  it("should add network and switch", async () => {
     const addNetworkPromise = testPage.evaluate(addNetwork, AddNetworkStatus);
     await metamask.page.waitForTimeout(500);
     await metamask.acceptAddNetwork();
@@ -161,8 +162,20 @@ describe("basic interactions", function () {
     ).to.be.rejectedWith(SyntaxError);
   });
 
-  it("should lock and unlock", async () => {
+  it.only("should lock and unlock", async () => {
     await metamask.lock();
+    const pageTitle = await metamask.page.waitForSelector(
+      ".unlock-page__title"
+    );
+    expect(pageTitle).to.not.be.undefined;
+
     await metamask.unlock(PASSWORD);
+    const accountSwitcher = await metamask.page.waitForSelector(
+      ".account-menu__icon",
+      {
+        visible: true,
+      }
+    );
+    expect(accountSwitcher).to.not.be.undefined;
   });
 });
