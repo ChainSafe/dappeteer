@@ -1,6 +1,4 @@
 import { StrictEventEmitter } from "strict-event-emitter";
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-import pEvent = require("p-event");
 import { DappeteerPage } from "../page";
 import * as dappeteer from "../../src";
 import { clickOnElement, profileDropdownClick } from "../helpers";
@@ -69,11 +67,12 @@ class NotificationsEmitter extends StrictEventEmitter<EventsMap> {
   }
 
   public async cleanup(): Promise<void> {
+    this.removeAllListeners("notification");
     await this.notificationsTab.close();
   }
 
-  public waitForNotification(): pEvent.CancelablePromise<NotificationItem> {
-    return pEvent<any, NotificationItem>(this, "notification");
+  public async waitForNotification(): Promise<void> {
+    await NotificationsEmitter.once(this, "notification");
   }
 
   public async getAllNotifications(): Promise<NotificationList> {
