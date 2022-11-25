@@ -5,7 +5,7 @@ import * as dappeteer from "../src";
 import { profileDropdownClick } from "../src/helpers";
 import { DappeteerPage } from "../src/page";
 
-import { AddTokenStatus } from "../src/types";
+import { AddNetworkStatus, AddTokenStatus } from "../src/types";
 import {
   PASSWORD,
   TestContext,
@@ -15,8 +15,8 @@ import {
   EXPECTED_LONG_TYPED_DATA_SIGNATURE,
   EXPECTED_SHORT_TYPED_DATA_SIGNATURE,
 } from "./constant";
-import { clickElement } from "./utils/utils";
 import {
+  addNetwork,
   addToken,
   requestAccounts,
   sign,
@@ -118,18 +118,20 @@ describe("basic interactions", function () {
     expect(res).to.equal(AddTokenStatus.SUCCESS);
   });
 
-  it("should not add network", async () => {
-    await clickElement(testPage, ".add-network-button");
+  it.only("should not add network", async () => {
+    const addNetworkPromise = testPage.evaluate(addNetwork, AddNetworkStatus);
     await metamask.page.waitForTimeout(500);
     await metamask.rejectAddNetwork();
-    await testPage.waitForSelector("#addNetworkResultFail");
+    const res = await addNetworkPromise;
+    expect(res).to.equal(AddNetworkStatus.FAIL);
   });
 
-  it("should add network and switch", async () => {
-    await clickElement(testPage, ".add-network-button");
-    await metamask.page.waitForTimeout(1000);
-    await metamask.acceptAddNetwork(true);
-    await testPage.waitForSelector("#addNetworkResultSuccess");
+  it.only("should add network and switch", async () => {
+    const addNetworkPromise = testPage.evaluate(addNetwork, AddNetworkStatus);
+    await metamask.page.waitForTimeout(500);
+    await metamask.acceptAddNetwork();
+    const res = await addNetworkPromise;
+    expect(res).to.equal(AddNetworkStatus.SUCCESS);
   });
 
   it("should import private key", async () => {

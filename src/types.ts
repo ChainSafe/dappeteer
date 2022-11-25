@@ -118,3 +118,8 @@ export enum AddTokenStatus {
   SUCCESS = "addTokenResultSuccess",
   FAIL = "addTokenResultFail",
 }
+
+export enum AddNetworkStatus {
+  SUCCESS = "addNetworkResultSuccess",
+  FAIL = "addNetworkResultFail",
+}
