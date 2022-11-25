@@ -1,39 +1,32 @@
 import { StrictEventEmitter } from "strict-event-emitter";
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-import pEvent = require("p-event");
 import { DappeteerPage } from "../page";
 import * as dappeteer from "../../src";
 import { clickOnElement, openProfileDropdown } from "../helpers";
 import { NotificationItem, NotificationList } from "./types";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import pEvent = require("p-event");
 
 interface EventsMap {
-  newNotification: (notification: NotificationItem) => void;
+  notification: (notification: NotificationItem) => void;
 }
 
 class NotificationsEmitter extends StrictEventEmitter<EventsMap> {
-  private notifications: NotificationList = [];
   private notificationsTab: DappeteerPage;
-  private readonly emitter: StrictEventEmitter<EventsMap>;
   private readonly page: DappeteerPage;
 
-  constructor(protected metamask: dappeteer.Dappeteer) {
+  constructor(
+    protected metamask: dappeteer.Dappeteer,
+    private notificationTimeout: number = 30000
+  ) {
     super();
     this.page = metamask.page;
-    this.emitter = new StrictEventEmitter<EventsMap>();
-    this.configureEmitterListener();
-  }
-
-  private configureEmitterListener(): void {
-    this.emitter.on("newNotification", (notification: NotificationItem) => {
-      this.notifications.push(notification);
-    });
   }
 
   private async exposeEmitNotificationToWindow(): Promise<void> {
     await this.notificationsTab.exposeFunction(
       "emitNotification",
       (notification: NotificationItem) => {
-        this.emitter.emit("newNotification", notification);
+        this.emit("notification", notification);
       }
     );
   }
@@ -46,7 +39,9 @@ class NotificationsEmitter extends StrictEventEmitter<EventsMap> {
     const newPage = await this.page.browser().newPage();
     await newPage.goto(this.page.url());
 
-    await newPage.waitForSelector(".notifications__container");
+    await newPage.waitForSelector(".notifications__container", {
+      timeout: this.notificationTimeout,
+    });
     this.notificationsTab = newPage;
   }
 
@@ -78,11 +73,11 @@ class NotificationsEmitter extends StrictEventEmitter<EventsMap> {
   }
 
   public waitForNotification(): pEvent.CancelablePromise<NotificationItem> {
-    return pEvent<any, NotificationItem>(this.emitter, "newNotification");
+    return pEvent<any, NotificationItem>(this, "notification");
   }
 
-  public getAllNotifications(): NotificationList {
-    return this.notifications;
+  public async getAllNotifications(): Promise<NotificationList> {
+    return await this.metamask.snaps.getAllNotifications();
   }
 }
 

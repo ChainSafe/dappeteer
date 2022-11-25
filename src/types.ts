@@ -75,23 +75,9 @@ export type Dappeteer = {
   page: DappeteerPage;
   snaps: {
     /**
-     * Returns all notifications in Metamask notifications page
+     * Returns all notifications in Metamask notifications page and go back to main page
      */
-    waitForNotification: (page: DappeteerPage) => Promise<NotificationItem>;
     getAllNotifications: () => Promise<NotificationList>;
-    /** Invoke notification snap method. The function will open a notification
-    page, invoke the snap, and it will wait until notification is rendered
-    in the DOM. Can be used in pair with getAllNotifications method f.e:
-     await metamask.snaps.invokeNotification(page, "snapid", "method_name")
-     const notifications = await metamask.snaps.getAllNotifications()
-     expect(notifications[0].message).to.equal("Notification message")
-    */
-    invokeNotification: <Params extends Serializable = Serializable>(
-      page: DappeteerPage,
-      snapId: string,
-      method: string,
-      params?: Params
-    ) => Promise<NotificationItem>;
     /**
      * Invoke Metamask snap method. Function will throw if there is an error while invoking snap.
      * Use generic params to override result and parameter types.

@@ -73,7 +73,7 @@ export interface DappeteerPage<P = unknown> {
 
   exposeFunction(
     name: string,
-    puppeteerFunction: Function | { default: Function }
+    callback: Function | { default: Function }
   ): Promise<void>;
 }
 
