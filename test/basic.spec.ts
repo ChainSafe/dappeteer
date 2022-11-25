@@ -5,9 +5,14 @@ import * as dappeteer from "../src";
 import { profileDropdownClick } from "../src/helpers";
 import { DappeteerPage } from "../src/page";
 
-import { PASSWORD, TestContext } from "./constant";
+import {
+  PASSWORD,
+  TestContext,
+  EXPECTED_SIGNATURE,
+  ACCOUNT_ADDRESS,
+  MESSAGE_TO_SIGN,
+} from "./constant";
 import { clickElement } from "./utils/utils";
-import { EXPECTED_SIGNATURE } from "./dapp/sharedConst.json";
 import { sign } from "./testPageFunctions";
 
 use(chaiAsPromised);
@@ -35,7 +40,11 @@ describe("basic interactions", function () {
   });
 
   it("should be able to sign", async () => {
-    const sigPromise = testPage.evaluate(sign);
+    const sigPromise = testPage.evaluate(sign, {
+      address: ACCOUNT_ADDRESS,
+      message: MESSAGE_TO_SIGN,
+    });
+
     await metamask.sign();
     const sig = await sigPromise;
     expect(sig).to.be.equal(EXPECTED_SIGNATURE);

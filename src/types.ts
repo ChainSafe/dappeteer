@@ -1,7 +1,6 @@
 import { MetaMaskInpageProvider } from "@metamask/providers";
 import type { LaunchOptions as PlaywrightLaunchOptions } from "playwright";
 import type { launch as puppeteerLaunch } from "puppeteer";
-import sharedConst from "../test/dapp/sharedConst.json";
 import { DappeteerPage, Serializable } from "./page";
 import { Path } from "./setup/utils/metaMaskDownloader";
 import { InstallStep } from "./snap/install";
@@ -28,10 +27,6 @@ export type DappeteerLaunchOptions = {
 declare global {
   interface Window {
     ethereum: MetaMaskInpageProvider;
-  }
-
-  interface Window {
-    sharedConst: typeof sharedConst;
   }
 }
 
