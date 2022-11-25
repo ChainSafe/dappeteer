@@ -13,7 +13,7 @@ import {
   MESSAGE_TO_SIGN,
 } from "./constant";
 import { clickElement } from "./utils/utils";
-import { sign } from "./testPageFunctions";
+import { requestAccounts, sign } from "./testPageFunctions";
 
 use(chaiAsPromised);
 
@@ -28,8 +28,9 @@ describe("basic interactions", function () {
     });
     metamask = this.metamask;
     try {
-      await clickElement(testPage, ".connect-button");
+      const connectionPromise = testPage.evaluate(requestAccounts);
       await metamask.approve();
+      await connectionPromise;
     } catch (e) {
       //ignored
     }

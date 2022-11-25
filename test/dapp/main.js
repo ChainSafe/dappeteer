@@ -24,22 +24,22 @@ async function start() {
     document.body.appendChild(txSent);
   });
 
-  const connectButton = document.querySelector(".connect-button");
-  connectButton.addEventListener("click", async function () {
-    accounts = await web3.eth.requestAccounts();
-    const connected = document.createElement("div");
-    connected.id = "connected";
-    document.body.appendChild(connected);
-  });
+  // const connectButton = document.querySelector(".connect-button");
+  // connectButton.addEventListener("click", async function () {
+  //   accounts = await web3.eth.requestAccounts();
+  //   const connected = document.createElement("div");
+  //   connected.id = "connected";
+  //   document.body.appendChild(connected);
+  // });
 
-  const signButton = document.querySelector(".sign-button");
-  signButton.addEventListener("click", async function () {
-    const message = web3.utils.sha3("TEST");
-    await web3.eth.sign(message, accounts[0]);
-    const signed = document.createElement("div");
-    signed.id = "signed";
-    document.body.appendChild(signed);
-  });
+  // const signButton = document.querySelector(".sign-button");
+  // signButton.addEventListener("click", async function () {
+  //   const message = web3.utils.sha3("TEST");
+  //   await web3.eth.sign(message, accounts[0]);
+  //   const signed = document.createElement("div");
+  //   signed.id = "signed";
+  //   document.body.appendChild(signed);
+  // });
 
   const signTypedDataButton = document.querySelector(".sign-typedData-button");
   signTypedDataButton.addEventListener("click", async function () {
