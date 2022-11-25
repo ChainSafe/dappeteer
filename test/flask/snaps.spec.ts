@@ -71,7 +71,7 @@ describe("snaps", function () {
     });
 
     after(async () => {
-      await Notifications.cleanup();
+      if (Notifications) await Notifications.cleanup();
     });
 
     it("should invoke provided snap method and ACCEPT the dialog", async function (this: TestContext) {
