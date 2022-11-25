@@ -3,7 +3,7 @@ import { StrictEventEmitter } from "strict-event-emitter";
 import pEvent = require("p-event");
 import { DappeteerPage } from "../page";
 import * as dappeteer from "../../src";
-import { clickOnElement, openProfileDropdown } from "../helpers";
+import { clickOnElement, profileDropdownClick } from "../helpers";
 import { NotificationItem, NotificationList } from "./types";
 
 interface EventsMap {
@@ -33,7 +33,7 @@ class NotificationsEmitter extends StrictEventEmitter<EventsMap> {
 
   private async openNotificationPage(): Promise<void> {
     await this.page.bringToFront();
-    await openProfileDropdown(this.page);
+    await profileDropdownClick(this.page);
     await clickOnElement(this.page, "Notifications");
 
     const newPage = await this.page.browser().newPage();

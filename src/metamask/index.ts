@@ -1,7 +1,6 @@
 import { Dappeteer } from "..";
 import { DappeteerBrowser } from "../browser";
 import { DappeteerPage } from "../page";
-
 import { acceptDialog } from "../snap/acceptDialog";
 import { rejectDialog } from "../snap/rejectDialog";
 import { getAllNotifications, installSnap, invokeSnap } from "../snap";
