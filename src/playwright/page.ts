@@ -88,12 +88,12 @@ export class DPlaywrightPage implements DappeteerPage<Page> {
 
   async waitForSelector(
     selector: string,
-    opts?: Partial<{ visible: boolean; timeout: number }>
+    opts?: Partial<{ visible: boolean; timeout: number; hidden: boolean }>
   ): Promise<DappeteerElementHandle<ElementHandle<HTMLElement>>> {
     return new DPlaywrightElementHandle(
       (await this.page.waitForSelector(selector, {
         timeout: opts?.timeout,
-        state: opts?.visible ? "visible" : "attached",
+        state: opts?.visible ? "visible" : opts?.hidden ? "hidden" : "attached",
       })) as ElementHandle<HTMLElement>
     );
   }

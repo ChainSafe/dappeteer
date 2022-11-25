@@ -1,32 +1,16 @@
-import {
-  clickOnButton,
-  clickOnElement,
-  clickOnLogo,
-  getElementByContent,
-  typeOnInputField,
-} from "../helpers";
-import { AddToken } from "../index";
+import { clickOnButton } from "../helpers";
 import { DappeteerPage } from "../page";
 
-export const addToken =
-  (page: DappeteerPage) =>
-  async ({ tokenAddress, symbol, decimals = 0 }: AddToken): Promise<void> => {
+export const acceptAddToken =
+  (page: DappeteerPage) => async (): Promise<void> => {
     await page.bringToFront();
-    await clickOnButton(page, "Assets");
-    await page.waitForSelector(".asset-list-item__token-button", {
-      visible: true,
-    });
-    await clickOnElement(page, "import tokens");
-    await clickOnButton(page, "Custom token");
+    await page.reload();
+    await clickOnButton(page, "Add token");
+  };
 
-    await typeOnInputField(page, "Token decimal", String(decimals), true);
-    await typeOnInputField(page, "Token contract address", tokenAddress);
-    await page.waitForTimeout(333);
-    await typeOnInputField(page, "Token symbol", symbol, true);
-
-    await clickOnButton(page, "Add custom token");
-    await clickOnButton(page, "Import tokens");
-
-    await getElementByContent(page, symbol);
-    await clickOnLogo(page);
+export const rejectAddToken =
+  (page: DappeteerPage) => async (): Promise<void> => {
+    await page.bringToFront();
+    await page.reload();
+    await clickOnButton(page, "Cancel");
   };

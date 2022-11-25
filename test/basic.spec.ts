@@ -2,9 +2,8 @@ import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
 
 import * as dappeteer from "../src";
-import { DappeteerPage } from "../src";
-import { openProfileDropdown } from "../src/helpers";
-
+import { profileDropdownClick } from "../src/helpers";
+import { DappeteerPage } from "../src/page";
 import { PASSWORD, TestContext } from "./constant";
 import { clickElement } from "./utils/utils";
 
@@ -28,10 +27,6 @@ describe("basic interactions", function () {
     }
   });
 
-  afterEach(async function () {
-    await metamask.page.reload();
-  });
-
   after(async function () {
     await testPage.close();
   });
@@ -42,6 +37,24 @@ describe("basic interactions", function () {
     await metamask.sign();
 
     await testPage.waitForSelector("#signed", { visible: false });
+  });
+
+  it("should be able to sign typed data", async () => {
+    await clickElement(testPage, ".sign-typedData-button");
+
+    await metamask.signTypedData();
+
+    await testPage.waitForSelector("#signed-typedData", { visible: false });
+  });
+
+  it("should be able to sign short typed data", async () => {
+    await clickElement(testPage, ".sign-short-typedData-button");
+
+    await metamask.signTypedData();
+
+    await testPage.waitForSelector("#signed-short-typedData", {
+      visible: false,
+    });
   });
 
   it("should switch network", async () => {
@@ -58,6 +71,7 @@ describe("basic interactions", function () {
     await metamask.switchNetwork("localhost");
     const tokenBalance: number = await metamask.helpers.getTokenBalance("ETH");
     expect(tokenBalance).to.be.greaterThan(0);
+    await metamask.switchNetwork("mainnet");
   });
 
   it("should return 0 token balance when token not found", async () => {
@@ -67,37 +81,38 @@ describe("basic interactions", function () {
     expect(tokenBalance).to.be.equal(0);
   });
 
-  // TODO: Metamask UI is flaky there
-  it("should add token", async () => {
-    await metamask.switchNetwork("mainnet");
-    await metamask.addToken({
-      tokenAddress: "0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa",
-      symbol: "KAKI",
-    });
+  it("should not add token", async () => {
+    await clickElement(testPage, ".add-token-button");
+    await metamask.rejectAddToken();
+    await testPage.waitForSelector("#addTokenResultFail");
   });
 
-  it("should add network with required params", async () => {
-    await metamask.addNetwork({
-      networkName: "Optimism",
-      rpc: "https://mainnet.optimism.io",
-      chainId: 10,
-      symbol: "OP",
-    });
+  it("should add token", async () => {
+    await clickElement(testPage, ".add-token-button");
+    await metamask.acceptAddToken();
+    await testPage.waitForSelector("#addTokenResultSuccess");
+  });
 
-    const selectedNetwork = await metamask.page.evaluate(
-      () =>
-        document.querySelector(".network-display > span:nth-child(2)").innerHTML
-    );
-    expect(selectedNetwork).to.be.equal("Optimism");
-    await metamask.switchNetwork("local");
+  it("should not add network", async () => {
+    await clickElement(testPage, ".add-network-button");
+    await metamask.page.waitForTimeout(500);
+    await metamask.rejectAddNetwork();
+    await testPage.waitForSelector("#addNetworkResultFail");
+  });
+
+  it("should add network and switch", async () => {
+    await clickElement(testPage, ".add-network-button");
+    await metamask.page.waitForTimeout(1000);
+    await metamask.acceptAddNetwork(true);
+    await testPage.waitForSelector("#addNetworkResultSuccess");
   });
 
   it("should import private key", async () => {
     const countAccounts = async (): Promise<number> => {
-      await openProfileDropdown(metamask.page);
+      await profileDropdownClick(metamask.page, false);
       const container = await metamask.page.$(".account-menu__accounts");
       const count = (await container.$$(".account-menu__account")).length;
-      await openProfileDropdown(metamask.page);
+      await profileDropdownClick(metamask.page, true);
       return count;
     };
 

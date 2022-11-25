@@ -37,19 +37,6 @@ export type MetaMaskOptions = {
   showTestNets?: boolean;
 };
 
-export type AddNetwork = {
-  networkName: string;
-  rpc: string;
-  chainId: number;
-  symbol: string;
-};
-
-export type AddToken = {
-  tokenAddress: string;
-  symbol?: string;
-  decimals?: number;
-};
-
 export type TransactionOptions = {
   gas?: number;
   gasLimit?: number;
@@ -59,13 +46,16 @@ export type TransactionOptions = {
 export type Dappeteer = {
   lock: () => Promise<void>;
   unlock: (password: string) => Promise<void>;
-  addNetwork: (options: AddNetwork) => Promise<void>;
-  addToken: (options: AddToken) => Promise<void>;
+  acceptAddNetwork: (shouldSwitch?: boolean) => Promise<void>;
+  rejectAddNetwork: () => Promise<void>;
+  acceptAddToken: () => Promise<void>;
+  rejectAddToken: () => Promise<void>;
   importPK: (pk: string) => Promise<void>;
   switchAccount: (accountNumber: number) => Promise<void>;
   switchNetwork: (network: string) => Promise<void>;
   confirmTransaction: (options?: TransactionOptions) => Promise<void>;
   sign: () => Promise<void>;
+  signTypedData: () => Promise<void>;
   approve: () => Promise<void>;
   helpers: {
     getTokenBalance: (tokenSymbol: string) => Promise<number>;
