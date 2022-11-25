@@ -8,12 +8,12 @@ import { DappeteerPage } from "../src/page";
 import {
   PASSWORD,
   TestContext,
-  EXPECTED_SIGNATURE,
+  EXPECTED_MESSAGE_SIGNATURE,
   ACCOUNT_ADDRESS,
   MESSAGE_TO_SIGN,
 } from "./constant";
 import { clickElement } from "./utils/utils";
-import { requestAccounts, sign } from "./testPageFunctions";
+import { requestAccounts, sign, signLongTypedData } from "./testPageFunctions";
 
 use(chaiAsPromised);
 
@@ -48,15 +48,17 @@ describe("basic interactions", function () {
 
     await metamask.sign();
     const sig = await sigPromise;
-    expect(sig).to.be.equal(EXPECTED_SIGNATURE);
+    expect(sig).to.be.equal(EXPECTED_MESSAGE_SIGNATURE);
   });
 
-  it("should be able to sign typed data", async () => {
-    await clickElement(testPage, ".sign-typedData-button");
-
+  it("should be able to sign long typed data", async () => {
+    const sigPromise = testPage.evaluate(signLongTypedData, {
+      address: ACCOUNT_ADDRESS,
+    });
     await metamask.signTypedData();
 
-    await testPage.waitForSelector("#signed-typedData", { visible: false });
+    const sig = await sigPromise;
+    expect(sig).to.be.equal(EXPECTED_MESSAGE_SIGNATURE);
   });
 
   it("should be able to sign short typed data", async () => {
