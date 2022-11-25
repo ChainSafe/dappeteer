@@ -11,6 +11,7 @@ import {
   EXPECTED_MESSAGE_SIGNATURE,
   ACCOUNT_ADDRESS,
   MESSAGE_TO_SIGN,
+  EXPECTED_LONG_TYPED_DATA_SIGNATURE,
 } from "./constant";
 import { clickElement } from "./utils/utils";
 import { requestAccounts, sign, signLongTypedData } from "./testPageFunctions";
@@ -51,14 +52,14 @@ describe("basic interactions", function () {
     expect(sig).to.be.equal(EXPECTED_MESSAGE_SIGNATURE);
   });
 
-  it("should be able to sign long typed data", async () => {
+  it.only("should be able to sign long typed data", async () => {
     const sigPromise = testPage.evaluate(signLongTypedData, {
       address: ACCOUNT_ADDRESS,
     });
     await metamask.signTypedData();
 
     const sig = await sigPromise;
-    expect(sig).to.be.equal(EXPECTED_MESSAGE_SIGNATURE);
+    expect(sig).to.be.equal(EXPECTED_LONG_TYPED_DATA_SIGNATURE);
   });
 
   it("should be able to sign short typed data", async () => {
