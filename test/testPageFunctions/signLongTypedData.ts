@@ -1,6 +1,7 @@
 interface Params {
   address: string;
 }
+
 export const signLongTypedData = async ({
   address,
 }: Params): Promise<unknown> => {

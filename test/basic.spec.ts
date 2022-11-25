@@ -12,9 +12,15 @@ import {
   ACCOUNT_ADDRESS,
   MESSAGE_TO_SIGN,
   EXPECTED_LONG_TYPED_DATA_SIGNATURE,
+  EXPECTED_SHORT_TYPED_DATA_SIGNATURE,
 } from "./constant";
 import { clickElement } from "./utils/utils";
-import { requestAccounts, sign, signLongTypedData } from "./testPageFunctions";
+import {
+  requestAccounts,
+  sign,
+  signLongTypedData,
+  signShortTypedData,
+} from "./testPageFunctions";
 
 use(chaiAsPromised);
 
@@ -52,7 +58,7 @@ describe("basic interactions", function () {
     expect(sig).to.be.equal(EXPECTED_MESSAGE_SIGNATURE);
   });
 
-  it.only("should be able to sign long typed data", async () => {
+  it("should be able to sign long typed data", async () => {
     const sigPromise = testPage.evaluate(signLongTypedData, {
       address: ACCOUNT_ADDRESS,
     });
@@ -62,14 +68,14 @@ describe("basic interactions", function () {
     expect(sig).to.be.equal(EXPECTED_LONG_TYPED_DATA_SIGNATURE);
   });
 
-  it("should be able to sign short typed data", async () => {
-    await clickElement(testPage, ".sign-short-typedData-button");
-
+  it.only("should be able to sign short typed data", async () => {
+    const sigPromise = testPage.evaluate(signShortTypedData, {
+      address: ACCOUNT_ADDRESS,
+    });
     await metamask.signTypedData();
 
-    await testPage.waitForSelector("#signed-short-typedData", {
-      visible: false,
-    });
+    const sig = await sigPromise;
+    expect(sig).to.be.equal(EXPECTED_SHORT_TYPED_DATA_SIGNATURE);
   });
 
   it("should switch network", async () => {
