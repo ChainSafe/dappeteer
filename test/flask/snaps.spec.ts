@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 import { expect } from "chai";
 import * as dappeteer from "../../src";
 import { DappeteerPage } from "../../src";
