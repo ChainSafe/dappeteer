@@ -5,6 +5,7 @@ import * as dappeteer from "../src";
 import { profileDropdownClick } from "../src/helpers";
 import { DappeteerPage } from "../src/page";
 
+import { AddTokenStatus } from "../src/types";
 import {
   PASSWORD,
   TestContext,
@@ -16,6 +17,7 @@ import {
 } from "./constant";
 import { clickElement } from "./utils/utils";
 import {
+  addToken,
   requestAccounts,
   sign,
   signLongTypedData,
@@ -68,7 +70,7 @@ describe("basic interactions", function () {
     expect(sig).to.be.equal(EXPECTED_LONG_TYPED_DATA_SIGNATURE);
   });
 
-  it.only("should be able to sign short typed data", async () => {
+  it("should be able to sign short typed data", async () => {
     const sigPromise = testPage.evaluate(signShortTypedData, {
       address: ACCOUNT_ADDRESS,
     });
@@ -103,15 +105,17 @@ describe("basic interactions", function () {
   });
 
   it("should not add token", async () => {
-    await clickElement(testPage, ".add-token-button");
+    const addTokenPromise = testPage.evaluate(addToken, AddTokenStatus);
     await metamask.rejectAddToken();
-    await testPage.waitForSelector("#addTokenResultFail");
+    const res = await addTokenPromise;
+    expect(res).to.equal(AddTokenStatus.FAIL);
   });
 
   it("should add token", async () => {
-    await clickElement(testPage, ".add-token-button");
+    const addTokenPromise = testPage.evaluate(addToken, AddTokenStatus);
     await metamask.acceptAddToken();
-    await testPage.waitForSelector("#addTokenResultSuccess");
+    const res = await addTokenPromise;
+    expect(res).to.equal(AddTokenStatus.SUCCESS);
   });
 
   it("should not add network", async () => {

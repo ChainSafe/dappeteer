@@ -113,3 +113,8 @@ export type Dappeteer = {
     rejectDialog: () => Promise<void>;
   };
 };
+
+export enum AddTokenStatus {
+  SUCCESS = "addTokenResultSuccess",
+  FAIL = "addTokenResultFail",
+}
