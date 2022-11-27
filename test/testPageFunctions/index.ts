@@ -4,3 +4,4 @@ export * from "./signLongTypedData";
 export * from "./signShortTypedData";
 export * from "./addToken";
 export * from "./addNetwork";
+export * from "./sendTx";

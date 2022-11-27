@@ -23,7 +23,6 @@ import {
   signLongTypedData,
   signShortTypedData,
 } from "./testPageFunctions";
-import { pause } from "./utils/utils";
 
 use(chaiAsPromised);
 
@@ -162,7 +161,7 @@ describe("basic interactions", function () {
     ).to.be.rejectedWith(SyntaxError);
   });
 
-  it.only("should lock and unlock", async () => {
+  it("should lock and unlock", async () => {
     await metamask.lock();
     const pageTitle = await metamask.page.waitForSelector(
       ".unlock-page__title"
