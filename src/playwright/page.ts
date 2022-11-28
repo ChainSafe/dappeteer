@@ -113,14 +113,30 @@ export class DPlaywrightPage implements DappeteerPage<Page> {
   ): Promise<DappeteerElementHandle<ElementHandle>> {
     return this.waitForSelector(xpath, opts);
   }
+
   waitForTimeout(timeout: number): Promise<void> {
     return this.page.waitForTimeout(timeout);
   }
+
   evaluate<Params, Result>(
     evaluateFn: (params?: Unboxed<Params>) => Result | Promise<Result>,
     params?: Params
   ): Promise<Result> {
     //@ts-expect-error
     return this.page.evaluate(evaluateFn, params);
+  }
+
+  async waitForFunction<Args>(
+    pageFunction: (params?: Unboxed<Args>) => void | string,
+    params?: Args
+  ): Promise<void> {
+    await this.page.waitForFunction(pageFunction, {}, params);
+  }
+
+  exposeFunction(
+    name: string,
+    callback: Function | { default: Function }
+  ): Promise<void> {
+    return this.page.exposeFunction(name, <Function>callback);
   }
 }
