@@ -35,14 +35,17 @@ export const profileDropdownClick = async (
   page: DappeteerPage,
   expectToClose = false
 ): Promise<void> => {
-  const accountSwitcher = await page.waitForSelector(".account-menu__icon", {
-    visible: true,
-  });
-  await page.waitForTimeout(500);
-  await accountSwitcher.click();
-  await page.waitForSelector(".account-menu__accounts", {
-    hidden: expectToClose,
-  });
+  await retry(async () => {
+    const accountSwitcher = await page.waitForSelector(".account-menu__icon", {
+      visible: true,
+      timeout: 2000,
+    });
+    await accountSwitcher.click();
+    await page.waitForSelector(".account-menu__accounts", {
+      hidden: expectToClose,
+      timeout: 2000,
+    });
+  }, 3);
 };
 
 export const openAccountDropdown = async (
