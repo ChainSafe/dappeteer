@@ -6,6 +6,7 @@ import {
   getInputByLabel,
   getSettingsSwitch,
 } from "./selectors";
+import { retry } from "./utils";
 
 export const clickOnSettingsSwitch = async (
   page: DappeteerPage,
@@ -18,37 +19,33 @@ export const clickOnSettingsSwitch = async (
 export const openNetworkDropdown = async (
   page: DappeteerPage
 ): Promise<void> => {
-  const networkSwitcher = await page.waitForSelector(".network-display", {
-    visible: true,
-  });
-  try {
+  await retry(async () => {
+    const networkSwitcher = await page.waitForSelector(".network-display", {
+      visible: true,
+    });
     await networkSwitcher.click();
     await page.waitForSelector(".network-dropdown-list", {
       visible: true,
       timeout: 1000,
     });
-  } catch (e) {
-    //retry on fail
-    await networkSwitcher.click();
-    await page.waitForSelector(".network-dropdown-list", {
-      visible: true,
-      timeout: 4000,
-    });
-  }
+  }, 3);
 };
 
 export const profileDropdownClick = async (
   page: DappeteerPage,
   expectToClose = false
 ): Promise<void> => {
-  const accountSwitcher = await page.waitForSelector(".account-menu__icon", {
-    visible: true,
-  });
-  await page.waitForTimeout(500);
-  await accountSwitcher.click();
-  await page.waitForSelector(".account-menu__accounts", {
-    hidden: expectToClose,
-  });
+  await retry(async () => {
+    const accountSwitcher = await page.waitForSelector(".account-menu__icon", {
+      visible: true,
+      timeout: 2000,
+    });
+    await accountSwitcher.click();
+    await page.waitForSelector(".account-menu__accounts", {
+      hidden: expectToClose,
+      timeout: 2000,
+    });
+  }, 3);
 };
 
 export const openAccountDropdown = async (
@@ -72,9 +69,10 @@ export const clickOnElement = async (
 
 export const clickOnButton = async (
   page: DappeteerPage,
-  text: string
+  text: string,
+  options?: { timeout?: number; visible?: boolean }
 ): Promise<void> => {
-  const button = await getElementByContent(page, text, "button");
+  const button = await getElementByContent(page, text, "button", options);
   await button.click();
 };
 
@@ -117,6 +115,11 @@ export const typeOnInputField = async (
   await input.type(text);
   return true;
 };
+
+export async function waitForOverlay(page: DappeteerPage): Promise<void> {
+  await page.waitForSelectorIsGone(".loading-overlay", { timeout: 10000 });
+  await page.waitForSelectorIsGone(".app-loading-spinner", { timeout: 10000 });
+}
 
 /**
  *

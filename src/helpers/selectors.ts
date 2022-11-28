@@ -5,11 +5,13 @@ import { DappeteerPage, Serializable } from "../page";
 export const getElementByContent = (
   page: DappeteerPage,
   text: string,
-  type = "*"
+  type = "*",
+  options?: { timeout?: number; visible?: boolean }
 ): Promise<DappeteerElementHandle | null> =>
   page.waitForXPath(`//${type}[contains(text(), '${text}')]`, {
     timeout: 20000,
     visible: true,
+    ...options,
   });
 
 export const getInputByLabel = (

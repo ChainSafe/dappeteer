@@ -5,7 +5,7 @@ import { DappeteerPage } from "../src/page";
 
 import { TestContext } from "./constant";
 import { Contract } from "./deploy";
-import { clickElement, pause } from "./utils/utils";
+import { clickElement } from "./utils/utils";
 
 describe("contract interactions", function () {
   let contract: Contract;
@@ -33,15 +33,12 @@ describe("contract interactions", function () {
   });
 
   it("should have increased count", async () => {
-    await pause(1);
     const counterBefore = await getCounterNumber(contract);
     // click increase button
     await clickElement(testPage, ".increase-button");
-    await pause(1);
     // submit tx
     await metamask.confirmTransaction();
     await testPage.waitForSelector("#txSent", { visible: false });
-    await pause(1);
 
     const counterAfter = await getCounterNumber(contract);
 
