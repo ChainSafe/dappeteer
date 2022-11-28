@@ -96,14 +96,12 @@ describe("basic interactions", function () {
 
   it("should not add network", async () => {
     await clickElement(testPage, ".add-network-button");
-    await metamask.page.waitForTimeout(500);
     await metamask.rejectAddNetwork();
     await testPage.waitForSelector("#addNetworkResultFail");
   });
 
   it("should add network and switch", async () => {
     await clickElement(testPage, ".add-network-button");
-    await metamask.page.waitForTimeout(1000);
     await metamask.acceptAddNetwork(true);
     await testPage.waitForSelector("#addNetworkResultSuccess");
   });

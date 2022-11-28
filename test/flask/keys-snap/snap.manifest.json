@@ -13,7 +13,14 @@
     }
   },
   "initialPermissions": {
-    "snap_getBip44Entropy_1": {}
+    "snap_getBip44Entropy": [
+      {
+        "coinType": 1
+      },
+      {
+        "coinType": 397
+      }
+    ]
   },
   "manifestVersion": "0.1"
 }

@@ -1,4 +1,9 @@
-import { clickOnButton } from "../helpers";
+import {
+  clickOnButton,
+  getElementByContent,
+  retry,
+  waitForOverlay,
+} from "../helpers";
 
 import { DappeteerPage } from "../page";
 import { GetSingedIn } from ".";
@@ -11,8 +16,13 @@ export const sign =
       throw new Error("You haven't signed in yet");
     }
 
-    await page.waitForTimeout(500);
-    await page.reload();
+    //retry till we get prompt
+    await retry(async () => {
+      await page.bringToFront();
+      await page.reload();
+      await waitForOverlay(page);
+      await getElementByContent(page, "Sign", "button", { timeout: 200 });
+    }, 5);
 
     await clickOnButton(page, "Sign");
 

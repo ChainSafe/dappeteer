@@ -1,5 +1,5 @@
 import { DappeteerPage, Serializable, Unboxed } from "../page";
-import { flaskOnly } from "./utils";
+import { flaskOnly, isMetamaskErrorObject } from "./utils";
 
 export async function invokeSnap<
   R = unknown,
@@ -30,7 +30,7 @@ export async function invokeSnap<
     },
     { snapId, method, params }
   );
-  if (result instanceof Error) {
+  if (result instanceof Error || isMetamaskErrorObject(result)) {
     throw result;
   } else {
     return result;
