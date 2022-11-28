@@ -70,7 +70,7 @@ export type Dappeteer = {
      */
     getNotificationEmitter: () => Promise<NotificationsEmitter>;
     /**
-     * Returns all notifications in Metamask notifications page and go back to main page
+     * Returns all notifications in Metamask notifications page
      */
     getAllNotifications: () => Promise<NotificationList>;
     /**
