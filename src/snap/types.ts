@@ -19,4 +19,5 @@ export interface InstallSnapResult {
   };
 }
 
-export type NotificationList = { message: string }[];
+export type NotificationItem = { message: string };
+export type NotificationList = NotificationItem[];

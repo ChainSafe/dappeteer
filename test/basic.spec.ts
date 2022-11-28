@@ -1,10 +1,8 @@
 import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
-
 import * as dappeteer from "../src";
 import { profileDropdownClick } from "../src/helpers";
-import { DappeteerPage } from "../src/page";
-
+import { DappeteerPage } from "../src";
 import { PASSWORD, TestContext } from "./constant";
 import { clickElement } from "./utils/utils";
 
