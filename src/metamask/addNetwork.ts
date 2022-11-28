@@ -8,9 +8,8 @@ export const acceptAddNetwork =
       await page.bringToFront();
       await page.reload();
       await waitForOverlay(page);
-      await page.waitForSelector(".confirmation-footer", {
-        visible: true,
-        timeout: 500,
+      await page.waitForSelector(".confirmation-page", {
+        timeout: 1000,
       });
       await clickOnButton(page, "Approve", { timeout: 500 });
     }, 5);
