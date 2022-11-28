@@ -72,7 +72,7 @@ export class DPlaywrightPage implements DappeteerPage<Page> {
   }
 
   async reload(): Promise<void> {
-    await this.page.reload();
+    await this.page.reload({ waitUntil: "networkidle" });
   }
 
   setViewport(opts: { height: number; width: number }): Promise<void> {
@@ -96,6 +96,15 @@ export class DPlaywrightPage implements DappeteerPage<Page> {
         state: opts?.visible ? "visible" : opts?.hidden ? "hidden" : "attached",
       })) as ElementHandle<HTMLElement>
     );
+  }
+  async waitForSelectorIsGone(
+    selector: string,
+    opts?: Partial<{ timeout: number }>
+  ): Promise<void> {
+    await this.page.waitForSelector(selector, {
+      timeout: opts?.timeout,
+      state: "hidden",
+    });
   }
 
   waitForXPath(

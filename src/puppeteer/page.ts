@@ -85,7 +85,7 @@ export class DPupeteerPage implements DappeteerPage<Page> {
   }
 
   async reload(): Promise<void> {
-    await this.page.reload();
+    await this.page.reload({ waitUntil: "networkidle0" });
   }
 
   setViewport(opts: { height: number; width: number }): Promise<void> {
@@ -109,6 +109,16 @@ export class DPupeteerPage implements DappeteerPage<Page> {
         opts
       )) as ElementHandle<HTMLElement>
     );
+  }
+
+  async waitForSelectorIsGone(
+    selector: string,
+    opts?: Partial<{ timeout: number }>
+  ): Promise<void> {
+    await this.page.waitForSelector(selector, {
+      hidden: true,
+      ...opts,
+    });
   }
 
   async waitForXPath(

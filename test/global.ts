@@ -58,7 +58,12 @@ export const mochaHooks = {
   async afterEach(this: TestContext): Promise<void> {
     if (this.currentTest.state === "failed") {
       await this.metamask.page.screenshot(
-        path.resolve(__dirname, `../${this.currentTest.fullTitle()}.png`)
+        path.resolve(
+          __dirname,
+          `../${
+            process.env.AUTOMATION ?? "puppeteer"
+          }_${this.currentTest.fullTitle()}.png`
+        )
       );
     }
   },
