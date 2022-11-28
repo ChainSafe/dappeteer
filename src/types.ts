@@ -5,6 +5,7 @@ import { DappeteerPage, Serializable } from "./page";
 import { Path } from "./setup/utils/metaMaskDownloader";
 import { InstallStep } from "./snap/install";
 import { NotificationItem, NotificationList } from "./snap/types";
+import NotificationsEmitter from "./snap/NotificationsEmitter";
 import { RECOMMENDED_METAMASK_VERSION } from "./index";
 
 export type DappeteerLaunchOptions = {
@@ -64,6 +65,10 @@ export type Dappeteer = {
   };
   page: DappeteerPage;
   snaps: {
+    /**
+     * Returns emitter to listen for notifications appearance in notification page
+     */
+    getNotificationEmitter: () => Promise<NotificationsEmitter>;
     /**
      * Returns all notifications in Metamask notifications page and go back to main page
      */

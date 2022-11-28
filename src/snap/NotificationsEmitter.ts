@@ -1,6 +1,5 @@
 import { StrictEventEmitter } from "strict-event-emitter";
 import { DappeteerPage } from "../page";
-import * as dappeteer from "../../src";
 import { clickOnElement, profileDropdownClick } from "../helpers";
 import { NotificationItem, NotificationList } from "./types";
 
@@ -10,14 +9,12 @@ interface EventsMap {
 
 class NotificationsEmitter extends StrictEventEmitter<EventsMap> {
   private notificationsTab: DappeteerPage;
-  private readonly page: DappeteerPage;
 
   constructor(
-    protected metamask: dappeteer.Dappeteer,
+    private page: DappeteerPage,
     private notificationTimeout: number = 30000
   ) {
     super();
-    this.page = metamask.page;
   }
 
   private async exposeEmitNotificationToWindow(): Promise<void> {
@@ -30,12 +27,11 @@ class NotificationsEmitter extends StrictEventEmitter<EventsMap> {
   }
 
   private async openNotificationPage(): Promise<void> {
-    await this.page.bringToFront();
-    await profileDropdownClick(this.page);
-    await clickOnElement(this.page, "Notifications");
-
     const newPage = await this.page.browser().newPage();
     await newPage.goto(this.page.url());
+
+    await profileDropdownClick(newPage);
+    await clickOnElement(newPage, "Notifications");
 
     await newPage.waitForSelector(".notifications__container", {
       timeout: this.notificationTimeout,
@@ -76,10 +72,6 @@ class NotificationsEmitter extends StrictEventEmitter<EventsMap> {
       this,
       "notification"
     )) as NotificationList;
-  }
-
-  public async getAllNotifications(): Promise<NotificationList> {
-    return await this.metamask.snaps.getAllNotifications();
   }
 }
 

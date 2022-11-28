@@ -3,7 +3,6 @@ import * as dappeteer from "../../src";
 import { DappeteerPage } from "../../src";
 import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
-import NotificationsEmitter from "../../src/snap/NotificationsEmitter";
 
 describe("snaps", function () {
   let metamask: dappeteer.Dappeteer;
@@ -41,7 +40,6 @@ describe("snaps", function () {
   });
 
   describe("should test snap methods", function () {
-    let Notifications: NotificationsEmitter;
     let testPage: DappeteerPage;
     let snapId: string;
 
@@ -64,14 +62,9 @@ describe("snaps", function () {
           hasKeyPermissions: false,
         }
       );
-      Notifications = new NotificationsEmitter(metamask);
       testPage = await metamask.page.browser().newPage();
       await testPage.goto("https://google.com");
       return testPage;
-    });
-
-    after(async () => {
-      if (Notifications) await Notifications.cleanup();
     });
 
     it("should invoke provided snap method and ACCEPT the dialog", async function (this: TestContext) {
@@ -106,8 +99,8 @@ describe("snaps", function () {
         }
       );
 
-      await Notifications.setup();
-      const notificationPromise = Notifications.waitForNotification();
+      const emitter = await metamask.snaps.getNotificationEmitter();
+      const notificationPromise = emitter.waitForNotification();
 
       await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
       await metamask.snaps.invokeSnap(
@@ -117,7 +110,7 @@ describe("snaps", function () {
       );
       await notificationPromise;
 
-      const notifications = await Notifications.getAllNotifications();
+      const notifications = await metamask.snaps.getAllNotifications();
 
       expect(notifications[0].message).to.contain(
         "Hello from permissions snap in App notification"
@@ -125,6 +118,7 @@ describe("snaps", function () {
       expect(notifications[1].message).to.contain(
         "Hello from methods snap in App notification"
       );
+      await emitter.cleanup();
     });
   });
 });
