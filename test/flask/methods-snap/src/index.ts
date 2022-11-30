@@ -25,7 +25,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
           params: [
             {
               type: "inApp",
-              message: `Hello, in App notification`,
+              message: `Hello from methods snap in App notification`,
             },
           ],
         });

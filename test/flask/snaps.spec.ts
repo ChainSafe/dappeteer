@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import * as dappeteer from "../../src";
-import { DappeteerPage } from "../../src/page";
+import { DappeteerPage } from "../../src";
 import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
 
@@ -62,7 +62,6 @@ describe("snaps", function () {
           hasKeyPermissions: false,
         }
       );
-
       testPage = await metamask.page.browser().newPage();
       await testPage.goto("https://google.com");
       return testPage;
@@ -86,18 +85,40 @@ describe("snaps", function () {
         snapId,
         "confirm"
       );
-
       await metamask.snaps.rejectDialog();
 
       expect(await invokeAction).to.equal(false);
     });
 
-    it("should invoke IN APP NOTIFICATIONS and check for a text", async function (this: TestContext) {
+    it("should return all notifications", async function (this: TestContext) {
+      const permissionSnapId = await metamask.snaps.installSnap(
+        this.snapServers[Snaps.PERMISSIONS_SNAP],
+        {
+          hasPermissions: true,
+          hasKeyPermissions: false,
+        }
+      );
+
+      const emitter = await metamask.snaps.getNotificationEmitter();
+      const notificationPromise = emitter.waitForNotification();
+
       await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
+      await metamask.snaps.invokeSnap(
+        testPage,
+        permissionSnapId,
+        "notify_inApp"
+      );
+      await notificationPromise;
 
       const notifications = await metamask.snaps.getAllNotifications();
 
-      expect(notifications[0].message).to.equal("Hello, in App notification");
+      expect(notifications[0].message).to.contain(
+        "Hello from permissions snap in App notification"
+      );
+      expect(notifications[1].message).to.contain(
+        "Hello from methods snap in App notification"
+      );
+      await emitter.cleanup();
     });
   });
 });

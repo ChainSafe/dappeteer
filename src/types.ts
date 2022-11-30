@@ -4,7 +4,8 @@ import type { launch as puppeteerLaunch } from "puppeteer";
 import { DappeteerPage, Serializable } from "./page";
 import { Path } from "./setup/utils/metaMaskDownloader";
 import { InstallStep } from "./snap/install";
-import { NotificationList } from "./snap/types";
+import { NotificationItem, NotificationList } from "./snap/types";
+import NotificationsEmitter from "./snap/NotificationsEmitter";
 import { RECOMMENDED_METAMASK_VERSION } from "./index";
 
 export type DappeteerLaunchOptions = {
@@ -27,6 +28,7 @@ export type DappeteerLaunchOptions = {
 declare global {
   interface Window {
     ethereum: MetaMaskInpageProvider;
+    emitNotification: (notification: NotificationItem) => void;
   }
 }
 
@@ -64,6 +66,10 @@ export type Dappeteer = {
   page: DappeteerPage;
   snaps: {
     /**
+     * Returns emitter to listen for notifications appearance in notification page
+     */
+    getNotificationEmitter: () => Promise<NotificationsEmitter>;
+    /**
      * Returns all notifications in Metamask notifications page
      */
     getAllNotifications: () => Promise<NotificationList>;
@@ -73,7 +79,7 @@ export type Dappeteer = {
      * @param page Browser page where injected Metamask provider will be available.
      * For most snaps, openning google.com will suffice.
      * @param snapId id of your installed snap (result of invoking `installSnap` method)
-     * @param method snap method you wan't to invoke
+     * @param method snap method you want to invoke
      * @param params required parameters of snap method
      */
     invokeSnap: <Result = unknown, Params extends Serializable = Serializable>(
@@ -82,12 +88,11 @@ export type Dappeteer = {
       method: string,
       params?: Params
     ) => Promise<Partial<Result>>;
-
     /**
      * Installs snap. Function will throw if there is an error while installing snap.
      * @param snapIdOrLocation either pass in snapId or full path to your snap directory
      * where we can find bundled snap (you need to ensure snap is built)
-     * @param opts {Object} snap method you wan't to invoke
+     * @param opts {Object} snap method you want to invoke
      * @param opts.hasPermissions Set to true if snap uses some permissions
      * @param opts.hasKeyPermissions Set to true if snap uses key permissions
      * @param installationSnapUrl url of your dapp. Defaults to google.com

@@ -85,7 +85,7 @@ export class DPupeteerPage implements DappeteerPage<Page> {
   }
 
   async reload(): Promise<void> {
-    await this.page.reload();
+    await this.page.reload({ waitUntil: "networkidle0" });
   }
 
   setViewport(opts: { height: number; width: number }): Promise<void> {
@@ -111,6 +111,16 @@ export class DPupeteerPage implements DappeteerPage<Page> {
     );
   }
 
+  async waitForSelectorIsGone(
+    selector: string,
+    opts?: Partial<{ timeout: number }>
+  ): Promise<void> {
+    await this.page.waitForSelector(selector, {
+      hidden: true,
+      ...opts,
+    });
+  }
+
   async waitForXPath(
     xpath: string,
     opts?: Partial<{ visible: boolean; timeout: number }>
@@ -119,9 +129,11 @@ export class DPupeteerPage implements DappeteerPage<Page> {
       await this.page.waitForXPath(xpath, opts)
     );
   }
+
   waitForTimeout(timeout: number): Promise<void> {
     return this.page.waitForTimeout(timeout);
   }
+
   evaluate<Params extends Serializable, Result>(
     evaluateFn: (params?: Unboxed<Params>) => Result | Promise<Result>,
     params?: Params
@@ -130,5 +142,16 @@ export class DPupeteerPage implements DappeteerPage<Page> {
       evaluateFn,
       params
     ) as Promise<Result>;
+  }
+
+  async waitForFunction<Params extends Serializable>(
+    pageFunction: (params?: Unboxed<Params>) => void | string,
+    params?: Params
+  ): Promise<void> {
+    await this.page.waitForFunction(pageFunction, {}, params);
+  }
+
+  exposeFunction(name: string, callback: Function): Promise<void> {
+    return this.page.exposeFunction(name, callback);
   }
 }

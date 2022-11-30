@@ -1,8 +1,8 @@
 import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
-
 import * as dappeteer from "../src";
 import { profileDropdownClick } from "../src/helpers";
+<<<<<<< HEAD
 import { DappeteerPage } from "../src/page";
 
 import { AddNetworkStatus, AddTokenStatus } from "../src/types";
@@ -23,6 +23,11 @@ import {
   signLongTypedData,
   signShortTypedData,
 } from "./testPageFunctions";
+=======
+import { DappeteerPage } from "../src";
+import { PASSWORD, TestContext } from "./constant";
+import { clickElement } from "./utils/utils";
+>>>>>>> 10c116eb7d68e51427d2007efc8752edf2eefb71
 
 use(chaiAsPromised);
 
@@ -119,19 +124,29 @@ describe("basic interactions", function () {
   });
 
   it("should not add network", async () => {
+<<<<<<< HEAD
     const addNetworkPromise = testPage.evaluate(addNetwork, AddNetworkStatus);
     await metamask.page.waitForTimeout(500);
+=======
+    await clickElement(testPage, ".add-network-button");
+>>>>>>> 10c116eb7d68e51427d2007efc8752edf2eefb71
     await metamask.rejectAddNetwork();
     const res = await addNetworkPromise;
     expect(res).to.equal(AddNetworkStatus.FAIL);
   });
 
   it("should add network and switch", async () => {
+<<<<<<< HEAD
     const addNetworkPromise = testPage.evaluate(addNetwork, AddNetworkStatus);
     await metamask.page.waitForTimeout(500);
     await metamask.acceptAddNetwork();
     const res = await addNetworkPromise;
     expect(res).to.equal(AddNetworkStatus.SUCCESS);
+=======
+    await clickElement(testPage, ".add-network-button");
+    await metamask.acceptAddNetwork(true);
+    await testPage.waitForSelector("#addNetworkResultSuccess");
+>>>>>>> 10c116eb7d68e51427d2007efc8752edf2eefb71
   });
 
   it("should import private key", async () => {
