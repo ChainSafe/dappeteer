@@ -118,7 +118,6 @@ describe("basic interactions", function () {
 
   it("should not add network", async () => {
     const addNetworkPromise = testPage.evaluate(addNetwork);
-    await metamask.page.waitForTimeout(500);
     await metamask.rejectAddNetwork();
     const res = await addNetworkPromise;
     expect(res).to.equal(false);
@@ -126,7 +125,6 @@ describe("basic interactions", function () {
 
   it("should add network and switch", async () => {
     const addNetworkPromise = testPage.evaluate(addNetwork);
-    await metamask.page.waitForTimeout(500);
     await metamask.acceptAddNetwork();
     const res = await addNetworkPromise;
     expect(res).to.equal(true);
