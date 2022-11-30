@@ -63,5 +63,9 @@ export const confirmTransaction =
 
       await clickOnButton(page, "Save");
     }
+
+    await page.waitForSelector(
+      '[data-testid="page-container-footer-next"]:not([disabled])'
+    );
     await clickOnButton(page, "Confirm");
   };
