@@ -1,9 +1,5 @@
-import { AddTokenStatus } from "../../src/types";
-
-export const addToken = async (
-  status: typeof AddTokenStatus
-): Promise<AddTokenStatus> => {
-  const addTokenRequest = window.ethereum.request<AddTokenStatus>({
+export const addToken = async (): Promise<boolean> => {
+  const addTokenRequest = window.ethereum.request<boolean>({
     method: "wallet_watchAsset",
     params: {
       type: "ERC20",
@@ -18,10 +14,10 @@ export const addToken = async (
   return new Promise((resolve) => {
     addTokenRequest
       .then(() => {
-        resolve(status.SUCCESS);
+        resolve(true);
       })
       .catch(() => {
-        resolve(status.FAIL);
+        resolve(false);
       });
   });
 };

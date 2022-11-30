@@ -1,9 +1,5 @@
-import { AddNetworkStatus } from "../../src/types";
-
-export const addNetwork = async (
-  status: typeof AddNetworkStatus
-): Promise<AddNetworkStatus> => {
-  const addNetworkRequest = window.ethereum.request({
+export const addNetwork = async (): Promise<boolean> => {
+  const addNetworkRequest = window.ethereum.request<boolean>({
     method: "wallet_addEthereumChain",
     params: [
       {
@@ -22,10 +18,10 @@ export const addNetwork = async (
   return new Promise((resolve) => {
     addNetworkRequest
       .then(() => {
-        resolve(status.SUCCESS);
+        resolve(true);
       })
       .catch(() => {
-        resolve(status.FAIL);
+        resolve(false);
       });
   });
 };
