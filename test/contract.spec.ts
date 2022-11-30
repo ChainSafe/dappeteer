@@ -1,11 +1,13 @@
 import { expect } from "chai";
 
+import web3 from "web3";
 import { Dappeteer } from "../src";
 import { DappeteerPage } from "../src/page";
 
-import { TestContext } from "./constant";
+import { ACCOUNT_ADDRESS, TestContext } from "./constant";
+import { ContractInfo } from "./contract/contractInfo";
 import { Contract } from "./deploy";
-import { clickElement } from "./utils/utils";
+import { requestAccounts, sendTx } from "./testPageFunctions";
 
 describe("contract interactions", function () {
   let contract: Contract;
@@ -14,13 +16,14 @@ describe("contract interactions", function () {
 
   before(async function (this: TestContext) {
     testPage = await this.browser.newPage();
-    await testPage.goto("http://localhost:8080/", { waitUntil: "load" });
+    await testPage.goto("http://localhost:8080/", { waitUntil: "networkidle" });
     metamask = this.metamask;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     contract = this.contract;
     try {
-      await clickElement(testPage, ".connect-button");
+      const connectionPromise = testPage.evaluate(requestAccounts);
       await metamask.approve();
+      await connectionPromise;
     } catch (e) {
       //ignored
     }
@@ -33,15 +36,31 @@ describe("contract interactions", function () {
   });
 
   it("should have increased count", async () => {
+    const web3Instance = new web3();
+    const counterContract = new web3Instance.eth.Contract(ContractInfo.abi);
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+    const contractData = counterContract.methods
+      .increase()
+      .encodeABI() as string;
+
+    const txToSend = {
+      from: ACCOUNT_ADDRESS,
+      to: ContractInfo.address,
+      data: contractData,
+    };
+
+    const increasePromise = testPage.evaluate(sendTx, {
+      tx: txToSend,
+    });
+
     const counterBefore = await getCounterNumber(contract);
-    // click increase button
-    await clickElement(testPage, ".increase-button");
-    // submit tx
     await metamask.confirmTransaction();
-    await testPage.waitForSelector("#txSent", { visible: false });
+
+    const tx = await increasePromise;
+    expect(tx).to.not.be.undefined;
 
     const counterAfter = await getCounterNumber(contract);
-
     expect(counterAfter).to.be.equal(counterBefore + 1);
   });
 });

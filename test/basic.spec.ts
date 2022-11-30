@@ -2,9 +2,25 @@ import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
 import * as dappeteer from "../src";
 import { profileDropdownClick } from "../src/helpers";
-import { DappeteerPage } from "../src";
-import { PASSWORD, TestContext } from "./constant";
-import { clickElement } from "./utils/utils";
+import { DappeteerPage } from "../src/page";
+
+import {
+  PASSWORD,
+  TestContext,
+  EXPECTED_MESSAGE_SIGNATURE,
+  ACCOUNT_ADDRESS,
+  MESSAGE_TO_SIGN,
+  EXPECTED_LONG_TYPED_DATA_SIGNATURE,
+  EXPECTED_SHORT_TYPED_DATA_SIGNATURE,
+} from "./constant";
+import {
+  addNetwork,
+  addToken,
+  requestAccounts,
+  sign,
+  signLongTypedData,
+  signShortTypedData,
+} from "./testPageFunctions";
 
 use(chaiAsPromised);
 
@@ -19,8 +35,9 @@ describe("basic interactions", function () {
     });
     metamask = this.metamask;
     try {
-      await clickElement(testPage, ".connect-button");
+      const connectionPromise = testPage.evaluate(requestAccounts);
       await metamask.approve();
+      await connectionPromise;
     } catch (e) {
       //ignored
     }
@@ -31,29 +48,34 @@ describe("basic interactions", function () {
   });
 
   it("should be able to sign", async () => {
-    await clickElement(testPage, ".sign-button");
+    const sigPromise = testPage.evaluate(sign, {
+      address: ACCOUNT_ADDRESS,
+      message: MESSAGE_TO_SIGN,
+    });
 
     await metamask.sign();
-
-    await testPage.waitForSelector("#signed", { visible: false });
+    const sig = await sigPromise;
+    expect(sig).to.be.equal(EXPECTED_MESSAGE_SIGNATURE);
   });
 
-  it("should be able to sign typed data", async () => {
-    await clickElement(testPage, ".sign-typedData-button");
-
+  it("should be able to sign long typed data", async () => {
+    const sigPromise = testPage.evaluate(signLongTypedData, {
+      address: ACCOUNT_ADDRESS,
+    });
     await metamask.signTypedData();
 
-    await testPage.waitForSelector("#signed-typedData", { visible: false });
+    const sig = await sigPromise;
+    expect(sig).to.be.equal(EXPECTED_LONG_TYPED_DATA_SIGNATURE);
   });
 
   it("should be able to sign short typed data", async () => {
-    await clickElement(testPage, ".sign-short-typedData-button");
-
+    const sigPromise = testPage.evaluate(signShortTypedData, {
+      address: ACCOUNT_ADDRESS,
+    });
     await metamask.signTypedData();
 
-    await testPage.waitForSelector("#signed-short-typedData", {
-      visible: false,
-    });
+    const sig = await sigPromise;
+    expect(sig).to.be.equal(EXPECTED_SHORT_TYPED_DATA_SIGNATURE);
   });
 
   it("should switch network", async () => {
@@ -81,27 +103,31 @@ describe("basic interactions", function () {
   });
 
   it("should not add token", async () => {
-    await clickElement(testPage, ".add-token-button");
+    const addTokenPromise = testPage.evaluate(addToken);
     await metamask.rejectAddToken();
-    await testPage.waitForSelector("#addTokenResultFail");
+    const res = await addTokenPromise;
+    expect(res).to.equal(false);
   });
 
   it("should add token", async () => {
-    await clickElement(testPage, ".add-token-button");
+    const addTokenPromise = testPage.evaluate(addToken);
     await metamask.acceptAddToken();
-    await testPage.waitForSelector("#addTokenResultSuccess");
+    const res = await addTokenPromise;
+    expect(res).to.equal(true);
   });
 
   it("should not add network", async () => {
-    await clickElement(testPage, ".add-network-button");
+    const addNetworkPromise = testPage.evaluate(addNetwork);
     await metamask.rejectAddNetwork();
-    await testPage.waitForSelector("#addNetworkResultFail");
+    const res = await addNetworkPromise;
+    expect(res).to.equal(false);
   });
 
   it("should add network and switch", async () => {
-    await clickElement(testPage, ".add-network-button");
-    await metamask.acceptAddNetwork(true);
-    await testPage.waitForSelector("#addNetworkResultSuccess");
+    const addNetworkPromise = testPage.evaluate(addNetwork);
+    await metamask.acceptAddNetwork();
+    const res = await addNetworkPromise;
+    expect(res).to.equal(true);
   });
 
   it("should import private key", async () => {
@@ -133,6 +159,18 @@ describe("basic interactions", function () {
 
   it("should lock and unlock", async () => {
     await metamask.lock();
+    const pageTitle = await metamask.page.waitForSelector(
+      ".unlock-page__title"
+    );
+    expect(pageTitle).to.not.be.undefined;
+
     await metamask.unlock(PASSWORD);
+    const accountSwitcher = await metamask.page.waitForSelector(
+      ".account-menu__icon",
+      {
+        visible: true,
+      }
+    );
+    expect(accountSwitcher).to.not.be.undefined;
   });
 });
