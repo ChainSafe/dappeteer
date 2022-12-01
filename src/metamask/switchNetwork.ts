@@ -4,7 +4,7 @@ import { DappeteerPage } from "../page";
 // TODO: validate - for now works fine as it is.
 export const switchNetwork =
   (page: DappeteerPage) =>
-  async (network: string = "main"): Promise<void> => {
+  async (network: string = "mainnet"): Promise<void> => {
     await page.bringToFront();
     await openNetworkDropdown(page);
 

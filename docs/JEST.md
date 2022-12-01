@@ -17,7 +17,7 @@ describe('Ethereum', () => {
     await page.goto('https://ethereum.org/en/');
   });
 
-  it('should be titled "Google"', async () => {
+  it('should be titled "Home | ethereum.org"', async () => {
     await expect(page.title()).resolves.toMatch('Home | ethereum.org');
   });
 });
@@ -28,7 +28,7 @@ To configure Dappeteer to use custom config values as `metamaskVersion` or own `
 
 **example of `dappeteer.config.js`**
 ``` js
-/** @type {import('@chainsafe/dappeteer').DappateerJestConfig} */
+/** @type {import('@chainsafe/dappeteer').DappeteerJestConfig} */
 
 const config = {
     dappeteer: {

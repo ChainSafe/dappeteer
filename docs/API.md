@@ -13,10 +13,13 @@ For additional information read root [readme](../README.md)
   - [lock](#lock)
   - [unlock](#unlock)
   - [switchNetwork](#switchNetwork)
-  - [addNetwork](#addNetwork)
-  - [addToken](#addToken)
+  - [acceptAddNetwork](#acceptAddNetwork)
+  - [rejectAddNetwork](#rejectAddNetwork)
+  - [acceptAddToken](#acceptAddToken)
+  - [rejectAddToken](#rejectAddToken)
   - [confirmTransaction](#confirmTransaction)
   - [sign](#sign)
+  - [signTypedData](#signTypedData)
   - [approve](#approve)
   - [helpers](#helpers)
     - [getTokenBalance](#getTokenBalance)
@@ -36,7 +39,7 @@ interface OfficialOptions {
 
 type Path = string | { download: string; extract: string; };
 ```
-or 
+or
 ```typescript
 interface CustomOptions {
   metamaskPath: string;
@@ -60,14 +63,36 @@ type Step = (page: Page, options?: Options) => void;
 ```
 
 <a name="bootstrap"><a/>
-## `dappeteer.bootstrap(puppeteerLib: typeof puppeteer, options: OfficialOptions & MetaMaskOptions): Promise<[Dappeteer, Page, Browser]>`
+## `dappeteer.bootstrap(options: DappeteerLaunchOptions & MetaMaskOptions): Promise<{
+  dappeteer: Dappeteer;
+  browser: DappeteerBrowser;
+  page: DappeteerPage;
+}>`
 ```typescript
-interface OfficialOptions {
-  metaMaskVersion: 'latest' | string;
+type DappeteerLaunchOptions = {
+  metaMaskVersion?:
+    | typeof RECOMMENDED_METAMASK_VERSION
+    | "latest"
+    | "local"
+    | string;
   metaMaskLocation?: Path;
+  metaMaskPath?: string;
+  //install flask (canary) version of metamask.
+  metaMaskFlask?: boolean;
+  //fallbacks to installed dependency and prefers playwright if both are installed
+  automation?: "puppeteer" | "playwright";
+  browser: "chrome";
+  puppeteerOptions?: Omit<Parameters<typeof puppeteerLaunch>[0], "headless">;
+  playwrightOptions?: Omit<PlaywrightLaunchOptions, "headless">;
+};
+
+type MetaMaskOptions = {
+  seed?: string;
+  password?: string;
+  showTestNets?: boolean;
 };
 ```
-it runs `dappeteer.launch` and `dappeteer.setup` and return array with dappetter, page and browser
+it runs `dappeteer.launch` and `dappeteer.setup` and returns an object with dappeteer, page and browser.
 
 <a name="getMetaMask"></a>
 ## `dappeteer.getMetaMaskWindow(browser: Browser, version?: string): Promise<Dappeteer>`
@@ -95,30 +120,27 @@ it unlocks the MetaMask extension. It can only be used in you locked/signed out 
 
 <a name="switchNetwork"></a>
 ## `metamask.switchNetwork(network: string): Promise<void>`  
-it changes the current selected network. `networkName` can take the following values: `"main"`, `"ropsten"`, `"rinkeby"`, `"kovan"`, `"localhost"`.
+it changes the current selected network. `networkName` can take the following values: `"mainnet"`, `"goerli"`, `"sepolia"`, `"ropsten"`, `"rinkeby"`, `"kovan"`, `"localhost"`.
 
-<a name="addNetwork"></a>
-## `metamask.addNetwork(options: AddNetwork): Promise<void>`
-```typescript
-interface AddNetwork {
-  networkName: string;
-  rpc: string;
-  chainId: number;
-  symbol: string;
-}
-```
-it adds a custom network to MetaMask.
+<a name="acceptAddNetwork"></a>
+## `metamask.acceptAddNetwork(shouldSwitch?: boolean): Promise<void>`
 
-<a name="addToken"></a>
-## `metamask.addToken(tokenAddress: string): Promise<void>`
-```typescript
-interface AddToken {
-  tokenAddress: string;
-  symbol?: string;
-  decimals?: number;
-}
-```
-it adds a custom token to MetaMask.  
+commands MetaMask to accept a Network addition. For this to work MetaMask has to be in a Network addition state (basically prompting the user to accept/reject a Network addition). You can optionnaly tell Metamask to switch to this network by passing the `true` parameter (default to `false`).
+
+<a name="rejectAddNetwork"></a>
+## `metamask.rejectAddNetwork(): Promise<void>`
+
+commands MetaMask to reject a Network addition. For this to work MetaMask has to be in a Network addition state (basically prompting the user to accept/reject a Network addition).
+
+<a name="acceptAddToken"></a>
+## `metamask.acceptAddToken(): Promise<void>`
+
+commands MetaMask to accept a Token addition. For this to work MetaMask has to be in a Token addition state (basically prompting the user to accept/reject a Token addition).
+
+<a name="rejectAddToken"></a>
+## `metamask.rejectAddToken(): Promise<void>`
+
+commands MetaMask to reject a Token addition. For this to work MetaMask has to be in a Token addition state (basically prompting the user to accept/reject a Token addition).
 
 <a name="confirmTransaction"></a>
 ## `metamask.confirmTransaction(options?: TransactionOptions): Promise<void>`
@@ -129,12 +151,16 @@ interface TransactionOptions {
   priority?: number;
 }
 ```
-commands MetaMask to submit a transaction. For this to work MetaMask has to be in a transaction confirmation state (basically promting the user to submit/reject a transaction). You can (optionally) pass an object with `gas` and/or `gasLimit`, by default they are `20` and `50000` respectively.
+commands MetaMask to submit a transaction. For this to work MetaMask has to be in a transaction confirmation state (basically prompting the user to submit/reject a transaction). You can (optionally) pass an object with `gas` and/or `gasLimit`, by default they are `20` and `50000` respectively.
 
 
 <a name="sign"></a>
 ## `metamask.sign(): Promise<void>`  
 commands MetaMask to sign a message. For this to work MetaMask must be in a sign confirmation state.
+
+<a name="signTypedData"></a>
+## `metamask.signTypedData(): Promise<void>`  
+commands MetaMask to sign a message. For this to work MetaMask must be in a sign typed data confirmation state.
 
 <a name="approve"></a>
 ## `metamask.approve(): Promise<void>`  

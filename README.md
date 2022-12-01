@@ -12,20 +12,20 @@ $ yarn add @chainsafe/dappeteer
 ## Usage
 
 ```js
-import puppeteer from 'puppeteer';
-import dappeteer from '@chainsafe/dappeteer';
+import D from '@chainsafe/dappeteer';
 
 async function main() {
-  const [metamask, page] = await dappeteer.bootstrap(puppeteer, { metaMaskVersion: 'v10.15.0' });
+  const { page, dappeteer } = await D.bootstrap({ metaMaskVersion: 'v10.15.0' });
 
   // you can change the network if you want
-  await metamask.switchNetwork('ropsten');
+  await dappeteer.switchNetwork('goerli');
 
-  // you can import a token
-  await metamask.addToken({
-    tokenAddress: '0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa',
-    symbol: 'KAKI',
-  });
+  // go to a dapp and do something that prompts MetaMask to add a Token
+  await page.goto('http://my-dapp.com');
+  const addToken = await page.$('#add-token');
+
+  // ✔️
+  await dappeteer.acceptAddToken();
 
   // go to a dapp and do something that prompts MetaMask to confirm a transaction
   await page.goto('http://my-dapp.com');
@@ -33,7 +33,7 @@ async function main() {
   await payButton.click();
 
   // 🏌
-  await metamask.confirmTransaction();
+  await dappeteer.confirmTransaction();
 }
 
 main();
