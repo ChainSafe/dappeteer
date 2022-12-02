@@ -7,7 +7,7 @@ For additional information read root [readme](../README.md)
 - [Setup MetaMask](#setup)
 - [Bootstrap dAppeteer](#bootstrap)
 - [Get MetaMask Window](#getMetaMask)
-- [dAppeteer methods](#methods)
+- [metaMask methods](#methods)
   - [switchAccount](#switchAccount)
   - [importPK](#importPK)
   - [lock](#lock)
@@ -26,6 +26,13 @@ For additional information read root [readme](../README.md)
     - [deleteAccount](#deleteAccount)
     - [deleteNetwork](#deleteNetwork)
   - [page](#page)
+  - [snaps methods](#snaps-methods)
+    - [installSnap](#installSnap)
+    - [invokeSnap](#invokeSnap)
+    - [acceptDialog](#acceptDialog)
+    - [rejectDialog](#rejectDialog)
+    - [getNotificationEmitter](#getNotificationEmitter)
+    - [getAllNotifications](#getAllNotifications)
 
 # dAppeteer setup methods
 
@@ -50,6 +57,7 @@ returns an instance of `browser` same as `puppeteer.launch`, but it also install
 
 <a name="setup"></a>
 ## `dappeteer.setupMetaMask(browser: Browser, options: MetaMaskOptions = {}, steps: Step[]): Promise<Dappeteer>`
+
 ```typescript
 interface MetaMaskOptions {
   seed?: string;
@@ -69,15 +77,36 @@ type Step = (page: Page, options?: Options) => void;
   metaMaskPage: DappeteerPage;
 }>`
 
+```typescript
+type DappeteerLaunchOptions = {
+  metaMaskVersion?:
+    | "latest"
+    | "local"
+    | string;
+  metaMaskLocation?: Path;
+  metaMaskPath?: string;
+  metaMaskFlask?: boolean;
+  automation?: "puppeteer" | "playwright";
+  browser: "chrome";
+  puppeteerOptions?: Omit<Parameters<typeof puppeteerLaunch>[0], "headless">;
+  playwrightOptions?: Omit<PlaywrightLaunchOptions, "headless">;
+};
+
+type MetaMaskOptions = {
+  seed?: string;
+  password?: string;
+  showTestNets?: boolean;
+};
+```
+
 it runs `dappeteer.launch` and `dappeteer.setup` and returns an object with metaMask, metaMaskPage and browser.
 
 <a name="getMetaMask"></a>
 ## `dappeteer.getMetaMaskWindow(browser: Browser, version?: string): Promise<Dappeteer>`
 
 <a name="methods"></a>
-# dAppeteer methods
+# metaMask methods
 `metaMask` is used as placeholder for dAppeteer returned by [`setupMetaMask`](setup) or [`getMetaMaskWindow`](getMetaMask)
-
 
 <a name="switchAccount"></a>
 ## `metaMask.switchAccount(accountNumber: number): Promise<void>`  
@@ -130,7 +159,6 @@ interface TransactionOptions {
 ```
 commands MetaMask to submit a transaction. For this to work MetaMask has to be in a transaction confirmation state (basically prompting the user to submit/reject a transaction). You can (optionally) pass an object with `gas` and/or `gasLimit`, by default they are `20` and `50000` respectively.
 
-
 <a name="sign"></a>
 ## `metaMask.sign(): Promise<void>`  
 commands MetaMask to sign a message. For this to work MetaMask must be in a sign confirmation state.
@@ -144,20 +172,69 @@ commands MetaMask to sign a message. For this to work MetaMask must be in a sign
 enables the app to connect to MetaMask account in privacy mode
 
 <a name="helpers"></a>
-## `metaMask.helpers`
+# Helpers methods
 
 <a name="getTokenBalance"></a>
-### `metaMask.helpers.getTokenBalance(tokenSymbol: string): Promise<number>`
+## `metaMask.helpers.getTokenBalance(tokenSymbol: string): Promise<number>`
 get balance of specific token
 
 <a name="deleteAccount"></a>
-### `metaMask.helpers.deleteAccount(accountNumber: number): Promise<void>`
+## `metaMask.helpers.deleteAccount(accountNumber: number): Promise<void>`
 deletes account containing name with specified number
 
 <a name="deleteNetwork"></a>
-### `metaMask.helpers.deleteNetwork(): Promise<void>`
+## `metaMask.helpers.deleteNetwork(): Promise<void>`
 deletes custom network from metaMask
 
 <a name="page"></a>
-## `metaMask.page` is MetaMask plugin `Page`
+## `metaMask.page` is the MetaMask plugin `Page`
 **for advanced usages** in case you need custom features.
+
+<a name="snaps_methods"></a>
+# Snaps methods
+
+<a name="installSnap"></a>
+## `metaMask.snaps.installSnap: ( snapIdOrLocation: string, opts: { hasPermissions: boolean; hasKeyPermissions: boolean; customSteps?: InstallStep[]; version?: string;},installationSnapUrl?: string`
+```typescript
+/**
+  * Installs snap. Function will throw if there is an error while installing the snap.
+  * @param snapIdOrLocation either the snapId or the full path to your snap directory
+  * where we can find the bundled snap (you need to ensure the snap is built)
+  * @param opts {Object} the snap method you want to invoke
+  * @param opts.hasPermissions Set to true if the snap uses some permissions
+  * @param opts.hasKeyPermissions Set to true if the snap uses the key permissions
+  * @param installationSnapUrl the url of your dapp. Defaults to google.com
+  */
+) => Promise<string>;
+```
+
+<a name="invokeSnap"></a>
+## `metaMask.snaps.invokeSnap<Result = unknown, Params extends Serializable = Serializable>(page: DappeteerPage,snapId: string,method: string,params?: Params): Promise<Partial<Result>>`
+invoke a MetaMask snap method. Function will throw if there is an error while invoking snap.
+
+```typescript
+/**
+ * Use generic params to override result and parameter types.
+ * @param page Browser page where injected MetaMask provider will be available.
+ * For most snaps, openning google.com will suffice.
+ * @param snapId id of your installed snap (result of invoking `installSnap` method)
+ * @param method snap method you want to invoke
+ * @param params required parameters of snap method
+*/
+```
+
+<a name="acceptDialog"></a>
+## `metaMask.snaps.acceptDialog(): Promise<void>`
+accepts a snap_confirm dialog
+
+<a name="rejectDialog"></a>
+## `metaMask.snaps.rejectDialog(): Promise<void>`
+rejects snap_confirm dialog
+
+<a name="getNotificationEmitter"></a>
+## `metaMask.snaps.getNotificationEmitter(): Promise<NotificationsEmitter>`
+returns emitter to listen for notifications appearance in notification page
+
+<a name="getAllNotifications"></a>
+## `metaMask.snaps.getAllNotifications(): Promise<NotificationList>`
+Returns all notifications in MetaMask notifications page

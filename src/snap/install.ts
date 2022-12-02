@@ -25,14 +25,14 @@ export type InstallSnapOptions = {
 };
 
 export const installSnap =
-  (page: DappeteerPage) =>
+  (flaskPage: DappeteerPage) =>
   async (
     snapIdOrLocation: string,
     opts: InstallSnapOptions
   ): Promise<string> => {
-    flaskOnly(page);
+    flaskOnly(flaskPage);
     //need to open page to access window.ethereum
-    const installPage = await page.browser().newPage();
+    const installPage = await flaskPage.browser().newPage();
     await installPage.goto(opts.installationSnapUrl ?? "https://google.com");
     let snapServer: http.Server | undefined;
     if (fs.existsSync(snapIdOrLocation)) {
@@ -55,26 +55,26 @@ export const installSnap =
       { snapId: snapIdOrLocation, version: opts.version }
     );
 
-    await page.bringToFront();
-    await page.reload();
-    await clickOnButton(page, "Connect");
+    await flaskPage.bringToFront();
+    await flaskPage.reload();
+    await clickOnButton(flaskPage, "Connect");
     if (opts.hasPermissions) {
-      await clickOnButton(page, "Approve & install");
+      await clickOnButton(flaskPage, "Approve & install");
       if (opts.hasKeyPermissions) {
-        await page.waitForSelector(".checkbox-label", {
+        await flaskPage.waitForSelector(".checkbox-label", {
           visible: true,
         });
-        for await (const checkbox of await page.$$(".checkbox-label")) {
+        for await (const checkbox of await flaskPage.$$(".checkbox-label")) {
           await checkbox.click();
         }
-        await clickOnButton(page, "Confirm");
+        await clickOnButton(flaskPage, "Confirm");
       }
     } else {
-      await clickOnButton(page, "Install");
+      await clickOnButton(flaskPage, "Install");
     }
 
     for (const step of opts.customSteps ?? []) {
-      await step(page);
+      await step(flaskPage);
     }
 
     const result = await installAction;
@@ -87,23 +87,23 @@ export const installSnap =
   };
 
 export async function isSnapInstalled(
-  page: DappeteerPage,
+  flaskPage: DappeteerPage,
   snapId: string
 ): Promise<boolean> {
-  await page.bringToFront();
-  await profileDropdownClick(page);
+  await flaskPage.bringToFront();
+  await profileDropdownClick(flaskPage);
 
-  await clickOnElement(page, "Settings");
-  await clickOnElement(page, "Snaps");
+  await clickOnElement(flaskPage, "Settings");
+  await clickOnElement(flaskPage, "Snaps");
   let found = false;
   try {
-    await page.waitForXPath(`//*[contains(text(), '${snapId}')]`, {
+    await flaskPage.waitForXPath(`//*[contains(text(), '${snapId}')]`, {
       timeout: 5000,
     });
     found = true;
   } catch (e) {
     found = false;
   }
-  await clickOnLogo(page);
+  await clickOnLogo(flaskPage);
   return found;
 }
