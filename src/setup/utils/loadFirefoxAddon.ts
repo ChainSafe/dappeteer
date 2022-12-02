@@ -20,10 +20,14 @@ export const loadFirefoxAddon = (
 
     socket.once("error", console.error);
     socket.once("close", () => {
+      console.log("closing connection", success, metamaskURL);
+
       resolve({ success, metamaskURL });
     });
 
     const send = (data: Record<string, string>): void => {
+      console.log("send", data);
+
       const raw = Buffer.from(JSON.stringify(data));
 
       socket.write(`${raw.length}`);
@@ -32,6 +36,8 @@ export const loadFirefoxAddon = (
     };
 
     socket.on("connect", () => {
+      console.log("socket connected");
+
       send({
         to: "root",
         type: "getRoot",
@@ -39,6 +45,8 @@ export const loadFirefoxAddon = (
     });
 
     const onMessage = (message: any): void => {
+      console.log("onMessage", message);
+
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (message.addonsActor) {
         send({
