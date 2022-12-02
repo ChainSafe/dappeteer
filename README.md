@@ -12,28 +12,30 @@ $ yarn add @chainsafe/dappeteer
 ## Usage
 
 ```js
-import D from '@chainsafe/dappeteer';
+import dappeteer from '@chainsafe/dappeteer';
 
 async function main() {
-  const { page, dappeteer } = await D.bootstrap({ metaMaskVersion: 'v10.15.0' });
+  const { metaMask, browser } = await dappeteer.bootstrap({ metaMaskVersion: 'v10.15.0' });
+
+  // create a new page and visit your dapp
+  const dappPage = browser.newPage();
+  await dappPage.goto('http://my-dapp.com');
 
   // you can change the network if you want
-  await dappeteer.switchNetwork('goerli');
+  await metaMask.switchNetwork('goerli');
 
-  // go to a dapp and do something that prompts MetaMask to add a Token
-  await page.goto('http://my-dapp.com');
-  const addToken = await page.$('#add-token');
+  // do something in your dapp that prompts MetaMask to add a Token
+  const addTokenButton = await dappPage.$('#add-token');
+  await addTokenButton.click();
+  // instruct MetaMask to accept this request
+  await metaMask.acceptAddToken();
 
-  // ✔️
-  await dappeteer.acceptAddToken();
-
-  // go to a dapp and do something that prompts MetaMask to confirm a transaction
-  await page.goto('http://my-dapp.com');
-  const payButton = await page.$('#pay-with-eth');
+  // do something that prompts MetaMask to confirm a transaction
+  const payButton = await dappPage.$('#pay-with-eth').click();
   await payButton.click();
 
   // 🏌
-  await dappeteer.confirmTransaction();
+  await metaMask.confirmTransaction();
 }
 
 main();
