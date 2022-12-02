@@ -47,7 +47,7 @@ module.exports = config;
 
 In case you need more customisable use case you can rebuild it from scratch.
 
-First lets define or entry `jest.config.js`
+First let's define our entry `jest.config.js`
 ```js
 // jest.config.js
 
@@ -58,7 +58,7 @@ module.exports = {
 };
 ```
 
-Then create `setup.js` with responsibility to start Puppeteer with MetaMask and `teardown.js` for clean up after test's
+Then create `setup.js` with responsibility to start Puppeteer with MetaMask and `teardown.js` for clean up after tests
 ```js
 // setup.js
 
