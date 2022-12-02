@@ -84,7 +84,7 @@ export async function getMetaMaskWindow(
         for (const page of pages) {
           if (page.url().includes("chrome-extension")) resolve(page);
         }
-        reject("Metamask extension not found");
+        reject("MetaMask extension not found");
       })
       .catch((e) => reject(e));
   });

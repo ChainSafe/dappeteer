@@ -102,7 +102,7 @@ it changes the current selected network. `networkName` can take the following va
 <a name="acceptAddNetwork"></a>
 ## `metaMask.acceptAddNetwork(shouldSwitch?: boolean): Promise<void>`
 
-commands MetaMask to accept a Network addition. For this to work MetaMask has to be in a Network addition state (basically prompting the user to accept/reject a Network addition). You can optionnaly tell Metamask to switch to this network by passing the `true` parameter (default to `false`).
+commands MetaMask to accept a Network addition. For this to work MetaMask has to be in a Network addition state (basically prompting the user to accept/reject a Network addition). You can optionnaly tell MetaMask to switch to this network by passing the `true` parameter (default to `false`).
 
 <a name="rejectAddNetwork"></a>
 ## `metaMask.rejectAddNetwork(): Promise<void>`
