@@ -8,6 +8,7 @@ import {
   profileDropdownClick,
 } from "../helpers";
 import { DappeteerPage } from "../page";
+import { EXAMPLE_WEBSITE } from "../../test/constant";
 import { startSnapServer, toUrl } from "./install-utils";
 import { flaskOnly } from "./utils";
 import { InstallSnapResult } from "./types";
@@ -33,7 +34,7 @@ export const installSnap =
     flaskOnly(flaskPage);
     //need to open page to access window.ethereum
     const installPage = await flaskPage.browser().newPage();
-    await installPage.goto(opts.installationSnapUrl ?? "https://google.com");
+    await installPage.goto(opts.installationSnapUrl ?? EXAMPLE_WEBSITE);
     let snapServer: http.Server | undefined;
     if (fs.existsSync(snapIdOrLocation)) {
       //snap dist location

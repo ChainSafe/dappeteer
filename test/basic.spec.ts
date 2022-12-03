@@ -12,6 +12,7 @@ import {
   MESSAGE_TO_SIGN,
   EXPECTED_LONG_TYPED_DATA_SIGNATURE,
   EXPECTED_SHORT_TYPED_DATA_SIGNATURE,
+  EXAMPLE_WEBSITE,
 } from "./constant";
 import {
   addNetwork,
@@ -31,7 +32,7 @@ describe("basic interactions", function () {
 
   before(async function (this: TestContext) {
     testPage = await this.browser.newPage();
-    await testPage.goto("http://localhost:8080/", {
+    await testPage.goto(EXAMPLE_WEBSITE, {
       waitUntil: "networkidle",
     });
     metaMask = this.metaMask;

@@ -8,7 +8,7 @@ import {
   PASSWORD,
   TestContext,
 } from "./constant";
-import { deployContract, startLocalEthereum, startTestServer } from "./deploy";
+import { deployContract, startLocalEthereum } from "./deploy";
 
 export const mochaHooks = {
   async beforeAll(this: Mocha.Context): Promise<void> {
@@ -31,8 +31,6 @@ export const mochaHooks = {
         process.env.METAMASK_VERSION || dappeteer.RECOMMENDED_METAMASK_VERSION,
     });
 
-    const server = await startTestServer();
-
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const contract = await deployContract(ethereum.provider);
 
@@ -40,7 +38,6 @@ export const mochaHooks = {
       ethereum: ethereum,
       provider: ethereum.provider,
       browser,
-      testPageServer: server,
       metaMask,
       metaMaskPage,
       flask: false,
@@ -52,7 +49,6 @@ export const mochaHooks = {
   },
 
   async afterAll(this: TestContext): Promise<void> {
-    this.testPageServer.close();
     await this.browser.close();
     await this.ethereum.close();
   },

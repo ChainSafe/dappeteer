@@ -203,7 +203,7 @@ deletes custom network from metaMask
   * @param opts {Object} the snap method you want to invoke
   * @param opts.hasPermissions Set to true if the snap uses some permissions
   * @param opts.hasKeyPermissions Set to true if the snap uses the key permissions
-  * @param installationSnapUrl the url of your dapp. Defaults to google.com
+  * @param installationSnapUrl the url of your dapp. Defaults to example.org
   */
 ) => Promise<string>;
 ```
@@ -216,7 +216,7 @@ invoke a MetaMask snap method. Function will throw if there is an error while in
 /**
  * Use generic params to override result and parameter types.
  * @param page Browser page where injected MetaMask provider will be available.
- * For most snaps, openning google.com will suffice.
+ * For most snaps, openning example.org will suffice.
  * @param snapId id of your installed snap (result of invoking `installSnap` method)
  * @param method snap method you want to invoke
  * @param params required parameters of snap method
