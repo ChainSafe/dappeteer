@@ -73,7 +73,7 @@ async function main() {
   // setup dappateer and install your snap
   const { snapId, metaMask, dappPage } = await dappeteer.initSnapEnv({
     snapIdOrLocation: builtSnapDir
-    hasPermissions: false,
+    hasPermissions: true,
     hasKeyPermissions: false,
   });
 
