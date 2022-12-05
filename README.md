@@ -74,7 +74,7 @@ async function main() {
 
   // install your snap
   const snapId = await metaMask.snaps.installSnap(builtSnapDir, {
-    hasPermissions: false,
+    hasPermissions: true,
     hasKeyPermissions: false,
   });
 
