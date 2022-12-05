@@ -99,7 +99,42 @@ type MetaMaskOptions = {
 };
 ```
 
-it runs `dappeteer.launch` and `dappeteer.setup` and returns an object with metaMask, metaMaskPage and browser.
+it runs it runs `dappeteer.launch` and `dappeteer.setupMetaMask` and returns an object with metaMask, metaMaskPage and browser.
+
+<a name="initSnapEnv"></a>
+## `dappeteer.initSnapEnv( opts: DappeteerLaunchOptions & MetaMaskOptions & InstallSnapOptions & { snapIdOrLocation: string }): Promise<{ metaMask: Dappeteer; browser: DappeteerBrowser; metaMaskPage: DappeteerPage; snapId: string;}`
+
+```typescript
+type DappeteerLaunchOptions = {
+  metaMaskVersion?:
+    | "latest"
+    | "local"
+    | string;
+  metaMaskLocation?: Path;
+  metaMaskPath?: string;
+  metaMaskFlask?: boolean;
+  automation?: "puppeteer" | "playwright";
+  browser: "chrome";
+  puppeteerOptions?: Omit<Parameters<typeof puppeteerLaunch>[0], "headless">;
+  playwrightOptions?: Omit<PlaywrightLaunchOptions, "headless">;
+};
+
+type MetaMaskOptions = {
+  seed?: string;
+  password?: string;
+  showTestNets?: boolean;
+};
+
+type InstallSnapOptions = {
+    hasPermissions: boolean;
+    hasKeyPermissions: boolean;
+    customSteps?: InstallStep[];
+    version?: string;
+    installationSnapUrl?: string;
+}
+```
+
+it runs `dappeteer.launch` and `dappeteer.setupMetamask` and `snaps.installSnap` and returns an object with metaMask, metaMaskPage, browser and snapId.
 
 <a name="getMetaMask"></a>
 ## `dappeteer.getMetaMaskWindow(browser: Browser, version?: string): Promise<Dappeteer>`
