@@ -9,7 +9,7 @@ import {
 } from "../helpers";
 import { DappeteerPage } from "../page";
 import { startSnapServer, toUrl } from "./install-utils";
-import { flaskOnly } from "./utils";
+import { flaskOnly, isElementVisible } from "./utils";
 import { InstallSnapResult } from "./types";
 
 declare let window: { ethereum: MetaMaskInpageProvider };
@@ -17,8 +17,6 @@ declare let window: { ethereum: MetaMaskInpageProvider };
 export type InstallStep = (page: DappeteerPage) => Promise<void>;
 
 export type InstallSnapOptions = {
-  hasPermissions: boolean;
-  hasKeyPermissions: boolean;
   customSteps?: InstallStep[];
   version?: string;
   installationSnapUrl?: string;
@@ -28,12 +26,12 @@ export const installSnap =
   (page: DappeteerPage) =>
   async (
     snapIdOrLocation: string,
-    opts: InstallSnapOptions
+    opts?: InstallSnapOptions
   ): Promise<string> => {
     flaskOnly(page);
     //need to open page to access window.ethereum
     const installPage = await page.browser().newPage();
-    await installPage.goto(opts.installationSnapUrl ?? "https://google.com");
+    await installPage.goto(opts?.installationSnapUrl ?? "https://google.com");
     let snapServer: http.Server | undefined;
     if (fs.existsSync(snapIdOrLocation)) {
       //snap dist location
@@ -41,13 +39,13 @@ export const installSnap =
       snapIdOrLocation = `local:${toUrl(snapServer.address())}`;
     }
     const installAction = installPage.evaluate(
-      (opts: { snapId: string; version?: string }) =>
+      ({ snapId, version }: { snapId: string; version?: string }) =>
         window.ethereum.request<InstallSnapResult>({
           method: "wallet_enable",
           params: [
             {
-              [`wallet_snap_${opts.snapId}`]: {
-                version: opts.version ?? "latest",
+              [`wallet_snap_${snapId}`]: {
+                version: version ?? "latest",
               },
             },
           ],
@@ -58,9 +56,24 @@ export const installSnap =
     await page.bringToFront();
     await page.reload();
     await clickOnButton(page, "Connect");
-    if (opts.hasPermissions) {
+
+    // if the snap is requesting for permissions
+    const isAskingForPermissions = await isElementVisible(
+      page,
+      ".permissions-connect-permission-list"
+    );
+
+    if (isAskingForPermissions) {
       await clickOnButton(page, "Approve & install");
-      if (opts.hasKeyPermissions) {
+
+      // if the snap requires key permissions
+      // a dedicated warning will apprear
+      const isShowingWarning = await isElementVisible(
+        page,
+        ".popover-wrap.snap-install-warning"
+      );
+
+      if (isShowingWarning) {
         await page.waitForSelector(".checkbox-label", {
           visible: true,
         });

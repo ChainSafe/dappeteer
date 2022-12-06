@@ -93,15 +93,11 @@ export type Dappeteer = {
      * @param snapIdOrLocation either pass in snapId or full path to your snap directory
      * where we can find bundled snap (you need to ensure snap is built)
      * @param opts {Object} snap method you want to invoke
-     * @param opts.hasPermissions Set to true if snap uses some permissions
-     * @param opts.hasKeyPermissions Set to true if snap uses key permissions
      * @param installationSnapUrl url of your dapp. Defaults to google.com
      */
     installSnap: (
       snapIdOrLocation: string,
-      opts: {
-        hasPermissions: boolean;
-        hasKeyPermissions: boolean;
+      opts?: {
         customSteps?: InstallStep[];
         version?: string;
       },
