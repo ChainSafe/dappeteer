@@ -6,12 +6,7 @@ import {
   PASSWORD,
   TestContext,
 } from "./constant";
-import {
-  deployContract,
-  startLocalEthereum,
-  buildSnaps,
-  startTestServer,
-} from "./deploy";
+import { deployContract, startLocalEthereum, buildSnaps } from "./deploy";
 
 export const mochaHooks = {
   async beforeAll(this: Mocha.Context): Promise<void> {
@@ -34,7 +29,6 @@ export const mochaHooks = {
       metaMaskFlask: true,
     });
 
-    const server = await startTestServer();
     const snapServers = await buildSnaps();
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -44,7 +38,6 @@ export const mochaHooks = {
       ethereum: ethereum,
       provider: ethereum.provider,
       browser,
-      testPageServer: server,
       snapServers: snapServers,
       metaMask,
       metaMaskPage,
@@ -57,7 +50,6 @@ export const mochaHooks = {
   },
 
   async afterAll(this: TestContext): Promise<void> {
-    this.testPageServer.close();
     await this.browser.close();
     await this.ethereum.close();
   },

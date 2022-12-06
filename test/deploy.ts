@@ -1,10 +1,7 @@
-import fs from "fs";
-import * as http from "http";
 import * as path from "path";
 import { exec } from "child_process";
 
 import ganache, { Provider, Server, ServerOptions } from "ganache";
-import handler from "serve-handler";
 import Web3 from "web3";
 
 import { compileContracts } from "./contract";
@@ -45,38 +42,7 @@ export async function deployContract(provider: Provider): Promise<Contract> {
     .send({ from: accounts[0], gas: 4000000 });
   console.log("Contract deployed at", counterContract.options.address);
 
-  // create file data for dapp
-  const dataJsPath = path.join(__dirname, "dapp", "data.js");
-  const data = `const ContractInfo = ${JSON.stringify(
-    { ...counterContractInfo, ...counterContract.options },
-    null,
-    2
-  )}`;
-
-  await new Promise((resolve) => {
-    fs.writeFile(dataJsPath, data, resolve);
-  });
-
   return { ...counterContract, ...counterContract, ...counterContract.options };
-}
-
-export async function startTestServer(): Promise<http.Server> {
-  console.log("Starting test server...");
-  const server = http.createServer((request, response) => {
-    void handler(request, response, {
-      public: path.join(__dirname, "dapp"),
-      cleanUrls: true,
-    });
-    return;
-  });
-
-  await new Promise<void>((resolve) => {
-    server.listen(8080, () => {
-      console.log("Server running at http://localhost:8080");
-      resolve();
-    });
-  });
-  return server;
 }
 
 export enum Snaps {
