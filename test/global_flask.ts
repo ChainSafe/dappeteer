@@ -6,12 +6,7 @@ import {
   PASSWORD,
   TestContext,
 } from "./constant";
-import {
-  deployContract,
-  startLocalEthereum,
-  buildSnaps,
-  startTestServer,
-} from "./deploy";
+import { deployContract, startLocalEthereum, buildSnaps } from "./deploy";
 
 export const mochaHooks = {
   async beforeAll(this: Mocha.Context): Promise<void> {
@@ -22,21 +17,20 @@ export const mochaHooks = {
         defaultBalance: 100,
       },
     });
-    const browser = await dappeteer.launch({
-      browser: "chrome",
+    const { browser, metaMask, metaMaskPage } = await dappeteer.bootstrap({
+      // optional, else it will use a default seed
+      seed: LOCAL_PREFUNDED_MNEMONIC,
+      password: PASSWORD,
       automation:
         (process.env.AUTOMATION as "puppeteer" | "playwright") ?? "puppeteer",
+      browser: "chrome",
       metaMaskVersion:
         process.env.METAMASK_VERSION || dappeteer.RECOMMENDED_METAMASK_VERSION,
       metaMaskFlask: true,
     });
-    const server = await startTestServer();
+
     const snapServers = await buildSnaps();
-    const metamask = await dappeteer.setupMetaMask(browser, {
-      // optional, else it will use a default seed
-      seed: LOCAL_PREFUNDED_MNEMONIC,
-      password: PASSWORD,
-    });
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const contract = await deployContract(ethereum.provider);
 
@@ -44,9 +38,9 @@ export const mochaHooks = {
       ethereum: ethereum,
       provider: ethereum.provider,
       browser,
-      testPageServer: server,
       snapServers: snapServers,
-      metamask,
+      metaMask,
+      metaMaskPage,
       flask: true,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       contract,
@@ -56,14 +50,13 @@ export const mochaHooks = {
   },
 
   async afterAll(this: TestContext): Promise<void> {
-    this.testPageServer.close();
     await this.browser.close();
     await this.ethereum.close();
   },
 
   async afterEach(this: TestContext): Promise<void> {
     if (this.currentTest.state === "failed") {
-      await this.metamask.page.screenshot(
+      await this.metaMaskPage.screenshot(
         path.resolve(
           __dirname,
           `../${

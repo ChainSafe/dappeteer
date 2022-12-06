@@ -70,14 +70,14 @@ export type Dappeteer = {
      */
     getNotificationEmitter: () => Promise<NotificationsEmitter>;
     /**
-     * Returns all notifications in Metamask notifications page
+     * Returns all notifications in MetaMask notifications page
      */
     getAllNotifications: () => Promise<NotificationList>;
     /**
-     * Invoke Metamask snap method. Function will throw if there is an error while invoking snap.
+     * Invoke a MetaMask snap method. Function will throw if there is an error while invoking snap.
      * Use generic params to override result and parameter types.
-     * @param page Browser page where injected Metamask provider will be available.
-     * For most snaps, openning google.com will suffice.
+     * @param page Browser page where injected MetaMask provider will be available.
+     * For most snaps, openning example.org will suffice.
      * @param snapId id of your installed snap (result of invoking `installSnap` method)
      * @param method snap method you want to invoke
      * @param params required parameters of snap method
@@ -93,7 +93,7 @@ export type Dappeteer = {
      * @param snapIdOrLocation either pass in snapId or full path to your snap directory
      * where we can find bundled snap (you need to ensure snap is built)
      * @param opts {Object} snap method you want to invoke
-     * @param installationSnapUrl url of your dapp. Defaults to google.com
+     * @param installationSnapUrl url of your dapp. Defaults to example.org
      */
     installSnap: (
       snapIdOrLocation: string,

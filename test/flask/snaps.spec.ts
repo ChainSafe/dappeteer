@@ -1,14 +1,15 @@
 import { expect } from "chai";
-import * as dappeteer from "../../src";
-import { DappeteerPage } from "../../src";
-import { TestContext } from "../constant";
+import { DappeteerPage, Dappeteer } from "../../src";
+import { EXAMPLE_WEBSITE, TestContext } from "../constant";
 import { Snaps } from "../deploy";
 
 describe("snaps", function () {
-  let metamask: dappeteer.Dappeteer;
+  let metaMask: Dappeteer;
+  let metaMaskPage: DappeteerPage;
 
   before(function (this: TestContext) {
-    metamask = this.metamask;
+    metaMask = this.metaMask;
+    metaMaskPage = this.metaMaskPage;
   });
 
   beforeEach(function (this: TestContext) {
@@ -19,15 +20,15 @@ describe("snaps", function () {
   });
 
   it("should install base snap from local server", async function (this: TestContext) {
-    await metamask.snaps.installSnap(this.snapServers[Snaps.BASE_SNAP]);
+    await metaMask.snaps.installSnap(this.snapServers[Snaps.BASE_SNAP]);
   });
 
   it("should install permissions snap local server", async function (this: TestContext) {
-    await metamask.snaps.installSnap(this.snapServers[Snaps.PERMISSIONS_SNAP]);
+    await metaMask.snaps.installSnap(this.snapServers[Snaps.PERMISSIONS_SNAP]);
   });
 
   it("should install keys snap from local server", async function (this: TestContext) {
-    await metamask.snaps.installSnap(this.snapServers[Snaps.KEYS_SNAP]);
+    await metaMask.snaps.installSnap(this.snapServers[Snaps.KEYS_SNAP]);
   });
 
   describe("should test snap methods", function () {
@@ -45,54 +46,54 @@ describe("snaps", function () {
       if (!this.browser.isMetaMaskFlask()) {
         this.skip();
       }
-      snapId = await metamask.snaps.installSnap(
+      snapId = await metaMask.snaps.installSnap(
         this.snapServers[Snaps.METHODS_SNAP]
       );
-      testPage = await metamask.page.browser().newPage();
-      await testPage.goto("https://google.com");
+      testPage = await metaMaskPage.browser().newPage();
+      await testPage.goto(EXAMPLE_WEBSITE);
       return testPage;
     });
 
     it("should invoke provided snap method and ACCEPT the dialog", async function (this: TestContext) {
-      const invokeAction = metamask.snaps.invokeSnap(
+      const invokeAction = metaMask.snaps.invokeSnap(
         testPage,
         snapId,
         "confirm"
       );
 
-      await metamask.snaps.acceptDialog();
+      await metaMask.snaps.acceptDialog();
 
       expect(await invokeAction).to.equal(true);
     });
 
     it("should invoke provided snap method and REJECT the dialog", async function (this: TestContext) {
-      const invokeAction = metamask.snaps.invokeSnap(
+      const invokeAction = metaMask.snaps.invokeSnap(
         testPage,
         snapId,
         "confirm"
       );
-      await metamask.snaps.rejectDialog();
+      await metaMask.snaps.rejectDialog();
 
       expect(await invokeAction).to.equal(false);
     });
 
     it("should return all notifications", async function (this: TestContext) {
-      const permissionSnapId = await metamask.snaps.installSnap(
+      const permissionSnapId = await metaMask.snaps.installSnap(
         this.snapServers[Snaps.PERMISSIONS_SNAP]
       );
 
-      const emitter = await metamask.snaps.getNotificationEmitter();
+      const emitter = await metaMask.snaps.getNotificationEmitter();
       const notificationPromise = emitter.waitForNotification();
 
-      await metamask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
-      await metamask.snaps.invokeSnap(
+      await metaMask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
+      await metaMask.snaps.invokeSnap(
         testPage,
         permissionSnapId,
         "notify_inApp"
       );
       await notificationPromise;
 
-      const notifications = await metamask.snaps.getAllNotifications();
+      const notifications = await metaMask.snaps.getAllNotifications();
 
       expect(notifications[0].message).to.contain(
         "Hello from permissions snap in App notification"

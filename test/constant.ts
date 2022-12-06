@@ -1,9 +1,7 @@
-import http from "http";
-
 import { Provider, Server } from "ganache";
 
 import web3 from "web3";
-import { Dappeteer } from "../src";
+import { Dappeteer, DappeteerPage } from "../src";
 
 import { DappeteerBrowser } from "../src/browser";
 import { Contract, Snaps } from "./deploy";
@@ -11,13 +9,15 @@ import { Contract, Snaps } from "./deploy";
 export type InjectableContext = Readonly<{
   provider: Provider;
   ethereum: Server<"ethereum">;
-  testPageServer: http.Server;
   snapServers?: Record<Snaps, string>;
   browser: DappeteerBrowser;
-  metamask: Dappeteer;
+  metaMask: Dappeteer;
+  metaMaskPage: DappeteerPage;
   contract: Contract;
   flask: boolean;
 }>;
+
+export const EXAMPLE_WEBSITE = "http://example.org/";
 
 // TestContext will be used by all the test
 export type TestContext = Mocha.Context & InjectableContext;

@@ -8,6 +8,7 @@ import {
   profileDropdownClick,
 } from "../helpers";
 import { DappeteerPage } from "../page";
+import { EXAMPLE_WEBSITE } from "../../test/constant";
 import { startSnapServer, toUrl } from "./install-utils";
 import { flaskOnly, isElementVisible } from "./utils";
 import { InstallSnapResult } from "./types";
@@ -23,15 +24,15 @@ export type InstallSnapOptions = {
 };
 
 export const installSnap =
-  (page: DappeteerPage) =>
+  (flaskPage: DappeteerPage) =>
   async (
     snapIdOrLocation: string,
     opts?: InstallSnapOptions
   ): Promise<string> => {
-    flaskOnly(page);
+    flaskOnly(flaskPage);
     //need to open page to access window.ethereum
-    const installPage = await page.browser().newPage();
-    await installPage.goto(opts?.installationSnapUrl ?? "https://google.com");
+    const installPage = await flaskPage.browser().newPage();
+    await installPage.goto(opts.installationSnapUrl ?? EXAMPLE_WEBSITE);
     let snapServer: http.Server | undefined;
     if (fs.existsSync(snapIdOrLocation)) {
       //snap dist location
@@ -53,41 +54,41 @@ export const installSnap =
       { snapId: snapIdOrLocation, version: opts.version }
     );
 
-    await page.bringToFront();
-    await page.reload();
-    await clickOnButton(page, "Connect");
+    await flaskPage.bringToFront();
+    await flaskPage.reload();
+    await clickOnButton(flaskPage, "Connect");
 
     // if the snap is requesting for permissions
     const isAskingForPermissions = await isElementVisible(
-      page,
+      flaskPage,
       ".permissions-connect-permission-list"
     );
 
     if (isAskingForPermissions) {
-      await clickOnButton(page, "Approve & install");
+      await clickOnButton(flaskPage, "Approve & install");
 
       // if the snap requires key permissions
       // a dedicated warning will apprear
       const isShowingWarning = await isElementVisible(
-        page,
+        flaskPage,
         ".popover-wrap.snap-install-warning"
       );
 
       if (isShowingWarning) {
-        await page.waitForSelector(".checkbox-label", {
+        await flaskPage.waitForSelector(".checkbox-label", {
           visible: true,
         });
-        for await (const checkbox of await page.$$(".checkbox-label")) {
+        for await (const checkbox of await flaskPage.$$(".checkbox-label")) {
           await checkbox.click();
         }
-        await clickOnButton(page, "Confirm");
+        await clickOnButton(flaskPage, "Confirm");
       }
     } else {
-      await clickOnButton(page, "Install");
+      await clickOnButton(flaskPage, "Install");
     }
 
     for (const step of opts.customSteps ?? []) {
-      await step(page);
+      await step(flaskPage);
     }
 
     const result = await installAction;
@@ -100,23 +101,23 @@ export const installSnap =
   };
 
 export async function isSnapInstalled(
-  page: DappeteerPage,
+  flaskPage: DappeteerPage,
   snapId: string
 ): Promise<boolean> {
-  await page.bringToFront();
-  await profileDropdownClick(page);
+  await flaskPage.bringToFront();
+  await profileDropdownClick(flaskPage);
 
-  await clickOnElement(page, "Settings");
-  await clickOnElement(page, "Snaps");
+  await clickOnElement(flaskPage, "Settings");
+  await clickOnElement(flaskPage, "Snaps");
   let found = false;
   try {
-    await page.waitForXPath(`//*[contains(text(), '${snapId}')]`, {
+    await flaskPage.waitForXPath(`//*[contains(text(), '${snapId}')]`, {
       timeout: 5000,
     });
     found = true;
   } catch (e) {
     found = false;
   }
-  await clickOnLogo(page);
+  await clickOnLogo(flaskPage);
   return found;
 }
