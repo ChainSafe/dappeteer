@@ -6,6 +6,7 @@ For additional information read root [readme](../README.md)
 - [Launch dAppeteer](#launch)
 - [Setup MetaMask](#setup)
 - [Bootstrap dAppeteer](#bootstrap)
+- [Initialize Snap Environment](#initSnapEnv)
 - [Get MetaMask Window](#getMetaMask)
 - [metaMask methods](#methods)
   - [switchAccount](#switchAccount)
@@ -99,7 +100,42 @@ type MetaMaskOptions = {
 };
 ```
 
-it runs `dappeteer.launch` and `dappeteer.setup` and returns an object with metaMask, metaMaskPage and browser.
+it runs it runs `dappeteer.launch` and `dappeteer.setupMetaMask` and returns an object with metaMask, metaMaskPage and browser.
+
+<a name="initSnapEnv"></a>
+## `dappeteer.initSnapEnv( opts: DappeteerLaunchOptions & MetaMaskOptions & InstallSnapOptions & { snapIdOrLocation: string }): Promise<{ metaMask: Dappeteer; browser: DappeteerBrowser; metaMaskPage: DappeteerPage; snapId: string;}`
+
+```typescript
+type DappeteerLaunchOptions = {
+  metaMaskVersion?:
+    | "latest"
+    | "local"
+    | string;
+  metaMaskLocation?: Path;
+  metaMaskPath?: string;
+  metaMaskFlask?: boolean;
+  automation?: "puppeteer" | "playwright";
+  browser: "chrome";
+  puppeteerOptions?: Omit<Parameters<typeof puppeteerLaunch>[0], "headless">;
+  playwrightOptions?: Omit<PlaywrightLaunchOptions, "headless">;
+};
+
+type MetaMaskOptions = {
+  seed?: string;
+  password?: string;
+  showTestNets?: boolean;
+};
+
+type InstallSnapOptions = {
+    hasPermissions: boolean;
+    hasKeyPermissions: boolean;
+    customSteps?: InstallStep[];
+    version?: string;
+    installationSnapUrl?: string;
+}
+```
+
+it runs `dappeteer.launch` and `dappeteer.setupMetamask` and `snaps.installSnap` and returns an object with metaMask, metaMaskPage, browser and snapId.
 
 <a name="getMetaMask"></a>
 ## `dappeteer.getMetaMaskWindow(browser: Browser, version?: string): Promise<Dappeteer>`
@@ -194,34 +230,12 @@ deletes custom network from metaMask
 # Snaps methods
 
 <a name="installSnap"></a>
-## `metaMask.snaps.installSnap: ( snapIdOrLocation: string, opts: { hasPermissions: boolean; hasKeyPermissions: boolean; customSteps?: InstallStep[]; version?: string;},installationSnapUrl?: string`
-```typescript
-/**
-  * Installs snap. Function will throw if there is an error while installing the snap.
-  * @param snapIdOrLocation either the snapId or the full path to your snap directory
-  * where we can find the bundled snap (you need to ensure the snap is built)
-  * @param opts {Object} the snap method you want to invoke
-  * @param opts.hasPermissions Set to true if the snap uses some permissions
-  * @param opts.hasKeyPermissions Set to true if the snap uses the key permissions
-  * @param installationSnapUrl the url of your dapp. Defaults to example.org
-  */
-) => Promise<string>;
-```
+## `metaMask.snaps.installSnap: (snapIdOrLocation: string, opts: { hasPermissions: boolean; hasKeyPermissions: boolean; customSteps?: InstallStep[]; version?: string;},installationSnapUrl?: string`) => Promise<string>;
+installs the snap. The `snapIdOrLocation` param is either the snapId or the full path to your snap directory.
 
 <a name="invokeSnap"></a>
 ## `metaMask.snaps.invokeSnap<Result = unknown, Params extends Serializable = Serializable>(page: DappeteerPage,snapId: string,method: string,params?: Params): Promise<Partial<Result>>`
-invoke a MetaMask snap method. Function will throw if there is an error while invoking snap.
-
-```typescript
-/**
- * Use generic params to override result and parameter types.
- * @param page Browser page where injected MetaMask provider will be available.
- * For most snaps, openning example.org will suffice.
- * @param snapId id of your installed snap (result of invoking `installSnap` method)
- * @param method snap method you want to invoke
- * @param params required parameters of snap method
-*/
-```
+invokes a MetaMask snap method. The snapId is the id of your installed snap (result of invoking `installSnap` method). This function will throw if there is an error while invoking snap.
 
 <a name="acceptDialog"></a>
 ## `metaMask.snaps.acceptDialog(): Promise<void>`

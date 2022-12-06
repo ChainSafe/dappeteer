@@ -63,25 +63,22 @@ async function buildSnap(): Promise<string> {
 }
 
 async function main() {
-  const { metaMask, browser } = await dappeteer.bootstrap({ metaMaskFlask: true });
+  // you need to have a webpage open to interact with MetaMask, you can also visit a dApp page
+  const dappPage = browser.newPage();
+  await dappPage.goto('http://example.org/');
 
   // build your local snap
   const builtSnapDir = await buildSnap()
 
-  // create a new page and visit your dapp
-  const dappPage = browser.newPage();
-  await dappPage.goto('http://my-dapp.com');
-
-  // install your snap
-  const snapId = await metaMask.snaps.installSnap(builtSnapDir, {
-    hasPermissions: false,
+  // setup dappateer and install your snap
+  const { snapId, metaMask, dappPage } = await dappeteer.initSnapEnv({
+    snapIdOrLocation: builtSnapDir
+    hasPermissions: true,
     hasKeyPermissions: false,
   });
 
-  // do something in your dapp that invokes a method in your snap
-  // you could alternatively call metaMask.snaps.invokeSnap(dappPage, snapId, "my-method")
-  const invokeSnapButton = await dappPage.$('#invoke-snap');
-  await addTokenButton.click();
+  // invoke a method from your snap that promps users with approve/reject dialog
+  metaMask.snaps.invokeSnap(dappPage, snapId, "my-method")
 
   // instruct MetaMask to accept this request
   await metaMask.snaps.acceptDialog();
@@ -91,8 +88,7 @@ async function main() {
   const notificationPromise = emitter.waitForNotification();
 
   // do something that prompts you snap to emit notifications
-  const emitNotificationButton = await dappPage.$('#emit-notification');
-  await emitNotificationButton.click();
+  await metaMask.snaps.invokeSnap(dappPage, snapId, "notify");
 
   // Make sure the notification promise has resolved
   await notificationPromise;
