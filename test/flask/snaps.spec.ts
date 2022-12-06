@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { DappeteerPage, Dappeteer } from "../../src";
-import { TestContext } from "../constant";
+import { EXAMPLE_WEBSITE, TestContext } from "../constant";
 import { Snaps } from "../deploy";
 
 describe("snaps", function () {
@@ -63,7 +63,7 @@ describe("snaps", function () {
         }
       );
       testPage = await metaMaskPage.browser().newPage();
-      await testPage.goto("https://google.com");
+      await testPage.goto(EXAMPLE_WEBSITE);
       return testPage;
     });
 
