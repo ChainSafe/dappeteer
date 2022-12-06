@@ -32,7 +32,7 @@ export const installSnap =
     flaskOnly(flaskPage);
     //need to open page to access window.ethereum
     const installPage = await flaskPage.browser().newPage();
-    await installPage.goto(opts?.installationSnapUrl || EXAMPLE_WEBSITE);
+    await installPage.goto(opts?.installationSnapUrl ?? EXAMPLE_WEBSITE);
     let snapServer: http.Server | undefined;
     if (fs.existsSync(snapIdOrLocation)) {
       //snap dist location
@@ -46,7 +46,7 @@ export const installSnap =
           params: [
             {
               [`wallet_snap_${snapId}`]: {
-                version: version || "latest",
+                version: version ?? "latest",
               },
             },
           ],
@@ -87,7 +87,7 @@ export const installSnap =
       await clickOnButton(flaskPage, "Install");
     }
 
-    for (const step of opts?.customSteps || []) {
+    for (const step of opts?.customSteps ?? []) {
       await step(flaskPage);
     }
 
