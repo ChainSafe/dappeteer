@@ -28,11 +28,9 @@ export function isElementVisible(
       .waitForSelector(selector, { visible: true, timeout })
       .then(() => {
         resolve(true);
-        console.log("yes", selector);
       })
       .catch(() => {
         resolve(false);
-        console.log("nope", selector);
       });
   });
 }
