@@ -21,7 +21,7 @@ export function isMetaMaskErrorObject(e: unknown): boolean {
 export function isElementVisible(
   page: DappeteerPage,
   selector: string,
-  timeout = 2000
+  timeout = 1000
 ): Promise<boolean> {
   return new Promise((resolve) => {
     page
