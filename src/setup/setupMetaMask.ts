@@ -45,7 +45,7 @@ export async function setupMetaMask<Options = MetaMaskOptions>(
   options?: Options,
   steps?: Step<Options>[]
 ): Promise<Dappeteer> {
-  const page = await getMetamaskPage(browser);
+  const page = await getMetaMaskPage(browser);
   steps = steps ?? defaultMetaMaskSteps;
   if (browser.isMetaMaskFlask()) {
     steps = flaskMetaMaskSteps;
@@ -59,7 +59,7 @@ export async function setupMetaMask<Options = MetaMaskOptions>(
   return getMetaMask(page);
 }
 
-async function getMetamaskPage(
+async function getMetaMaskPage(
   browser: DappeteerBrowser
 ): Promise<DappeteerPage> {
   const pages = await browser.pages();

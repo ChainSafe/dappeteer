@@ -3,7 +3,7 @@ import http from "http";
 import { Provider, Server } from "ganache";
 
 import web3 from "web3";
-import { Dappeteer } from "../src";
+import { Dappeteer, DappeteerPage } from "../src";
 
 import { DappeteerBrowser } from "../src/browser";
 import { Contract, Snaps } from "./deploy";
@@ -14,7 +14,8 @@ export type InjectableContext = Readonly<{
   testPageServer: http.Server;
   snapServers?: Record<Snaps, string>;
   browser: DappeteerBrowser;
-  metamask: Dappeteer;
+  metaMask: Dappeteer;
+  metaMaskPage: DappeteerPage;
   contract: Contract;
   flask: boolean;
 }>;

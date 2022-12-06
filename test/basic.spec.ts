@@ -25,18 +25,20 @@ import {
 use(chaiAsPromised);
 
 describe("basic interactions", function () {
-  let metamask: dappeteer.Dappeteer;
+  let metaMask: dappeteer.Dappeteer;
   let testPage: DappeteerPage;
+  let metaMaskPage: DappeteerPage;
 
   before(async function (this: TestContext) {
     testPage = await this.browser.newPage();
     await testPage.goto("http://localhost:8080/", {
       waitUntil: "networkidle",
     });
-    metamask = this.metamask;
+    metaMask = this.metaMask;
+    metaMaskPage = this.metaMaskPage;
     try {
       const connectionPromise = testPage.evaluate(requestAccounts);
-      await metamask.approve();
+      await metaMask.approve();
       await connectionPromise;
     } catch (e) {
       //ignored
@@ -53,7 +55,7 @@ describe("basic interactions", function () {
       message: MESSAGE_TO_SIGN,
     });
 
-    await metamask.sign();
+    await metaMask.sign();
     const sig = await sigPromise;
     expect(sig).to.be.equal(EXPECTED_MESSAGE_SIGNATURE);
   });
@@ -62,7 +64,7 @@ describe("basic interactions", function () {
     const sigPromise = testPage.evaluate(signLongTypedData, {
       address: ACCOUNT_ADDRESS,
     });
-    await metamask.signTypedData();
+    await metaMask.signTypedData();
 
     const sig = await sigPromise;
     expect(sig).to.be.equal(EXPECTED_LONG_TYPED_DATA_SIGNATURE);
@@ -72,16 +74,16 @@ describe("basic interactions", function () {
     const sigPromise = testPage.evaluate(signShortTypedData, {
       address: ACCOUNT_ADDRESS,
     });
-    await metamask.signTypedData();
+    await metaMask.signTypedData();
 
     const sig = await sigPromise;
     expect(sig).to.be.equal(EXPECTED_SHORT_TYPED_DATA_SIGNATURE);
   });
 
   it("should switch network", async () => {
-    await metamask.switchNetwork("localhost");
+    await metaMask.switchNetwork("localhost");
 
-    const selectedNetwork = await metamask.page.evaluate(
+    const selectedNetwork = await metaMaskPage.evaluate(
       () =>
         document.querySelector(".network-display > span:nth-child(2)").innerHTML
     );
@@ -89,14 +91,14 @@ describe("basic interactions", function () {
   });
 
   it("should return eth balance", async () => {
-    await metamask.switchNetwork("localhost");
-    const tokenBalance: number = await metamask.helpers.getTokenBalance("ETH");
+    await metaMask.switchNetwork("localhost");
+    const tokenBalance: number = await metaMask.helpers.getTokenBalance("ETH");
     expect(tokenBalance).to.be.greaterThan(0);
-    await metamask.switchNetwork("mainnet");
+    await metaMask.switchNetwork("mainnet");
   });
 
   it("should return 0 token balance when token not found", async () => {
-    const tokenBalance: number = await metamask.helpers.getTokenBalance(
+    const tokenBalance: number = await metaMask.helpers.getTokenBalance(
       "FARTBUCKS"
     );
     expect(tokenBalance).to.be.equal(0);
@@ -104,68 +106,66 @@ describe("basic interactions", function () {
 
   it("should not add token", async () => {
     const addTokenPromise = testPage.evaluate(addToken);
-    await metamask.rejectAddToken();
+    await metaMask.rejectAddToken();
     const res = await addTokenPromise;
     expect(res).to.equal(false);
   });
 
   it("should add token", async () => {
     const addTokenPromise = testPage.evaluate(addToken);
-    await metamask.acceptAddToken();
+    await metaMask.acceptAddToken();
     const res = await addTokenPromise;
     expect(res).to.equal(true);
   });
 
   it("should not add network", async () => {
     const addNetworkPromise = testPage.evaluate(addNetwork);
-    await metamask.rejectAddNetwork();
+    await metaMask.rejectAddNetwork();
     const res = await addNetworkPromise;
     expect(res).to.equal(false);
   });
 
   it("should add network and switch", async () => {
     const addNetworkPromise = testPage.evaluate(addNetwork);
-    await metamask.acceptAddNetwork();
+    await metaMask.acceptAddNetwork();
     const res = await addNetworkPromise;
     expect(res).to.equal(true);
   });
 
   it("should import private key", async () => {
     const countAccounts = async (): Promise<number> => {
-      await profileDropdownClick(metamask.page, false);
-      const container = await metamask.page.$(".account-menu__accounts");
+      await profileDropdownClick(metaMaskPage, false);
+      const container = await metaMaskPage.$(".account-menu__accounts");
       const count = (await container.$$(".account-menu__account")).length;
-      await profileDropdownClick(metamask.page, true);
+      await profileDropdownClick(metaMaskPage, true);
       return count;
     };
 
     const beforeImport = await countAccounts();
-    await metamask.importPK(
+    await metaMask.importPK(
       "4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b10"
     );
     const afterImport = await countAccounts();
 
     expect(beforeImport + 1).to.be.equal(afterImport);
-    await metamask.helpers.deleteAccount(2);
+    await metaMask.helpers.deleteAccount(2);
   });
 
   it("should throw error on wrong key", async () => {
     await expect(
-      metamask.importPK(
+      metaMask.importPK(
         "4f3edf983ac636a65a$@!ce7c78d9aa706d3b113bce9c46f30d7d21715b23b10"
       )
     ).to.be.rejectedWith(SyntaxError);
   });
 
   it("should lock and unlock", async () => {
-    await metamask.lock();
-    const pageTitle = await metamask.page.waitForSelector(
-      ".unlock-page__title"
-    );
+    await metaMask.lock();
+    const pageTitle = await metaMaskPage.waitForSelector(".unlock-page__title");
     expect(pageTitle).to.not.be.undefined;
 
-    await metamask.unlock(PASSWORD);
-    const accountSwitcher = await metamask.page.waitForSelector(
+    await metaMask.unlock(PASSWORD);
+    const accountSwitcher = await metaMaskPage.waitForSelector(
       ".account-menu__icon",
       {
         visible: true,

@@ -14,22 +14,21 @@ export const bootstrap = async ({
   showTestNets,
   ...launchOptions
 }: DappeteerLaunchOptions & MetaMaskOptions): Promise<{
-  dappeteer: Dappeteer;
+  metaMask: Dappeteer;
   browser: DappeteerBrowser;
-  page: DappeteerPage;
+  metaMaskPage: DappeteerPage;
 }> => {
   const browser = await launch(launchOptions);
-  const dappeteer = await setupMetaMask(browser, {
+  const metaMask = await setupMetaMask(browser, {
     seed,
     password,
     showTestNets,
   });
-  const pages = await browser.pages();
 
   return {
-    dappeteer,
+    metaMask,
     browser,
-    page: pages[0],
+    metaMaskPage: metaMask.page,
   };
 };
 
@@ -38,9 +37,9 @@ export const initSnapEnv = async (
     MetaMaskOptions &
     InstallSnapOptions & { snapIdOrLocation: string }
 ): Promise<{
-  dappeteer: Dappeteer;
+  metaMask: Dappeteer;
   browser: DappeteerBrowser;
-  page: DappeteerPage;
+  metaMaskPage: DappeteerPage;
   snapId: string;
 }> => {
   const browser = await launch({
@@ -48,19 +47,19 @@ export const initSnapEnv = async (
     metaMaskFlask: true,
   });
   const { snapIdOrLocation, seed, password, showTestNets } = opts;
-  const dappeteer = await setupMetaMask(browser, {
+  const metaMask = await setupMetaMask(browser, {
     seed,
     password,
     showTestNets,
   });
-  const page = dappeteer.page;
+  const metaMaskPage = metaMask.page;
 
-  const snapId = await dappeteer.snaps.installSnap(snapIdOrLocation, opts);
+  const snapId = await metaMask.snaps.installSnap(snapIdOrLocation, opts);
 
   return {
-    dappeteer,
+    metaMask,
     browser,
-    page,
+    metaMaskPage,
     snapId,
   };
 };
