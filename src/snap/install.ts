@@ -61,7 +61,8 @@ export const installSnap =
     // if the snap is requesting for permissions
     const isAskingForPermissions = await isElementVisible(
       flaskPage,
-      ".permissions-connect-permission-list"
+      ".permissions-connect-permission-list",
+      2000
     );
 
     if (isAskingForPermissions) {
@@ -71,7 +72,8 @@ export const installSnap =
       // a dedicated warning will apprear
       const isShowingWarning = await isElementVisible(
         flaskPage,
-        ".popover-wrap.snap-install-warning"
+        ".popover-wrap.snap-install-warning",
+        2000
       );
 
       if (isShowingWarning) {
