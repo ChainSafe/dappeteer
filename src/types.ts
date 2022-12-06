@@ -70,13 +70,13 @@ export type Dappeteer = {
      */
     getNotificationEmitter: () => Promise<NotificationsEmitter>;
     /**
-     * Returns all notifications in Metamask notifications page
+     * Returns all notifications in MetaMask notifications page
      */
     getAllNotifications: () => Promise<NotificationList>;
     /**
-     * Invoke Metamask snap method. Function will throw if there is an error while invoking snap.
+     * Invoke a MetaMask snap method. Function will throw if there is an error while invoking snap.
      * Use generic params to override result and parameter types.
-     * @param page Browser page where injected Metamask provider will be available.
+     * @param page Browser page where injected MetaMask provider will be available.
      * For most snaps, openning google.com will suffice.
      * @param snapId id of your installed snap (result of invoking `installSnap` method)
      * @param method snap method you want to invoke
@@ -89,13 +89,13 @@ export type Dappeteer = {
       params?: Params
     ) => Promise<Partial<Result>>;
     /**
-     * Installs snap. Function will throw if there is an error while installing snap.
-     * @param snapIdOrLocation either pass in snapId or full path to your snap directory
-     * where we can find bundled snap (you need to ensure snap is built)
-     * @param opts {Object} snap method you want to invoke
-     * @param opts.hasPermissions Set to true if snap uses some permissions
-     * @param opts.hasKeyPermissions Set to true if snap uses key permissions
-     * @param installationSnapUrl url of your dapp. Defaults to google.com
+     * Installs snap. Function will throw if there is an error while installing the snap.
+     * @param snapIdOrLocation either the snapId or the full path to your snap directory
+     * where we can find the bundled snap (you need to ensure the snap is built)
+     * @param opts {Object} the snap method you want to invoke
+     * @param opts.hasPermissions Set to true if the snap uses some permissions
+     * @param opts.hasKeyPermissions Set to true if the snap uses the key permissions
+     * @param installationSnapUrl the url of your dapp. Defaults to google.com
      */
     installSnap: (
       snapIdOrLocation: string,

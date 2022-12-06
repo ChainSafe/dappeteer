@@ -17,7 +17,7 @@ describe("contract interactions", function () {
   before(async function (this: TestContext) {
     testPage = await this.browser.newPage();
     await testPage.goto("http://localhost:8080/", { waitUntil: "networkidle" });
-    metamask = this.metamask;
+    metamask = this.metaMask;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     contract = this.contract;
     try {

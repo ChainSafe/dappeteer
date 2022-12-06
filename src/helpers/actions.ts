@@ -133,7 +133,7 @@ export const clickOnLittleDownArrowIfNeeded = async (
     visible: true,
   });
 
-  // Metamask requires users to read all the data
+  // MetaMask requires users to read all the data
   // and scroll until the bottom of the message
   // before enabling the "Sign" button
   const isSignButtonDisabled = await page.$eval(
