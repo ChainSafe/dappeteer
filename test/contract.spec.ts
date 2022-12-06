@@ -4,7 +4,7 @@ import web3 from "web3";
 import { Dappeteer } from "../src";
 import { DappeteerPage } from "../src/page";
 
-import { ACCOUNT_ADDRESS, TestContext } from "./constant";
+import { ACCOUNT_ADDRESS, EXAMPLE_WEBSITE, TestContext } from "./constant";
 import { ContractInfo } from "./contract/contractInfo";
 import { Contract } from "./deploy";
 import { requestAccounts, sendTx } from "./testPageFunctions";
@@ -16,7 +16,7 @@ describe("contract interactions", function () {
 
   before(async function (this: TestContext) {
     testPage = await this.browser.newPage();
-    await testPage.goto("http://localhost:8080/", { waitUntil: "networkidle" });
+    await testPage.goto(EXAMPLE_WEBSITE, { waitUntil: "networkidle" });
     metamask = this.metaMask;
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     contract = this.contract;
