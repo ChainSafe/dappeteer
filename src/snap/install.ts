@@ -58,23 +58,29 @@ export const installSnap =
     await flaskPage.reload();
     await clickOnButton(flaskPage, "Connect");
 
+    const t2 = performance.now();
     // if the snap is requesting for permissions
     const isAskingForPermissions = await isElementVisible(
       flaskPage,
       ".permissions-connect-permission-list",
-      2000
+      1500
     );
+    const t3 = performance.now();
+    console.log("isAskingForPermissions", t3 - t2);
 
     if (isAskingForPermissions) {
       await clickOnButton(flaskPage, "Approve & install");
 
       // if the snap requires key permissions
       // a dedicated warning will apprear
+      const t0 = performance.now();
       const isShowingWarning = await isElementVisible(
         flaskPage,
         ".popover-wrap.snap-install-warning",
-        2000
+        500
       );
+      const t1 = performance.now();
+      console.log("isShowingWarning", t1 - t0);
 
       if (isShowingWarning) {
         await flaskPage.waitForSelector(".checkbox-label", {
