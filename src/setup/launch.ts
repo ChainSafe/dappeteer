@@ -5,6 +5,7 @@ import { launchPlaywright } from "./playwright";
 import { launchPuppeteer } from "./puppeteer";
 import { isNewerVersion } from "./utils/isNewerVersion";
 import downloader from "./utils/metaMaskDownloader";
+import { getTemporaryUserDataDir } from "./utils/getTemporaryUserDataDir";
 
 /**
  * Launch Puppeteer chromium instance with MetaMask plugin installed
@@ -54,12 +55,14 @@ export async function launch(
     metamaskPath = options.metaMaskPath;
   }
 
+  const userDataDir = options.userDataDir && getTemporaryUserDataDir();
+
   if (options.automation) {
     switch (options.automation) {
       case "playwright":
-        return await launchPlaywright(metamaskPath, options);
+        return await launchPlaywright(metamaskPath, userDataDir, options);
       case "puppeteer":
-        return await launchPuppeteer(metamaskPath, options);
+        return await launchPuppeteer(metamaskPath, userDataDir, options);
       default:
         throw new Error(
           "Unsupported automation tool. Use playwright or puppeteer"
@@ -67,11 +70,11 @@ export async function launch(
     }
   } else {
     try {
-      return await launchPlaywright(metamaskPath, options);
+      return await launchPlaywright(metamaskPath, userDataDir, options);
       // eslint-disable-next-line no-empty
     } catch (ignored) {}
     try {
-      return await launchPuppeteer(metamaskPath, options);
+      return await launchPuppeteer(metamaskPath, userDataDir, options);
     } catch (error) {
       throw new Error("Failed to launch both playwright and puppeteer");
     }

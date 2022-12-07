@@ -3,6 +3,7 @@ import { DappeteerLaunchOptions } from "../types";
 
 export async function launchPuppeteer(
   metamaskPath: string,
+  userDataDir: string,
   options: DappeteerLaunchOptions
 ): Promise<DappeteerBrowser> {
   const pBrowser = await (

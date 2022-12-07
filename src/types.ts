@@ -8,6 +8,8 @@ import { NotificationItem, NotificationList } from "./snap/types";
 import NotificationsEmitter from "./snap/NotificationsEmitter";
 import { RECOMMENDED_METAMASK_VERSION } from "./index";
 
+export type Automation = "puppeteer" | "playwright";
+
 export type DappeteerLaunchOptions = {
   metaMaskVersion?:
     | typeof RECOMMENDED_METAMASK_VERSION
@@ -19,10 +21,11 @@ export type DappeteerLaunchOptions = {
   //install flask (canary) version of metamask.
   metaMaskFlask?: boolean;
   //fallbacks to installed dependency and prefers playwright if both are installed
-  automation?: "puppeteer" | "playwright";
+  automation?: Automation;
   browser: "chrome";
   puppeteerOptions?: Omit<Parameters<typeof puppeteerLaunch>[0], "headless">;
   playwrightOptions?: Omit<PlaywrightLaunchOptions, "headless">;
+  userDataDir?: string;
 };
 
 declare global {
