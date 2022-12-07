@@ -19,15 +19,15 @@ describe("snaps", function () {
     }
   });
 
-  it.only("should install base snap from local server", async function (this: TestContext) {
+  it("should install base snap from local server", async function (this: TestContext) {
     await metaMask.snaps.installSnap(this.snapServers[Snaps.BASE_SNAP]);
   });
 
-  it.only("should install permissions snap local server", async function (this: TestContext) {
+  it("should install permissions snap local server", async function (this: TestContext) {
     await metaMask.snaps.installSnap(this.snapServers[Snaps.PERMISSIONS_SNAP]);
   });
 
-  it.only("should install keys snap from local server", async function (this: TestContext) {
+  it("should install keys snap from local server", async function (this: TestContext) {
     await metaMask.snaps.installSnap(this.snapServers[Snaps.KEYS_SNAP]);
   });
 

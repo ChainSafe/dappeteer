@@ -1,3 +1,4 @@
+import { DappeteerElementHandle } from "../element";
 import { DappeteerPage } from "../page";
 
 export function flaskOnly(page: DappeteerPage): void {
@@ -33,4 +34,39 @@ export function isElementVisible(
         resolve(false);
       });
   });
+}
+
+function getWaitingPromise(
+  page: DappeteerPage,
+  selectorOrXpath: string,
+  timeout: number
+): Promise<DappeteerElementHandle<unknown, HTMLElement>> {
+  if (selectorOrXpath.startsWith("//")) {
+    return page.waitForXPath(selectorOrXpath, { timeout });
+  } else {
+    return page.waitForSelector(selectorOrXpath, { timeout });
+  }
+}
+
+interface IsFirstElementAppearsFirstParams {
+  selectorOrXpath1: string;
+  selectorOrXpath2: string;
+  timeout?: number;
+  page: DappeteerPage;
+}
+
+export async function isFirstElementAppearsFirst({
+  selectorOrXpath1,
+  selectorOrXpath2,
+  page,
+  timeout = 2000,
+}: IsFirstElementAppearsFirstParams): Promise<boolean> {
+  const promise1 = getWaitingPromise(page, selectorOrXpath1, timeout).then(
+    () => true
+  );
+  const promise2 = getWaitingPromise(page, selectorOrXpath2, timeout).then(
+    () => false
+  );
+
+  return await Promise.race([promise1, promise2]);
 }

@@ -10,7 +10,7 @@ import {
 import { DappeteerPage } from "../page";
 import { EXAMPLE_WEBSITE } from "../../test/constant";
 import { startSnapServer, toUrl } from "./install-utils";
-import { flaskOnly, isElementVisible } from "./utils";
+import { flaskOnly, isFirstElementAppearsFirst } from "./utils";
 import { InstallSnapResult } from "./types";
 
 declare let window: { ethereum: MetaMaskInpageProvider };
@@ -58,29 +58,20 @@ export const installSnap =
     await flaskPage.reload();
     await clickOnButton(flaskPage, "Connect");
 
-    const t2 = performance.now();
-    // if the snap is requesting for permissions
-    const isAskingForPermissions = await isElementVisible(
-      flaskPage,
-      ".permissions-connect-permission-list",
-      1500
-    );
-    const t3 = performance.now();
-    console.log("isAskingForPermissions", t3 - t2);
+    const isAskingForPermissions = await isFirstElementAppearsFirst({
+      selectorOrXpath1: `//*[contains(text(), 'Approve & install')]`,
+      selectorOrXpath2: `//*[contains(text(), 'Install')]`,
+      page: flaskPage,
+    });
 
     if (isAskingForPermissions) {
       await clickOnButton(flaskPage, "Approve & install");
 
-      // if the snap requires key permissions
-      // a dedicated warning will apprear
-      const t0 = performance.now();
-      const isShowingWarning = await isElementVisible(
-        flaskPage,
-        ".popover-wrap.snap-install-warning",
-        500
-      );
-      const t1 = performance.now();
-      console.log("isShowingWarning", t1 - t0);
+      const isShowingWarning = await isFirstElementAppearsFirst({
+        selectorOrXpath1: ".popover-wrap.snap-install-warning",
+        selectorOrXpath2: ".app-header__metafox-logo--icon",
+        page: flaskPage,
+      });
 
       if (isShowingWarning) {
         await flaskPage.waitForSelector(".checkbox-label", {
