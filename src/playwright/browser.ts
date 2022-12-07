@@ -1,6 +1,8 @@
 import { EventEmitter } from "events";
 import fs from "fs";
+import path from "path";
 import { BrowserContext, Page } from "playwright";
+import { copySync } from "fs-extra";
 import { DappeteerBrowser } from "../browser";
 import { DappeteerPage } from "../page";
 import { DPlaywrightPage } from "./page";
@@ -11,7 +13,7 @@ export class DPlaywrightBrowser
 {
   constructor(
     protected browser: BrowserContext,
-    protected tmpDir: string,
+    protected userDataDir: string,
     protected flask: boolean = false
   ) {
     super();
@@ -23,7 +25,7 @@ export class DPlaywrightBrowser
 
   async close(): Promise<void> {
     await this.browser.close();
-    fs.rmSync(this.tmpDir, { recursive: true, force: true });
+    fs.rmSync(this.userDataDir, { recursive: true, force: true });
   }
 
   // eslint-disable-next-line @typescript-eslint/require-await
@@ -45,5 +47,19 @@ export class DPlaywrightBrowser
 
   isMetaMaskFlask(): boolean {
     return this.flask;
+  }
+
+  storeUserData(destination: string): boolean {
+    const location = path.resolve(destination);
+    try {
+      copySync(this.userDataDir, location, {
+        overwrite: true,
+        recursive: true,
+      });
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
   }
 }

@@ -42,6 +42,7 @@
   "license": "MIT",
   "dependencies": {
     "@metamask/providers": "^9.1.0",
+    "fs-extra": "^11.1.0",
     "node-stream-zip": "^1.13.0",
     "serve-handler": "5.0.8",
     "strict-event-emitter": "^0.2.8"
@@ -55,6 +56,7 @@
     "@rushstack/eslint-patch": "^1.2.0",
     "@types/chai": "^4.2.22",
     "@types/chai-as-promised": "^7.1.5",
+    "@types/fs-extra": "^9.0.13",
     "@types/mocha": "^9.1.1",
     "@types/serve-handler": "^6.1.1",
     "chai": "^4.3.4",

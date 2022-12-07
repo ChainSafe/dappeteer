@@ -18,5 +18,5 @@ export async function launchPuppeteer(
     ...(options.puppeteerOptions ?? {}),
   });
   const { DPuppeteerBrowser } = await import("../puppeteer");
-  return new DPuppeteerBrowser(pBrowser, options.metaMaskFlask);
+  return new DPuppeteerBrowser(pBrowser, userDataDir, options.metaMaskFlask);
 }

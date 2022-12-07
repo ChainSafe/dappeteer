@@ -1,3 +1,5 @@
+import fs from "fs";
+import { copySync } from "fs-extra";
 import { RECOMMENDED_METAMASK_VERSION } from "..";
 import { DappeteerBrowser } from "../browser";
 import { DappeteerLaunchOptions } from "../types";
@@ -55,7 +57,12 @@ export async function launch(
     metamaskPath = options.metaMaskPath;
   }
 
-  const userDataDir = options.userDataDir && getTemporaryUserDataDir();
+  const userDataDir = getTemporaryUserDataDir();
+  if (options.userDataDir)
+    copySync(options.userDataDir, userDataDir, {
+      overwrite: true,
+      recursive: true,
+    });
 
   if (options.automation) {
     switch (options.automation) {
@@ -64,6 +71,7 @@ export async function launch(
       case "puppeteer":
         return await launchPuppeteer(metamaskPath, userDataDir, options);
       default:
+        fs.rmSync(userDataDir, { recursive: true, force: true });
         throw new Error(
           "Unsupported automation tool. Use playwright or puppeteer"
         );
@@ -76,6 +84,7 @@ export async function launch(
     try {
       return await launchPuppeteer(metamaskPath, userDataDir, options);
     } catch (error) {
+      fs.rmSync(userDataDir, { recursive: true, force: true });
       throw new Error("Failed to launch both playwright and puppeteer");
     }
   }

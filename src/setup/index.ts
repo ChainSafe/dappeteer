@@ -3,14 +3,14 @@ import { DappeteerPage } from "../page";
 import { InstallSnapOptions } from "../snap/install";
 import { Dappeteer, DappeteerLaunchOptions, MetaMaskOptions } from "../types";
 import { launch } from "./launch";
-import { setupMetaMask } from "./setupMetaMask";
+import { setupBootstrappedMetaMask, setupMetaMask } from "./setupMetaMask";
 
 export * from "./launch";
 export * from "./setupMetaMask";
 
 export const bootstrap = async ({
   seed,
-  password,
+  password = "password1234",
   showTestNets,
   ...launchOptions
 }: DappeteerLaunchOptions & MetaMaskOptions): Promise<{
@@ -19,11 +19,14 @@ export const bootstrap = async ({
   metaMaskPage: DappeteerPage;
 }> => {
   const browser = await launch(launchOptions);
-  const metaMask = await setupMetaMask(browser, {
-    seed,
-    password,
-    showTestNets,
-  });
+
+  const metaMask = await (launchOptions.userDataDir
+    ? setupBootstrappedMetaMask(browser, password)
+    : setupMetaMask(browser, {
+        seed,
+        password,
+        showTestNets,
+      }));
 
   return {
     metaMask,
