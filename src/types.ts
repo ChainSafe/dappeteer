@@ -89,19 +89,15 @@ export type Dappeteer = {
       params?: Params
     ) => Promise<Partial<Result>>;
     /**
-     * Installs snap. Function will throw if there is an error while installing the snap.
-     * @param snapIdOrLocation either the snapId or the full path to your snap directory
-     * where we can find the bundled snap (you need to ensure the snap is built)
-     * @param opts {Object} the snap method you want to invoke
-     * @param opts.hasPermissions Set to true if the snap uses some permissions
-     * @param opts.hasKeyPermissions Set to true if the snap uses the key permissions
-     * @param installationSnapUrl the url of your dapp. Defaults to example.org
+     * Installs snap. Function will throw if there is an error while installing snap.
+     * @param snapIdOrLocation either pass in snapId or full path to your snap directory
+     * where we can find bundled snap (you need to ensure snap is built)
+     * @param opts {Object} snap method you want to invoke
+     * @param installationSnapUrl url of your dapp. Defaults to example.org
      */
     installSnap: (
       snapIdOrLocation: string,
-      opts: {
-        hasPermissions: boolean;
-        hasKeyPermissions: boolean;
+      opts?: {
         customSteps?: InstallStep[];
         version?: string;
       },

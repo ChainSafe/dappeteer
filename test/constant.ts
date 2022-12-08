@@ -17,7 +17,7 @@ export type InjectableContext = Readonly<{
   flask: boolean;
 }>;
 
-export const EXAMPLE_WEBSITE = "http://example.org/";
+export const EXAMPLE_WEBSITE = "http://example.org";
 
 // TestContext will be used by all the test
 export type TestContext = Mocha.Context & InjectableContext;
