@@ -10,6 +10,7 @@ export async function launchPuppeteer(
     await import("puppeteer")
   ).default.launch({
     headless: false,
+    userDataDir,
     args: [
       `--disable-extensions-except=${metamaskPath}`,
       `--load-extension=${metamaskPath}`,
