@@ -8,6 +8,10 @@ describe("snaps", function () {
   let metaMaskPage: DappeteerPage;
 
   before(function (this: TestContext) {
+    if (Boolean(process.env.USER_DATA_TEST) === true) {
+      this.skip();
+    }
+
     metaMask = this.metaMask;
     metaMaskPage = this.metaMaskPage;
   });

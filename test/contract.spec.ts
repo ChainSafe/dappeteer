@@ -15,6 +15,10 @@ describe("contract interactions", function () {
   let metamask: Dappeteer;
 
   before(async function (this: TestContext) {
+    if (Boolean(process.env.USER_DATA_TEST) === true) {
+      this.skip();
+    }
+
     testPage = await this.browser.newPage();
     await testPage.goto(EXAMPLE_WEBSITE, { waitUntil: "networkidle" });
     metamask = this.metaMask;
@@ -32,7 +36,7 @@ describe("contract interactions", function () {
   });
 
   after(async function (this: TestContext) {
-    await testPage.close();
+    if (testPage) await testPage.close();
   });
 
   it("should have increased count", async () => {
