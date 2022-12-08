@@ -20,24 +20,15 @@ describe("snaps", function () {
   });
 
   it("should install base snap from local server", async function (this: TestContext) {
-    await metaMask.snaps.installSnap(this.snapServers[Snaps.BASE_SNAP], {
-      hasPermissions: false,
-      hasKeyPermissions: false,
-    });
+    await metaMask.snaps.installSnap(this.snapServers[Snaps.BASE_SNAP]);
   });
 
   it("should install permissions snap local server", async function (this: TestContext) {
-    await metaMask.snaps.installSnap(this.snapServers[Snaps.PERMISSIONS_SNAP], {
-      hasPermissions: true,
-      hasKeyPermissions: false,
-    });
+    await metaMask.snaps.installSnap(this.snapServers[Snaps.PERMISSIONS_SNAP]);
   });
 
   it("should install keys snap from local server", async function (this: TestContext) {
-    await metaMask.snaps.installSnap(this.snapServers[Snaps.KEYS_SNAP], {
-      hasPermissions: true,
-      hasKeyPermissions: true,
-    });
+    await metaMask.snaps.installSnap(this.snapServers[Snaps.KEYS_SNAP]);
   });
 
   describe("should test snap methods", function () {
@@ -56,11 +47,7 @@ describe("snaps", function () {
         this.skip();
       }
       snapId = await metaMask.snaps.installSnap(
-        this.snapServers[Snaps.METHODS_SNAP],
-        {
-          hasPermissions: true,
-          hasKeyPermissions: false,
-        }
+        this.snapServers[Snaps.METHODS_SNAP]
       );
       testPage = await metaMaskPage.browser().newPage();
       await testPage.goto(EXAMPLE_WEBSITE);
@@ -92,11 +79,7 @@ describe("snaps", function () {
 
     it("should return all notifications", async function (this: TestContext) {
       const permissionSnapId = await metaMask.snaps.installSnap(
-        this.snapServers[Snaps.PERMISSIONS_SNAP],
-        {
-          hasPermissions: true,
-          hasKeyPermissions: false,
-        }
+        this.snapServers[Snaps.PERMISSIONS_SNAP]
       );
 
       const emitter = await metaMask.snaps.getNotificationEmitter();

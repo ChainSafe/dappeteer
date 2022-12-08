@@ -73,8 +73,6 @@ async function main() {
   // setup dappateer and install your snap
   const { snapId, metaMask, dappPage } = await dappeteer.initSnapEnv({
     snapIdOrLocation: builtSnapDir
-    hasPermissions: true,
-    hasKeyPermissions: false,
   });
 
   // invoke a method from your snap that promps users with approve/reject dialog

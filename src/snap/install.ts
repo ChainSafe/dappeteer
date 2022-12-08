@@ -10,7 +10,7 @@ import {
 import { DappeteerPage } from "../page";
 import { EXAMPLE_WEBSITE } from "../../test/constant";
 import { startSnapServer, toUrl } from "./install-utils";
-import { flaskOnly } from "./utils";
+import { flaskOnly, isFirstElementAppearsFirst } from "./utils";
 import { InstallSnapResult } from "./types";
 
 declare let window: { ethereum: MetaMaskInpageProvider };
@@ -18,8 +18,6 @@ declare let window: { ethereum: MetaMaskInpageProvider };
 export type InstallStep = (page: DappeteerPage) => Promise<void>;
 
 export type InstallSnapOptions = {
-  hasPermissions: boolean;
-  hasKeyPermissions: boolean;
   customSteps?: InstallStep[];
   version?: string;
   installationSnapUrl?: string;
@@ -29,12 +27,12 @@ export const installSnap =
   (flaskPage: DappeteerPage) =>
   async (
     snapIdOrLocation: string,
-    opts: InstallSnapOptions
+    opts?: InstallSnapOptions
   ): Promise<string> => {
     flaskOnly(flaskPage);
     //need to open page to access window.ethereum
     const installPage = await flaskPage.browser().newPage();
-    await installPage.goto(opts.installationSnapUrl ?? EXAMPLE_WEBSITE);
+    await installPage.goto(opts?.installationSnapUrl ?? EXAMPLE_WEBSITE);
     let snapServer: http.Server | undefined;
     if (fs.existsSync(snapIdOrLocation)) {
       //snap dist location
@@ -42,26 +40,40 @@ export const installSnap =
       snapIdOrLocation = `local:${toUrl(snapServer.address())}`;
     }
     const installAction = installPage.evaluate(
-      (opts: { snapId: string; version?: string }) =>
+      ({ snapId, version }: { snapId: string; version?: string }) =>
         window.ethereum.request<InstallSnapResult>({
           method: "wallet_enable",
           params: [
             {
-              [`wallet_snap_${opts.snapId}`]: {
-                version: opts.version ?? "latest",
+              [`wallet_snap_${snapId}`]: {
+                version: version ?? "latest",
               },
             },
           ],
         }),
-      { snapId: snapIdOrLocation, version: opts.version }
+      { snapId: snapIdOrLocation, version: opts?.version }
     );
 
     await flaskPage.bringToFront();
     await flaskPage.reload();
     await clickOnButton(flaskPage, "Connect");
-    if (opts.hasPermissions) {
+
+    const isAskingForPermissions = await isFirstElementAppearsFirst({
+      selectorOrXpath1: `//*[contains(text(), 'Approve & install')]`,
+      selectorOrXpath2: `//*[contains(text(), 'Install')]`,
+      page: flaskPage,
+    });
+
+    if (isAskingForPermissions) {
       await clickOnButton(flaskPage, "Approve & install");
-      if (opts.hasKeyPermissions) {
+
+      const isShowingWarning = await isFirstElementAppearsFirst({
+        selectorOrXpath1: ".popover-wrap.snap-install-warning",
+        selectorOrXpath2: ".app-header__metafox-logo--icon",
+        page: flaskPage,
+      });
+
+      if (isShowingWarning) {
         await flaskPage.waitForSelector(".checkbox-label", {
           visible: true,
         });
@@ -74,7 +86,7 @@ export const installSnap =
       await clickOnButton(flaskPage, "Install");
     }
 
-    for (const step of opts.customSteps ?? []) {
+    for (const step of opts?.customSteps ?? []) {
       await step(flaskPage);
     }
 
