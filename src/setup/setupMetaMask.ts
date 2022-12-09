@@ -3,7 +3,7 @@ import { getMetaMask } from "../metamask";
 import { DappeteerPage } from "../page";
 import { Dappeteer, MetaMaskOptions } from "../types";
 
-import { waitForOverlay } from "../helpers";
+import { clickOnButton, waitForOverlay } from "../helpers";
 import {
   acceptTheRisks,
   closePopup,
@@ -71,11 +71,12 @@ export async function setupBootstrappedMetaMask(
   await metaMask.page.evaluate(() => {
     (window as unknown as { signedIn: boolean }).signedIn = false;
   });
-  await page.waitForTimeout(100);
+  await page.waitForTimeout(200);
   await waitForOverlay(page);
   await metaMask.unlock(password);
 
   await closePopup(page);
+  if (browser.isMetaMaskFlask()) await clickOnButton(page, "No");
 
   return metaMask;
 }
