@@ -71,8 +71,9 @@ export async function setupBootstrappedMetaMask(
   await metaMask.page.evaluate(() => {
     (window as unknown as { signedIn: boolean }).signedIn = false;
   });
-  await page.waitForTimeout(200);
+  await page.waitForTimeout(100);
   await waitForOverlay(page);
+  if (browser.isMetaMaskFlask()) await waitForOverlay(page);
   await metaMask.unlock(password);
 
   await closePopup(page);
