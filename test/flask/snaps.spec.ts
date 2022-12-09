@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { DappeteerPage, Dappeteer } from "../../src";
-import { EXAMPLE_WEBSITE, TestContext } from "../constant";
+import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
 
 describe("snaps", function () {
@@ -36,6 +36,7 @@ describe("snaps", function () {
   });
 
   describe("should test snap methods", function () {
+    const installationSnapUrl = "https://google.com/";
     let testPage: DappeteerPage;
     let snapId: string;
     let permissionSnapId: string;
@@ -52,14 +53,16 @@ describe("snaps", function () {
         this.skip();
       }
       snapId = await metaMask.snaps.installSnap(
-        this.snapServers[Snaps.METHODS_SNAP]
+        this.snapServers[Snaps.METHODS_SNAP],
+        { installationSnapUrl }
       );
       permissionSnapId = await metaMask.snaps.installSnap(
-        this.snapServers[Snaps.PERMISSIONS_SNAP]
+        this.snapServers[Snaps.PERMISSIONS_SNAP],
+        { installationSnapUrl }
       );
 
       testPage = await metaMaskPage.browser().newPage();
-      await testPage.goto(EXAMPLE_WEBSITE);
+      await testPage.goto(installationSnapUrl);
       return testPage;
     });
 
