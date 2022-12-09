@@ -91,6 +91,7 @@ export const installSnap =
     }
 
     const result = await installAction;
+    await installPage.waitForTimeout(1000);
     await installPage.close({ runBeforeUnload: true });
     if (!(snapIdOrLocation in result.snaps)) {
       throw new Error("Failed to install snap");

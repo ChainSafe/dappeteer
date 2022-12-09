@@ -12,28 +12,33 @@ describe("snaps", function () {
     metaMaskPage = this.metaMaskPage;
   });
 
-  beforeEach(function (this: TestContext) {
-    //skip those tests for non flask metamask
-    if (!this.browser.isMetaMaskFlask()) {
-      this.skip();
-    }
-  });
+  describe("Snaps Installation", () => {
+    beforeEach(function (this: TestContext) {
+      //skip those tests for non flask metamask
+      if (!this.browser.isMetaMaskFlask()) {
+        this.skip();
+      }
+    });
 
-  it("should install base snap from local server", async function (this: TestContext) {
-    await metaMask.snaps.installSnap(this.snapServers[Snaps.BASE_SNAP]);
-  });
+    it("should install base snap from local server", async function (this: TestContext) {
+      await metaMask.snaps.installSnap(this.snapServers[Snaps.BASE_SNAP]);
+    });
 
-  it("should install permissions snap local server", async function (this: TestContext) {
-    await metaMask.snaps.installSnap(this.snapServers[Snaps.PERMISSIONS_SNAP]);
-  });
+    it("should install permissions snap local server", async function (this: TestContext) {
+      await metaMask.snaps.installSnap(
+        this.snapServers[Snaps.PERMISSIONS_SNAP]
+      );
+    });
 
-  it("should install keys snap from local server", async function (this: TestContext) {
-    await metaMask.snaps.installSnap(this.snapServers[Snaps.KEYS_SNAP]);
+    it("should install keys snap from local server", async function (this: TestContext) {
+      await metaMask.snaps.installSnap(this.snapServers[Snaps.KEYS_SNAP]);
+    });
   });
 
   describe("should test snap methods", function () {
     let testPage: DappeteerPage;
     let snapId: string;
+    let permissionSnapId: string;
 
     beforeEach(function (this: TestContext) {
       //skip those tests for non flask metamask
@@ -49,6 +54,10 @@ describe("snaps", function () {
       snapId = await metaMask.snaps.installSnap(
         this.snapServers[Snaps.METHODS_SNAP]
       );
+      permissionSnapId = await metaMask.snaps.installSnap(
+        this.snapServers[Snaps.PERMISSIONS_SNAP]
+      );
+
       testPage = await metaMaskPage.browser().newPage();
       await testPage.goto(EXAMPLE_WEBSITE);
       return testPage;
@@ -78,10 +87,6 @@ describe("snaps", function () {
     });
 
     it("should return all notifications", async function (this: TestContext) {
-      const permissionSnapId = await metaMask.snaps.installSnap(
-        this.snapServers[Snaps.PERMISSIONS_SNAP]
-      );
-
       const emitter = await metaMask.snaps.getNotificationEmitter();
       const notificationPromise = emitter.waitForNotification();
 
