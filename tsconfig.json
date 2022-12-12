@@ -3,12 +3,24 @@
     "target": "ES2021",
     "module": "commonjs",
     "moduleResolution": "node",
-    "lib": ["es2021", "dom"],
-    "typeRoots": ["./node_modules/@types", "./types"],
+    "lib": [
+      "es2021",
+      "dom"
+    ],
+    "typeRoots": [
+      "./node_modules/@types",
+      "./types"
+    ],
     "declaration": true,
     "esModuleInterop": true,
+    "skipLibCheck": true,
     "outDir": "dist"
   },
-  "files": ["./node_modules/@metamask/snap-types/global.d.ts"],
-  "include": ["src/**/*", "test/**/*"]
+  "files": [
+    "./node_modules/@metamask/snap-types/global.d.ts"
+  ],
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ]
 }

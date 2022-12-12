@@ -1,16 +1,18 @@
 import { expect } from "chai";
 
-import web3 from "web3";
+import Web3 from "web3";
+import { Contract } from "web3-eth-contract";
 import { Dappeteer } from "../src";
 import { DappeteerPage } from "../src/page";
 
 import { ACCOUNT_ADDRESS, EXAMPLE_WEBSITE, TestContext } from "./constant";
 import { ContractInfo } from "./contract/contractInfo";
-import { Contract } from "./deploy";
+import { TestContract } from "./deploy";
+
 import { requestAccounts, sendTx } from "./testPageFunctions";
 
 describe("contract interactions", function () {
-  let contract: Contract;
+  let contract: TestContract;
   let testPage: DappeteerPage;
   let metamask: Dappeteer;
 
@@ -18,7 +20,6 @@ describe("contract interactions", function () {
     testPage = await this.browser.newPage();
     await testPage.goto(EXAMPLE_WEBSITE, { waitUntil: "networkidle" });
     metamask = this.metaMask;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     contract = this.contract;
     try {
       const connectionPromise = testPage.evaluate(requestAccounts);
@@ -36,13 +37,13 @@ describe("contract interactions", function () {
   });
 
   it("should have increased count", async () => {
-    const web3Instance = new web3();
-    const counterContract = new web3Instance.eth.Contract(ContractInfo.abi);
+    const web3Instance = new Web3();
+    const counterContract: TestContract = new Contract(
+      ContractInfo.abi,
+      web3Instance
+    );
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    const contractData = counterContract.methods
-      .increase()
-      .encodeABI() as string;
+    const contractData = counterContract.methods.increase().encodeABI();
 
     const txToSend = {
       from: ACCOUNT_ADDRESS,
@@ -65,8 +66,7 @@ describe("contract interactions", function () {
   });
 });
 
-function getCounterNumber(contract): Promise<number> {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+function getCounterNumber(contract: TestContract): Promise<number> {
   return contract.methods
     .count()
     .call()
