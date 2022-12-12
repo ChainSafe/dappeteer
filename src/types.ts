@@ -100,8 +100,8 @@ export type Dappeteer = {
       opts?: {
         customSteps?: InstallStep[];
         version?: string;
-      },
-      installationSnapUrl?: string
+        installationSnapUrl?: string;
+      }
     ) => Promise<string>;
     /**
      * Accepts snap_confirm dialog
