@@ -9,7 +9,7 @@ export const approve = (page: DappeteerPage) => async (): Promise<void> => {
     await waitForOverlay(page);
 
     // TODO: step 1 of connect chose account to connect?
-    await clickOnButton(page, "Next", { timeout: 100 });
+    await clickOnButton(page, "Next", { timeout: 1000 });
     await clickOnButton(page, "Connect", { timeout: 2000 });
   }, 5);
 };

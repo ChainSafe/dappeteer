@@ -7,6 +7,6 @@ export const acceptDialog =
       await page.bringToFront();
       await page.reload();
       await waitForOverlay(page);
-      await clickOnButton(page, "Approve", { timeout: 100 });
+      await clickOnButton(page, "Approve", { timeout: 1000 });
     }, 5);
   };
