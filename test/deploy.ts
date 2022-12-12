@@ -1,10 +1,12 @@
 import * as path from "path";
 import { exec } from "child_process";
 
-import ganache, { Provider, Server, ServerOptions } from "ganache";
+import ganache, { EthereumProvider, Server, ServerOptions } from "ganache";
 import Web3 from "web3";
+import { Contract } from "web3-eth-contract";
 
 import { compileContracts } from "./contract";
+import { ContractInfo } from "./contract/contractInfo";
 
 const counterContract: { address: string } | null = null;
 
@@ -23,26 +25,26 @@ export async function startLocalEthereum(
   return server;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type Contract = any | null;
+export type TestContract = Contract<typeof ContractInfo.abi>;
 
-export async function deployContract(provider: Provider): Promise<Contract> {
+export async function deployContract(
+  provider: EthereumProvider
+): Promise<TestContract> {
   console.log("Deploying test contract...");
-  const web3 = new Web3(provider as unknown as Web3["currentProvider"]);
+  const web3 = new Web3(provider);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const compiledContracts = compileContracts();
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
   const counterContractInfo = compiledContracts["Counter.sol"]["Counter"];
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-member-access
-  const counterContractDef = new web3.eth.Contract(counterContractInfo.abi);
+  const counterContractDef = new Contract(ContractInfo.abi, web3);
   const accounts = await web3.eth.getAccounts();
   const counterContract = await counterContractDef
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     .deploy({ data: counterContractInfo.evm.bytecode.object })
-    .send({ from: accounts[0], gas: 4000000 });
+    .send({ from: accounts[0], gas: "4000000" });
   console.log("Contract deployed at", counterContract.options.address);
 
-  return { ...counterContract, ...counterContract, ...counterContract.options };
+  return counterContract;
 }
 
 export enum Snaps {
