@@ -50,7 +50,7 @@ export async function setupMetaMask<Options = MetaMaskOptions>(
   if (browser.isMetaMaskFlask()) {
     steps = flaskMetaMaskSteps;
   }
-  await page.setViewport({ height: 800, width: 800 });
+  await page.setViewport({ height: 1920, width: 1080 });
   // goes through the installation steps required by MetaMask
   for (const step of steps) {
     await step(page, options);
