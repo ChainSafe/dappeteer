@@ -1,13 +1,15 @@
-import { launch, setupMetaMask } from "../index";
+import puppeteer from 'puppeteer';
 
-import { getDappeteerConfig } from "./config";
+import { launch, setupMetamask } from '../index';
+
+import { getDappeteerConfig } from './config';
 
 export default async function (): Promise<void> {
-  const { dappeteer, metaMask } = await getDappeteerConfig();
+  const { dappeteer, metamask } = await getDappeteerConfig();
 
-  const browser = await launch(dappeteer);
+  const browser = await launch(puppeteer, dappeteer);
   try {
-    await setupMetaMask(browser, metaMask);
+    await setupMetamask(browser, metamask);
     global.browser = browser;
   } catch (error) {
     // eslint-disable-next-line no-console

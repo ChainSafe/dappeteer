@@ -1,4 +1,4 @@
-name: "Validate compatiblity with MetaMask"
+name: "Validate compatiblity with metamask"
 
 on:
   schedule:

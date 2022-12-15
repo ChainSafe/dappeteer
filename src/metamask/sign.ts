@@ -1,33 +1,16 @@
-import {
-  clickOnButton,
-  getElementByContent,
-  retry,
-  waitForOverlay,
-} from "../helpers";
+import { Page } from 'puppeteer';
 
-import { DappeteerPage } from "../page";
-import { GetSingedIn } from ".";
+import { clickOnButton } from '../helpers';
 
-export const sign =
-  (page: DappeteerPage, getSingedIn: GetSingedIn) =>
-  async (): Promise<void> => {
-    await page.bringToFront();
-    if (!(await getSingedIn())) {
-      throw new Error("You haven't signed in yet");
-    }
+import { GetSingedIn } from '.';
 
-    //retry till we get prompt
-    await retry(async () => {
-      await page.bringToFront();
-      await page.reload();
-      await waitForOverlay(page);
-      await getElementByContent(page, "Sign", "button", { timeout: 200 });
-    }, 5);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const sign = (page: Page, getSingedIn: GetSingedIn, version?: string) => async (): Promise<void> => {
+  await page.bringToFront();
+  if (!(await getSingedIn())) {
+    throw new Error("You haven't signed in yet");
+  }
+  await page.reload();
 
-    await clickOnButton(page, "Sign");
-
-    // wait for MM to be back in a stable state
-    await page.waitForSelector(".app-header", {
-      visible: true,
-    });
-  };
+  await clickOnButton(page, 'Sign');
+};

@@ -1,18 +1,23 @@
-import { clickOnButton, profileDropdownClick } from "../helpers";
-import { DappeteerPage } from "../page";
+import { Page } from 'puppeteer';
 
-import { GetSingedIn, SetSignedIn } from "./index";
+import { clickOnButton, openProfileDropdown } from '../helpers';
 
-export const lock =
-  (page: DappeteerPage, setSignedIn: SetSignedIn, getSingedIn: GetSingedIn) =>
-  async (): Promise<void> => {
-    if (!(await getSingedIn())) {
-      throw new Error("You can't sign out because you haven't signed in yet");
-    }
-    await page.bringToFront();
+import { GetSingedIn, SetSignedIn } from './index';
 
-    await profileDropdownClick(page);
-    await clickOnButton(page, "Lock");
+export const lock = (
+  page: Page,
+  setSignedIn: SetSignedIn,
+  getSingedIn: GetSingedIn,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  version?: string,
+) => async (): Promise<void> => {
+  if (!(await getSingedIn())) {
+    throw new Error("You can't sign out because you haven't signed in yet");
+  }
+  await page.bringToFront();
 
-    await setSignedIn(false);
-  };
+  await openProfileDropdown(page);
+  await clickOnButton(page, 'Lock');
+
+  await setSignedIn(false);
+};

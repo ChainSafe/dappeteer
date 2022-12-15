@@ -1,6 +1,6 @@
 # dAppeteer with jest
 
-As dAppeteer is Puppeteer with MetaMask. Using it with jest is pretty similar to `jest-puppeteer`.
+As dAppeteer is Puppeteer with Metamask. Using it with jest is pretty similar to `jest-puppeteer`.
 
 ## Use preset
 
@@ -17,7 +17,7 @@ describe('Ethereum', () => {
     await page.goto('https://ethereum.org/en/');
   });
 
-  it('should be titled "Home | ethereum.org"', async () => {
+  it('should be titled "Google"', async () => {
     await expect(page.title()).resolves.toMatch('Home | ethereum.org');
   });
 });
@@ -28,7 +28,7 @@ To configure Dappeteer to use custom config values as `metamaskVersion` or own `
 
 **example of `dappeteer.config.js`**
 ``` js
-/** @type {import('@chainsafe/dappeteer').DappeteerJestConfig} */
+/** @type {import('@chainsafe/dappeteer').DappateerJestConfig} */
 
 const config = {
     dappeteer: {
@@ -47,7 +47,7 @@ module.exports = config;
 
 In case you need more customisable use case you can rebuild it from scratch.
 
-First let's define our entry `jest.config.js`
+First lets define or entry `jest.config.js`
 ```js
 // jest.config.js
 
@@ -58,7 +58,7 @@ module.exports = {
 };
 ```
 
-Then create `setup.js` with responsibility to start Puppeteer with MetaMask and `teardown.js` for clean up after tests
+Then create `setup.js` wit responsibility to start Puppeteer with Metamask and `teardown.js` for clean up after test's
 ```js
 // setup.js
 
@@ -66,18 +66,18 @@ const { writeFile } = require('fs').promises;
 const os = require('os');
 const path = require('path');
 
-const { launch, setupMetaMask } = require('@chainsafe/dappeteer');
+const { launch, setupMetamask } = require('@chainsafe/dappeteer');
 const mkdirp = require('mkdirp');
 const puppeteer = require('puppeteer');
 
-const { metaMaskOptions, PUPPETEER_CONFIG } = require('./jest.config');
+const { metamaskOptions, PUPPETEER_CONFIG } = require('./jest.config');
 
 const DIR = path.join(os.tmpdir(), 'jest_dappeteer_global_setup');
 
 module.exports = async function () {
   const browser = await launch(puppeteer, PUPPETEER_CONFIG);
   try {
-    await setupMetaMask(browser, metaMaskOptions);
+    await setupMetamask(browser, metamaskOptions);
     global.browser = browser;
   } catch (error) {
     console.log(error);
@@ -115,7 +115,7 @@ const os = require('os');
 const path = require('path');
 const puppeteer = require('puppeteer');
 const NodeEnvironment = require('jest-environment-node');
-const { getMetaMaskWindow } = require('@chainsafe/dappeteer');
+const { getMetamaskWindow } = require('@chainsafe/dappeteer');
 
 const DIR = path.join(os.tmpdir(), 'jest_dappeteer_global_setup');
 
@@ -131,7 +131,7 @@ class DappeteerEnvironment extends NodeEnvironment {
       browserWSEndpoint: wsEndpoint,
     });
     this.global.browser = browser;
-    this.global.metamask = await getMetaMaskWindow(browser);
+    this.global.metamask = await getMetamaskWindow(browser);
   }
 }
 

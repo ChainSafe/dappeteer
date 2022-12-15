@@ -1,12 +1,10 @@
-import { Config } from "@jest/types";
-import NodeEnvironment from "jest-environment-node";
-import puppeteer from "puppeteer";
+import NodeEnvironment from 'jest-environment-node';
+import puppeteer from 'puppeteer';
 
-import { getMetaMaskWindow } from "../index";
-import { DPuppeteerBrowser } from "../puppeteer";
+import { getMetamaskWindow } from '../index';
 
 class DappeteerEnvironment extends NodeEnvironment {
-  constructor(config: Config.ProjectConfig) {
+  constructor(config) {
     super(config);
   }
 
@@ -16,7 +14,7 @@ class DappeteerEnvironment extends NodeEnvironment {
     // get the wsEndpoint
     const wsEndpoint = process.env.PUPPETEER_WS_ENDPOINT;
     if (!wsEndpoint) {
-      throw new Error("wsEndpoint not found");
+      throw new Error('wsEndpoint not found');
     }
 
     // connect to puppeteer
@@ -24,9 +22,7 @@ class DappeteerEnvironment extends NodeEnvironment {
       browserWSEndpoint: wsEndpoint,
     });
     this.global.browser = browser;
-    this.global.metamask = await getMetaMaskWindow(
-      new DPuppeteerBrowser(browser, false)
-    );
+    this.global.metamask = await getMetamaskWindow(browser);
     this.global.page = await browser.newPage();
   }
 }

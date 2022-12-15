@@ -1,15 +1,14 @@
-import { clickOnButton, retry, waitForOverlay } from "../helpers";
-import { DappeteerPage } from "../page";
+import { Page } from 'puppeteer';
+
+import { clickOnButton } from '../helpers';
 
 // TODO: thing about renaming this method?
-export const approve = (page: DappeteerPage) => async (): Promise<void> => {
-  await retry(async () => {
-    await page.bringToFront();
-    await page.reload();
-    await waitForOverlay(page);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const approve = (page: Page, version?: string) => async (): Promise<void> => {
+  await page.bringToFront();
+  await page.reload();
 
-    // TODO: step 1 of connect chose account to connect?
-    await clickOnButton(page, "Next", { timeout: 1000 });
-    await clickOnButton(page, "Connect", { timeout: 2000 });
-  }, 5);
+  // TODO: step 1 of connect chose account to connect?
+  await clickOnButton(page, 'Next');
+  await clickOnButton(page, 'Connect');
 };
