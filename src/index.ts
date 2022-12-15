@@ -8,4 +8,4 @@ export * from "./setup";
 export { DapeteerJestConfig } from "./jest/global";
 
 // default constants
-export const RECOMMENDED_METAMASK_VERSION = "v10.20.0";
+export const RECOMMENDED_METAMASK_VERSION = "v10.23.0";

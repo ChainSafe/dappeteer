@@ -1,5 +1,3 @@
-import { AbiItem } from "web3-utils";
-
 export const ContractInfo = {
   abi: [
     {
@@ -26,7 +24,7 @@ export const ContractInfo = {
       stateMutability: "nonpayable",
       type: "function",
     },
-  ] as AbiItem[],
+  ],
   evm: {
     bytecode: {
       linkReferences: {},
@@ -65,4 +63,4 @@ export const ContractInfo = {
       signature: "0xe8927fbc",
     },
   ],
-};
+} as const;

@@ -1,10 +1,9 @@
 import { Provider, Server } from "ganache";
 
-import web3 from "web3";
-import { Dappeteer, DappeteerPage } from "../src";
+import Web3 from "web3";
+import { Dappeteer, DappeteerPage, DappeteerBrowser } from "../src";
 
-import { DappeteerBrowser } from "../src/browser";
-import { Contract, Snaps } from "./deploy";
+import { Snaps, TestContract } from "./deploy";
 
 export type InjectableContext = Readonly<{
   provider: Provider;
@@ -13,7 +12,7 @@ export type InjectableContext = Readonly<{
   browser: DappeteerBrowser;
   metaMask: Dappeteer;
   metaMaskPage: DappeteerPage;
-  contract: Contract;
+  contract: TestContract;
   flask: boolean;
 }>;
 
@@ -26,7 +25,7 @@ export const LOCAL_PREFUNDED_MNEMONIC =
   "pioneer casual canoe gorilla embrace width fiction bounce spy exhibit another dog";
 export const PASSWORD = "password1234";
 
-export const MESSAGE_TO_SIGN = web3.utils.sha3("TEST"); // "0x852daa74cc3c31fe64542bb9b8764cfb91cc30f9acf9389071ffb44a9eefde46";
+export const MESSAGE_TO_SIGN = Web3.utils.sha3("TEST"); // "0x852daa74cc3c31fe64542bb9b8764cfb91cc30f9acf9389071ffb44a9eefde46";
 export const EXPECTED_MESSAGE_SIGNATURE =
   "0x727c2e31ae342588b680dfc502f0d6a7b8d0f8b9afc4ca313bdad9dca80429741f50b78c2c98ac2f18c4ec1e8fade88c8d7477766d6ceeb1f3a3ddbe7d80e90f1c";
 export const EXPECTED_LONG_TYPED_DATA_SIGNATURE =
