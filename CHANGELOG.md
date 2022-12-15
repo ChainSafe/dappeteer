@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.2](https://github.com/ChainSafe/dappeteer/compare/v4.0.1...v4.0.2) (2022-12-15)
+
+
+### Bug Fixes
+
+* dappeteer dependency ([#229](https://github.com/ChainSafe/dappeteer/issues/229)) ([#230](https://github.com/ChainSafe/dappeteer/issues/230)) ([2b6c213](https://github.com/ChainSafe/dappeteer/commit/2b6c2136701df55a7cb27528c7c4428553adb7a1))
+
 ## [4.0.1](https://github.com/ChainSafe/dappeteer/compare/v4.0.0...v4.0.1) (2022-12-15)
 
 
