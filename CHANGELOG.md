@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.0.1](https://github.com/ChainSafe/dappeteer/compare/v4.0.0...v4.0.1) (2022-12-15)
+
+
+### Bug Fixes
+
+* viewport size, timeouts ([#226](https://github.com/ChainSafe/dappeteer/issues/226)) ([cb6abfc](https://github.com/ChainSafe/dappeteer/commit/cb6abfc4bf751addd2e3f1746db3c4183f495c10))
+
 ## [4.0.0](https://github.com/ChainSafe/dappeteer/compare/v3.0.0...v4.0.0) (2022-12-15)
 
 
