@@ -1,0 +1,7 @@
+parallel: false
+recursive: true
+color: true
+timeout: 20000
+exit: true
+spec:
+  - 'test/**/*.spec.ts'

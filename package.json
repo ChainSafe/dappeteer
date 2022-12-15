@@ -6,7 +6,6 @@
   "typings": "dist/index.d.ts",
   "files": [
     "jest-preset.js",
-    "metamask",
     "dist"
   ],
   "engines": {
@@ -17,8 +16,12 @@
     "build": "tsc -p tsconfig.build.json",
     "lint": "eslint --color --ext .ts src/ test/",
     "lint:fix": "yarn run lint --fix",
-    "test": "mocha",
-    "test:dev": "mocha --timeout 36000000"
+    "test:mm": "mocha --bail --require ts-node/register --require test/global.ts",
+    "test:flask": "mocha --bail --require ts-node/register --require test/global_flask.ts",
+    "test:puppeteer:mm": "AUTOMATION=puppeteer yarn run test:mm",
+    "test:puppeteer:flask": "AUTOMATION=puppeteer yarn run test:flask",
+    "test:playwright:mm": "AUTOMATION=playwright yarn run test:mm",
+    "test:playwright:flask": "AUTOMATION=playwright yarn run test:flask"
   },
   "repository": {
     "type": "git",
@@ -38,33 +41,47 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@types/chai-as-promised": "^7.1.5",
-    "chai-as-promised": "^7.1.1",
-    "node-stream-zip": "^1.13.0"
+    "@metamask/providers": "^9.1.0",
+    "node-stream-zip": "^1.13.0",
+    "serve-handler": "5.0.8",
+    "strict-event-emitter": "^0.2.8"
   },
   "devDependencies": {
+    "@chainsafe/eslint-config": "^1.0.0",
+    "@ganache/console.log": "^0.2.0",
     "@jest/types": "^27.1.1",
+    "@metamask/snap-types": "^0.22.0",
+    "@metamask/snaps-cli": "^0.22.0",
+    "@rushstack/eslint-patch": "^1.2.0",
     "@types/chai": "^4.2.22",
-    "@types/mocha": "^7.0.2",
-    "@typescript-eslint/eslint-plugin": "^4.15.0",
-    "@typescript-eslint/parser": "^4.15.0",
+    "@types/chai-as-promised": "^7.1.5",
+    "@types/mocha": "^9.1.1",
+    "@types/serve-handler": "^6.1.1",
     "chai": "^4.3.4",
-    "eslint": "^7.20.0",
-    "eslint-config-prettier": "^7.2.0",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-prettier": "^3.3.1",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^8.24.0",
     "ganache": "^7.4.3",
     "jest-environment-node": "^27.1.1",
-    "mocha": "7.2.0",
+    "mocha": "^10.0.0",
+    "playwright": "^1.27.1",
     "prettier": "^2.2.1",
     "puppeteer": "14.0.0",
-    "serve-handler": "5.0.8",
     "solc": "0.5.2",
     "ts-node": "10.8.1",
-    "typescript": "^4.7",
-    "web3": "1.3.4"
+    "typescript": "~4.7",
+    "web3": "4.0.1-alpha.2",
+    "web3-eth-contract": "4.0.1-alpha.2"
   },
   "peerDependencies": {
+    "playwright": ">=1",
     "puppeteer": ">13"
+  },
+  "peerDependenciesMeta": {
+    "soy-puppeteer": {
+      "optional": true
+    },
+    "playwright": {
+      "optional": true
+    }
   }
 }

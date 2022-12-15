@@ -1,33 +1,24 @@
-import { Page } from 'puppeteer';
+import { clickOnButton, retry, waitForOverlay } from "../helpers";
+import { DappeteerPage } from "../page";
 
-import { clickOnButton, clickOnElement, getInputByLabel, typeOnInputField } from '../helpers';
-import { AddToken } from '../index';
+export const acceptAddToken =
+  (page: DappeteerPage) => async (): Promise<void> => {
+    await retry(async () => {
+      await page.bringToFront();
+      await page.reload();
+      await waitForOverlay(page);
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const addToken = (page: Page, version?: string) => async ({
-  tokenAddress,
-  symbol,
-  decimals = 0,
-}: AddToken): Promise<void> => {
-  await page.bringToFront();
+      await clickOnButton(page, "Add token", { timeout: 500 });
+    }, 5);
+  };
 
-  await clickOnElement(page, 'Import tokens');
-  await typeOnInputField(page, 'Token Contract Address', tokenAddress);
+export const rejectAddToken =
+  (page: DappeteerPage) => async (): Promise<void> => {
+    await retry(async () => {
+      await page.bringToFront();
+      await page.reload();
+      await waitForOverlay(page);
 
-  // wait to metamask pull token data
-  // TODO: handle case when contract is not containing symbol
-  const symbolInput = await getInputByLabel(page, 'Token Symbol');
-  await page.waitForFunction((node) => !!node.value, {}, symbolInput);
-
-  if (symbol) {
-    await clickOnElement(page, 'Edit');
-    await typeOnInputField(page, 'Token Symbol', symbol, true);
-  }
-
-  const decimalsInput = await getInputByLabel(page, 'Token Decimal');
-  const isDisabled = await page.evaluate((node) => node.disabled, decimalsInput);
-  if (!isDisabled) await decimalsInput.type(String(decimals));
-
-  await clickOnButton(page, 'Add Custom Token');
-  await clickOnButton(page, 'Import Tokens');
-};
+      await clickOnButton(page, "Cancel", { timeout: 500 });
+    }, 5);
+  };

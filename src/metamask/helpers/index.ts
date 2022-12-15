@@ -1,3 +1,3 @@
-export * from './getTokenBalance';
-export * from './deleteAccount';
-export * from './deleteNetwork';
+export * from "./getTokenBalance";
+export * from "./deleteAccount";
+export * from "./deleteNetwork";

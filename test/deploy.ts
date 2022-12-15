@@ -1,12 +1,12 @@
-import fs from 'fs';
-import * as http from 'http';
-import * as path from 'path';
+import * as path from "path";
+import { exec } from "child_process";
 
-import ganache, { Provider } from 'ganache';
-import handler from 'serve-handler';
-import Web3 from 'web3';
+import ganache, { EthereumProvider, Server, ServerOptions } from "ganache";
+import Web3 from "web3";
+import { Contract } from "web3-eth-contract";
 
-import { compileContracts } from './contract';
+import { compileContracts } from "./contract";
+import { ContractInfo } from "./contract/contractInfo";
 
 const counterContract: { address: string } | null = null;
 
@@ -14,62 +14,65 @@ export function getCounterContract(): { address: string } | null {
   return counterContract;
 }
 
-async function deploy(): Promise<{ address: string }> {
-  const provider = await waitForGanache();
-  await startTestServer();
-  return await deployContract(provider);
-}
-
-async function waitForGanache(): Promise<Provider> {
-  console.log('Starting ganache...');
-  const server = ganache.server({ seed: 'asd123', logging: { quiet: true } });
+export async function startLocalEthereum(
+  opts?: ServerOptions
+): Promise<Server<"ethereum">> {
+  console.log("Starting ganache...");
+  opts = opts ?? {};
+  const server = ganache.server({ ...opts, logging: { quiet: true } });
   await server.listen(8545);
-  console.log('Ganache running at http://localhost:8545');
-  return server.provider;
+  console.log("Ganache running at http://localhost:8545");
+  return server;
 }
 
-async function deployContract(provider: Provider): Promise<{ address: string } | null> {
-  console.log('Deploying test contract...');
-  const web3 = new Web3((provider as unknown) as Web3['currentProvider']);
+export type TestContract = Contract<typeof ContractInfo.abi>;
+
+export async function deployContract(
+  provider: EthereumProvider
+): Promise<TestContract> {
+  console.log("Deploying test contract...");
+  const web3 = new Web3(provider);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const compiledContracts = compileContracts();
-  const counterContractInfo = compiledContracts['Counter.sol']['Counter'];
-  const counterContractDef = new web3.eth.Contract(counterContractInfo.abi);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+  const counterContractInfo = compiledContracts["Counter.sol"]["Counter"];
+  const counterContractDef = new Contract(ContractInfo.abi, web3);
   const accounts = await web3.eth.getAccounts();
   const counterContract = await counterContractDef
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     .deploy({ data: counterContractInfo.evm.bytecode.object })
-    .send({ from: accounts[0], gas: 4000000 });
-  console.log('Contract deployed at', counterContract.options.address);
+    .send({ from: accounts[0], gas: "4000000" });
+  console.log("Contract deployed at", counterContract.options.address);
 
-  // create file data for dapp
-  const dataJsPath = path.join(__dirname, 'dapp', 'data.js');
-  const data = `const ContractInfo = ${JSON.stringify(
-    { ...counterContractInfo, ...counterContract.options },
-    null,
-    2,
-  )}`;
-  await new Promise((resolve) => {
-    fs.writeFile(dataJsPath, data, resolve);
-  });
-  console.log('path:', dataJsPath);
-
-  return { ...counterContract, ...counterContract, ...counterContract.options };
+  return counterContract;
 }
 
-async function startTestServer(): Promise<void> {
-  console.log('Starting test server...');
-  const server = http.createServer((request, response) => {
-    return handler(request, response, {
-      public: path.join(__dirname, 'dapp'),
-      cleanUrls: true,
-    });
-  });
-
-  await new Promise<void>((resolve) => {
-    server.listen(8080, () => {
-      console.log('Server running at http://localhost:8080');
-      resolve();
-    });
-  });
+export enum Snaps {
+  BASE_SNAP = "base-snap",
+  KEYS_SNAP = "keys-snap",
+  PERMISSIONS_SNAP = "permissions-snap",
+  METHODS_SNAP = "methods-snap",
 }
 
-export default deploy;
+export async function buildSnaps(): Promise<Record<Snaps, string>> {
+  return {
+    [Snaps.BASE_SNAP]: await buildSnap(Snaps.BASE_SNAP),
+    [Snaps.KEYS_SNAP]: await buildSnap(Snaps.KEYS_SNAP),
+    [Snaps.PERMISSIONS_SNAP]: await buildSnap(Snaps.PERMISSIONS_SNAP),
+    [Snaps.METHODS_SNAP]: await buildSnap(Snaps.METHODS_SNAP),
+  };
+}
+
+async function buildSnap(snap: Snaps): Promise<string> {
+  console.log(`Building ${snap}...`);
+  await new Promise((resolve, reject) => {
+    exec(`cd ./test/flask/${snap} && npx mm-snap build`, (error, stdout) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(stdout);
+    });
+  });
+  return `${path.resolve("./test/flask", snap)}`;
+}

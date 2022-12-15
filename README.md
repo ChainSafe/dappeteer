@@ -12,28 +12,87 @@ $ yarn add @chainsafe/dappeteer
 ## Usage
 
 ```js
-import puppeteer from 'puppeteer';
 import dappeteer from '@chainsafe/dappeteer';
 
 async function main() {
-  const [metamask, page] = await dappeteer.bootstrap(puppeteer, { metamaskVersion: 'v10.15.0' });
+  const { metaMask, browser } = await dappeteer.bootstrap();
+
+  // create a new page and visit your dapp
+  const dappPage = browser.newPage();
+  await dappPage.goto('http://my-dapp.com');
 
   // you can change the network if you want
-  await metamask.switchNetwork('ropsten');
+  await metaMask.switchNetwork('goerli');
 
-  // you can import a token
-  await metamask.addToken({
-    tokenAddress: '0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa',
-    symbol: 'KAKI',
-  });
+  // do something in your dapp that prompts MetaMask to add a Token
+  const addTokenButton = await dappPage.$('#add-token');
+  await addTokenButton.click();
+  // instruct MetaMask to accept this request
+  await metaMask.acceptAddToken();
 
-  // go to a dapp and do something that prompts MetaMask to confirm a transaction
-  await page.goto('http://my-dapp.com');
-  const payButton = await page.$('#pay-with-eth');
+  // do something that prompts MetaMask to confirm a transaction
+  const payButton = await dappPage.$('#pay-with-eth');
   await payButton.click();
 
   // 🏌
-  await metamask.confirmTransaction();
+  await metaMask.confirmTransaction();
+}
+
+main();
+```
+
+## Usage with Snaps
+
+```js
+import dappeteer from '@chainsafe/dappeteer';
+import { exec } from "child_process";
+
+async function buildSnap(): Promise<string> {
+  console.log(`Building my-snap...`);
+  await new Promise((resolve, reject) => {
+    exec(`cd ./my-snap && npx mm-snap build`, (error, stdout) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+      resolve(stdout);
+    });
+  });
+
+  return "./my-snap";
+}
+
+async function main() {
+  // you need to have a webpage open to interact with MetaMask, you can also visit a dApp page
+  const dappPage = browser.newPage();
+  await dappPage.goto('http://example.org/');
+
+  // build your local snap
+  const builtSnapDir = await buildSnap()
+
+  // setup dappateer and install your snap
+  const { snapId, metaMask, dappPage } = await dappeteer.initSnapEnv({
+    snapIdOrLocation: builtSnapDir
+  });
+
+  // invoke a method from your snap that promps users with approve/reject dialog
+  metaMask.snaps.invokeSnap(dappPage, snapId, "my-method")
+
+  // instruct MetaMask to accept this request
+  await metaMask.snaps.acceptDialog();
+
+  // get the notification emitter and the promise that will receive the notifications
+  const emitter = await metaMask.snaps.getNotificationEmitter();
+  const notificationPromise = emitter.waitForNotification();
+
+  // do something that prompts you snap to emit notifications
+  await metaMask.snaps.invokeSnap(dappPage, snapId, "notify");
+
+  // Make sure the notification promise has resolved
+  await notificationPromise;
+
+  // You can now read the snap notifications and run tests against them
+  const notifications = await metaMask.snaps.getAllNotifications();
 }
 
 main();

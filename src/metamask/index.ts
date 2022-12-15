@@ -1,67 +1,93 @@
-import { Browser, Page } from 'puppeteer';
-
-import { Dappeteer } from '..';
-
-import { addNetwork } from './addNetwork';
-import { addToken } from './addToken';
-import { approve } from './approve';
-import { confirmTransaction } from './confirmTransaction';
-import { deleteAccount, getTokenBalance, deleteNetwork } from './helpers';
-import { importPk } from './importPk';
-import { lock } from './lock';
-import { sign } from './sign';
-import { switchAccount } from './switchAccount';
-import { switchNetwork } from './switchNetwork';
-import { unlock } from './unlock';
+import { Dappeteer } from "..";
+import { DappeteerBrowser } from "../browser";
+import { DappeteerPage } from "../page";
+import { acceptDialog } from "../snap/acceptDialog";
+import { rejectDialog } from "../snap/rejectDialog";
+import { getAllNotifications, installSnap, invokeSnap } from "../snap";
+import { getNotificationEmitter } from "../snap/getNotificationEmitter";
+import { acceptAddNetwork, rejectAddNetwork } from "./addNetwork";
+import { approve } from "./approve";
+import { confirmTransaction } from "./confirmTransaction";
+import { deleteAccount, deleteNetwork, getTokenBalance } from "./helpers";
+import { importPk } from "./importPk";
+import { lock } from "./lock";
+import { sign } from "./sign";
+import { signTypedData } from "./signTypedData";
+import { switchAccount } from "./switchAccount";
+import { switchNetwork } from "./switchNetwork";
+import { unlock } from "./unlock";
+import { acceptAddToken, rejectAddToken } from "./addToken";
 
 export type SetSignedIn = (state: boolean) => Promise<void>;
 export type GetSingedIn = () => Promise<boolean>;
 
-export const getMetamask = async (page: Page, version?: string): Promise<Dappeteer> => {
+export const getMetaMask = (page: DappeteerPage): Promise<Dappeteer> => {
   // modified window object to kep state between tests
   const setSignedIn = async (state: boolean): Promise<void> => {
-    await page.evaluate((s: boolean) => {
-      ((window as unknown) as { signedIn: boolean }).signedIn = s;
-    }, state);
+    const evaluateFn = (s: boolean): void => {
+      (window as unknown as { signedIn: boolean }).signedIn = s;
+    };
+    await page.evaluate(evaluateFn, state);
   };
-  const getSingedIn = (): Promise<boolean> =>
-    page.evaluate(() =>
-      ((window as unknown) as { signedIn: boolean | undefined }).signedIn !== undefined
-        ? ((window as unknown) as { signedIn: boolean }).signedIn
-        : true,
-    );
+  const getSingedIn = (): Promise<boolean> => {
+    const evaluateFn = (): boolean =>
+      (window as unknown as { signedIn: boolean | undefined }).signedIn !==
+      undefined
+        ? (window as unknown as { signedIn: boolean }).signedIn
+        : true;
+    return page.evaluate(evaluateFn);
+  };
 
-  return {
-    addNetwork: addNetwork(page, version),
-    approve: approve(page, version),
-    confirmTransaction: confirmTransaction(page, getSingedIn, version),
-    importPK: importPk(page, version),
-    lock: lock(page, setSignedIn, getSingedIn, version),
-    sign: sign(page, getSingedIn, version),
-    switchAccount: switchAccount(page, version),
-    switchNetwork: switchNetwork(page, version),
-    unlock: unlock(page, setSignedIn, getSingedIn, version),
-    addToken: addToken(page),
-    helpers: {
-      getTokenBalance: getTokenBalance(page),
-      deleteAccount: deleteAccount(page),
-      deleteNetwork: deleteNetwork(page),
-    },
-    page,
-  };
+  return new Promise<Dappeteer>((resolve) => {
+    resolve({
+      acceptAddNetwork: acceptAddNetwork(page),
+      rejectAddNetwork: rejectAddNetwork(page),
+      approve: approve(page),
+      confirmTransaction: confirmTransaction(page, getSingedIn),
+      importPK: importPk(page),
+      lock: lock(page, setSignedIn, getSingedIn),
+      sign: sign(page, getSingedIn),
+      signTypedData: signTypedData(page, getSingedIn),
+      switchAccount: switchAccount(page),
+      switchNetwork: switchNetwork(page),
+      unlock: unlock(page, setSignedIn, getSingedIn),
+      acceptAddToken: acceptAddToken(page),
+      rejectAddToken: rejectAddToken(page),
+      helpers: {
+        getTokenBalance: getTokenBalance(page),
+        deleteAccount: deleteAccount(page),
+        deleteNetwork: deleteNetwork(page),
+      },
+      snaps: {
+        invokeSnap,
+        getNotificationEmitter: getNotificationEmitter(page),
+        getAllNotifications: getAllNotifications(page),
+        acceptDialog: acceptDialog(page),
+        rejectDialog: rejectDialog(page),
+        installSnap: installSnap(page),
+      },
+      page,
+    });
+  });
 };
 
 /**
  * Return MetaMask instance
  * */
-export async function getMetamaskWindow(browser: Browser, version?: string): Promise<Dappeteer> {
-  const metamaskPage = await new Promise<Page>((resolve) => {
-    browser.pages().then((pages) => {
-      for (const page of pages) {
-        if (page.url().includes('chrome-extension')) resolve(page);
-      }
-    });
+export async function getMetaMaskWindow(
+  browser: DappeteerBrowser
+): Promise<Dappeteer> {
+  const metaMaskPage = await new Promise<DappeteerPage>((resolve, reject) => {
+    browser
+      .pages()
+      .then((pages) => {
+        for (const page of pages) {
+          if (page.url().includes("chrome-extension")) resolve(page);
+        }
+        reject("MetaMask extension not found");
+      })
+      .catch((e) => reject(e));
   });
 
-  return getMetamask(metamaskPage, version);
+  return getMetaMask(metaMaskPage);
 }

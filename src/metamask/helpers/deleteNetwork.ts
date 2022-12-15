@@ -1,18 +1,25 @@
-import { Page } from 'puppeteer';
+import {
+  clickOnButton,
+  clickOnLogo,
+  getElementByContent,
+  openNetworkDropdown,
+} from "../../helpers";
+import { DappeteerPage } from "../../page";
 
-import { clickOnButton, clickOnLogo, getElementByContent, openNetworkDropdown } from '../../helpers';
+export const deleteNetwork =
+  (page: DappeteerPage) =>
+  async (name: string): Promise<void> => {
+    await page.bringToFront();
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const deleteNetwork = (page: Page, version?: string) => async (name: string): Promise<void> => {
-  await page.bringToFront();
+    await openNetworkDropdown(page);
+    const network = await getElementByContent(page, name);
+    await network.hover();
 
-  await openNetworkDropdown(page);
-  const network = await getElementByContent(page, name);
-  await network.hover();
+    const deleteButton = await page.waitForXPath(
+      `//*[contains(text(), '${name}')]/following-sibling::i`
+    );
+    await deleteButton.click();
 
-  const deleteButton = await page.waitForXPath(`//*[contains(text(), '${name}')]/following-sibling::i`);
-  await deleteButton.click();
-
-  await clickOnButton(page, 'Delete');
-  await clickOnLogo(page);
-};
+    await clickOnButton(page, "Delete");
+    await clickOnLogo(page);
+  };

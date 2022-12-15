@@ -1,35 +1,36 @@
-import { Page } from 'puppeteer';
+import { clickOnButton, retry, waitForOverlay } from "../helpers";
+import { DappeteerPage } from "../page";
 
-import { clickOnButton, getErrorMessage, openNetworkDropdown, typeOnInputField } from '../helpers';
-import { AddNetwork } from '../index';
+export const acceptAddNetwork =
+  (page: DappeteerPage) =>
+  async (shouldSwitch = false): Promise<void> => {
+    await retry(async () => {
+      await page.bringToFront();
+      await page.reload();
+      await waitForOverlay(page);
+      await page.waitForSelector(".confirmation-page", {
+        timeout: 1000,
+      });
+      await clickOnButton(page, "Approve", { timeout: 500 });
+    }, 5);
+    if (shouldSwitch) {
+      await clickOnButton(page, "Switch network");
+      await page.waitForSelector(".new-network-info__wrapper", {
+        visible: true,
+      });
+      await clickOnButton(page, "Got it");
+    } else {
+      await clickOnButton(page, "Cancel");
+    }
+  };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const addNetwork = (page: Page, version?: string) => async ({
-  networkName,
-  rpc,
-  chainId,
-  symbol,
-}: AddNetwork): Promise<void> => {
-  await page.bringToFront();
-  await openNetworkDropdown(page);
-  await clickOnButton(page, 'Add Network');
+export const rejectAddNetwork =
+  (page: DappeteerPage) => async (): Promise<void> => {
+    await retry(async () => {
+      await page.bringToFront();
+      await page.reload();
+      await waitForOverlay(page);
 
-  const responsePromise = page.waitForResponse(
-    (response) => new URL(response.url()).pathname === new URL(rpc).pathname,
-  );
-
-  await typeOnInputField(page, 'Network Name', networkName);
-  await typeOnInputField(page, 'New RPC URL', rpc);
-  await typeOnInputField(page, 'Chain ID', String(chainId));
-  await typeOnInputField(page, 'Currency Symbol', symbol);
-
-  await responsePromise;
-  await page.waitForTimeout(500);
-
-  const errorMessage = await getErrorMessage(page);
-  if (errorMessage) throw new SyntaxError(errorMessage);
-
-  await clickOnButton(page, 'Save');
-
-  await page.waitForXPath(`//*[text() = '${networkName}']`);
-};
+      await clickOnButton(page, "Cancel", { timeout: 500 });
+    }, 5);
+  };

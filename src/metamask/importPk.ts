@@ -1,16 +1,22 @@
-import { Page } from 'puppeteer';
+import {
+  clickOnButton,
+  clickOnElement,
+  getErrorMessage,
+  profileDropdownClick,
+  typeOnInputField,
+} from "../helpers";
+import { DappeteerPage } from "../page";
 
-import { clickOnButton, clickOnElement, getErrorMessage, openProfileDropdown, typeOnInputField } from '../helpers';
+export const importPk =
+  (page: DappeteerPage) =>
+  async (privateKey: string): Promise<void> => {
+    await page.bringToFront();
+    await profileDropdownClick(page);
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const importPk = (page: Page, version?: string) => async (privateKey: string): Promise<void> => {
-  await page.bringToFront();
-  await openProfileDropdown(page);
+    await clickOnElement(page, "Import account");
+    await typeOnInputField(page, "your private key", privateKey);
+    await clickOnButton(page, "Import");
 
-  await clickOnElement(page, 'Import Account');
-  await typeOnInputField(page, 'your private key', privateKey);
-  await clickOnButton(page, 'Import');
-
-  const errorMessage = await getErrorMessage(page);
-  if (errorMessage) throw new SyntaxError(errorMessage);
-};
+    const errorMessage = await getErrorMessage(page);
+    if (errorMessage) throw new SyntaxError(errorMessage);
+  };
