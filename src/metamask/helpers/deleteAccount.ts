@@ -1,22 +1,15 @@
-import {
-  clickOnButton,
-  clickOnElement,
-  openAccountDropdown,
-} from "../../helpers";
-import { DappeteerPage } from "../../page";
-import { switchAccount } from "../switchAccount";
+import { Page } from 'puppeteer';
 
-export const deleteAccount =
-  (page: DappeteerPage) =>
-  async (accountNumber: number): Promise<void> => {
-    await page.bringToFront();
+import { clickOnButton, clickOnElement, openAccountDropdown } from '../../helpers';
+import { switchAccount } from '../switchAccount';
 
-    if (accountNumber === 1)
-      throw new SyntaxError("Account 1 cannot be deleted");
-    await switchAccount(page)(accountNumber);
+export const deleteAccount = (page: Page, version?: string) => async (accountNumber: number): Promise<void> => {
+  await page.bringToFront();
 
-    await openAccountDropdown(page);
-    await clickOnElement(page, "Remove account");
-    await clickOnButton(page, "Remove");
-    await page.reload();
-  };
+  if (accountNumber === 1) throw new SyntaxError('Account 1 cannot be deleted');
+  await switchAccount(page, version)(accountNumber);
+
+  await openAccountDropdown(page);
+  await clickOnElement(page, 'Remove account');
+  await clickOnButton(page, 'Remove');
+};

@@ -1,10 +1,10 @@
 *DS_Store
 node_modules
+test/server/data.js
 build
 dist
 .vscode/
 /metamask
-/.metamask
 .idea
 *.log
-*.png
+test/dapp/data.js

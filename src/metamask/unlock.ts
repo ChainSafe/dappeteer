@@ -1,18 +1,20 @@
-import { clickOnButton, typeOnInputField } from "../helpers";
+import { Page } from 'puppeteer';
 
-import { DappeteerPage } from "../page";
-import { GetSingedIn, SetSignedIn } from ".";
+import { clickOnButton, typeOnInputField } from '../helpers';
 
-export const unlock =
-  (page: DappeteerPage, setSignedIn: SetSignedIn, getSingedIn: GetSingedIn) =>
-  async (password = "password1234"): Promise<void> => {
-    if (await getSingedIn()) {
-      throw new Error("You can't sign in because you are already signed in");
-    }
-    await page.bringToFront();
+import { GetSingedIn, SetSignedIn } from '.';
 
-    await typeOnInputField(page, "Password", password);
-    await clickOnButton(page, "Unlock");
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const unlock = (page: Page, setSignedIn: SetSignedIn, getSingedIn: GetSingedIn, version?: string) => async (
+  password = 'password1234',
+): Promise<void> => {
+  if (await getSingedIn()) {
+    throw new Error("You can't sign in because you are already signed in");
+  }
+  await page.bringToFront();
 
-    await setSignedIn(true);
-  };
+  await typeOnInputField(page, 'Password', password);
+  await clickOnButton(page, 'Unlock');
+
+  await setSignedIn(true);
+};
