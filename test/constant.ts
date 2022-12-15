@@ -1,9 +1,6 @@
 import { Provider, Server } from "ganache";
-
 import web3 from "web3";
-import { Dappeteer, DappeteerPage } from "../src";
-
-import { DappeteerBrowser } from "../src/browser";
+import { Dappeteer, DappeteerPage, DappeteerBrowser } from "../src";
 import { Contract, Snaps } from "./deploy";
 
 export type InjectableContext = Readonly<{

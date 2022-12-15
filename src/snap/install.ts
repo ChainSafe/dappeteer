@@ -8,7 +8,7 @@ import {
   profileDropdownClick,
 } from "../helpers";
 import { DappeteerPage } from "../page";
-import { EXAMPLE_WEBSITE } from "../../test/constant";
+import { EXAMPLE_WEBSITE } from "../constants";
 import { startSnapServer, toUrl } from "./install-utils";
 import { flaskOnly, isFirstElementAppearsFirst } from "./utils";
 import { InstallSnapResult } from "./types";
