@@ -1,4 +1,4 @@
-import { clickOnButton, typeOnInputField, waitForOverlay } from "../helpers";
+import { clickOnButton, typeOnInputField } from "../helpers";
 
 import { DappeteerPage } from "../page";
 import { GetSingedIn, SetSignedIn } from ".";
@@ -15,6 +15,4 @@ export const unlock =
     await clickOnButton(page, "Unlock");
 
     await setSignedIn(true);
-
-    await waitForOverlay(page);
   };

@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { DappeteerPage, Dappeteer } from "../../src";
 import { EXAMPLE_WEBSITE, TestContext } from "../constant";
+import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
 
 describe("snaps", function () {
@@ -16,37 +17,34 @@ describe("snaps", function () {
     metaMaskPage = this.metaMaskPage;
   });
 
-  beforeEach(function (this: TestContext) {
-    //skip those tests for non flask metamask
-    if (!this.browser.isMetaMaskFlask()) {
-      this.skip();
-    }
-  });
-
-  it("should install base snap from local server", async function (this: TestContext) {
-    await metaMask.snaps.installSnap(this.snapServers[Snaps.BASE_SNAP], {
-      hasPermissions: false,
-      hasKeyPermissions: false,
+  describe("Snaps Installation", () => {
+    beforeEach(function (this: TestContext) {
+      //skip those tests for non flask metamask
+      if (!this.browser.isMetaMaskFlask()) {
+        this.skip();
+      }
     });
-  });
 
-  it("should install permissions snap local server", async function (this: TestContext) {
-    await metaMask.snaps.installSnap(this.snapServers[Snaps.PERMISSIONS_SNAP], {
-      hasPermissions: true,
-      hasKeyPermissions: false,
+    it("should install base snap from local server", async function (this: TestContext) {
+      await metaMask.snaps.installSnap(this.snapServers[Snaps.BASE_SNAP]);
     });
-  });
 
-  it("should install keys snap from local server", async function (this: TestContext) {
-    await metaMask.snaps.installSnap(this.snapServers[Snaps.KEYS_SNAP], {
-      hasPermissions: true,
-      hasKeyPermissions: true,
+    it("should install permissions snap local server", async function (this: TestContext) {
+      await metaMask.snaps.installSnap(
+        this.snapServers[Snaps.PERMISSIONS_SNAP]
+      );
+    });
+
+    it("should install keys snap from local server", async function (this: TestContext) {
+      await metaMask.snaps.installSnap(this.snapServers[Snaps.KEYS_SNAP]);
     });
   });
 
   describe("should test snap methods", function () {
+    const installationSnapUrl = "https://google.com/";
     let testPage: DappeteerPage;
     let snapId: string;
+    let permissionSnapId: string;
 
     beforeEach(function (this: TestContext) {
       //skip those tests for non flask metamask
@@ -61,13 +59,15 @@ describe("snaps", function () {
       }
       snapId = await metaMask.snaps.installSnap(
         this.snapServers[Snaps.METHODS_SNAP],
-        {
-          hasPermissions: true,
-          hasKeyPermissions: false,
-        }
+        { installationSnapUrl }
       );
+      permissionSnapId = await metaMask.snaps.installSnap(
+        this.snapServers[Snaps.PERMISSIONS_SNAP],
+        { installationSnapUrl }
+      );
+
       testPage = await metaMaskPage.browser().newPage();
-      await testPage.goto(EXAMPLE_WEBSITE);
+      await testPage.goto(installationSnapUrl);
       return testPage;
     });
 
@@ -95,14 +95,6 @@ describe("snaps", function () {
     });
 
     it("should return all notifications", async function (this: TestContext) {
-      const permissionSnapId = await metaMask.snaps.installSnap(
-        this.snapServers[Snaps.PERMISSIONS_SNAP],
-        {
-          hasPermissions: true,
-          hasKeyPermissions: false,
-        }
-      );
-
       const emitter = await metaMask.snaps.getNotificationEmitter();
       const notificationPromise = emitter.waitForNotification();
 

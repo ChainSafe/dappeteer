@@ -27,7 +27,7 @@ jobs:
       - name: Install
         run: yarn --prefer-offline --frozen-lockfile
       - name: Tests
-        run: 'xvfb-run --auto-servernum yarn run test:${{matrix.automation}}:${{ matrix.mm-version }} --timeout 50000'
+        run: 'xvfb-run --auto-servernum --server-args="-screen 0, 1920x1080x24" yarn run test:${{matrix.automation}}:${{ matrix.mm-version }} --timeout 50000'
       - uses: actions/upload-artifact@v3
         if: always()
         with:

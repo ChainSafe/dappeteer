@@ -127,8 +127,6 @@ type MetaMaskOptions = {
 };
 
 type InstallSnapOptions = {
-    hasPermissions: boolean;
-    hasKeyPermissions: boolean;
     customSteps?: InstallStep[];
     version?: string;
     installationSnapUrl?: string;
@@ -230,7 +228,7 @@ deletes custom network from metaMask
 # Snaps methods
 
 <a name="installSnap"></a>
-## `metaMask.snaps.installSnap: (snapIdOrLocation: string, opts: { hasPermissions: boolean; hasKeyPermissions: boolean; customSteps?: InstallStep[]; version?: string;},installationSnapUrl?: string`) => Promise<string>;
+## `metaMask.snaps.installSnap: (snapIdOrLocation: string, opts?: { customSteps?: InstallStep[]; version?: string;},installationSnapUrl?: string`) => Promise<string>;
 installs the snap. The `snapIdOrLocation` param is either the snapId or the full path to your snap directory.
 
 <a name="invokeSnap"></a>
