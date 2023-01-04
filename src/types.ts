@@ -26,6 +26,7 @@ export type DappeteerLaunchOptions = {
   puppeteerOptions?: Omit<Parameters<typeof puppeteerLaunch>[0], "headless">;
   playwrightOptions?: Omit<PlaywrightLaunchOptions, "headless">;
   userDataDir?: string;
+  key?: string;
 };
 
 declare global {

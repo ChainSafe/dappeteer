@@ -6,7 +6,6 @@ import { Dappeteer, MetaMaskOptions } from "../types";
 import { clickOnButton, waitForOverlay } from "../helpers";
 import {
   acceptTheRisks,
-  closePopup,
   closePortfolioTooltip,
   closeWhatsNewModal,
   confirmWelcomeScreen,
@@ -76,7 +75,9 @@ export async function setupBootstrappedMetaMask(
   if (browser.isMetaMaskFlask()) await waitForOverlay(page);
   await metaMask.unlock(password);
 
-  await closePopup(page);
+  await clickOnButton(page, "Got it");
+  await page.waitForTimeout(500);
+
   if (browser.isMetaMaskFlask()) await clickOnButton(page, "No");
 
   return metaMask;
