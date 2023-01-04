@@ -75,11 +75,9 @@ export async function setupBootstrappedMetaMask(
   if (browser.isMetaMaskFlask()) await waitForOverlay(page);
   await metaMask.unlock(password);
 
-  await clickOnButton(page, "Got it");
-  await page.waitForTimeout(500);
-
   if (browser.isMetaMaskFlask()) await clickOnButton(page, "No");
 
+  await waitForOverlay(page);
   return metaMask;
 }
 

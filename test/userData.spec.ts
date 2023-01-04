@@ -8,6 +8,7 @@ import {
   SHORT_ACCOUNT_ADDRESS,
   TestContext,
 } from "./constant";
+import { pause } from "./utils/utils";
 
 describe("userData", function () {
   this.timeout(50000);
@@ -42,6 +43,9 @@ describe("userData", function () {
     it("should successfully store user data", async function (this: TestContext) {
       const browser = await launch({ automation, browser: "chrome" });
       await setupMetaMask(browser, metaMaskOptions);
+
+      // give some pause to store state into files
+      await pause(1);
 
       browser.storeUserData(userDataDir);
       await browser.close();
@@ -88,6 +92,9 @@ describe("userData", function () {
         metaMaskFlask: true,
       });
       await setupMetaMask(browser, metaMaskOptions);
+
+      // give some pause to store state into files
+      await pause(1);
 
       browser.storeUserData(userDataDir);
       await browser.close();
