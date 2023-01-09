@@ -59,7 +59,7 @@ export async function isFirstElementAppearsFirst({
   selectorOrXpath1,
   selectorOrXpath2,
   page,
-  timeout = 2000,
+  timeout = 4000,
 }: IsFirstElementAppearsFirstParams): Promise<boolean> {
   const promise1 = getWaitingPromise(page, selectorOrXpath1, timeout).then(
     () => true
