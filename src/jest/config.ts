@@ -12,11 +12,9 @@ export const DAPPETEER_DEFAULT_CONFIG: DappeteerLaunchOptions = {
   browser: "chrome",
   playwrightOptions: {
     headless: true,
-    args: ["--headless=chrome"],
   },
   puppeteerOptions: {
     headless: true,
-    args: ["--headless=chrome"],
   },
 };
 
