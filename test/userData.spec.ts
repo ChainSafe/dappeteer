@@ -1,7 +1,12 @@
 import fs from "fs";
-import path from "path";
 import { expect } from "chai";
-import { launch, setupBootstrappedMetaMask, setupMetaMask } from "../src";
+import {
+  DEFAULT_FLASK_USERDATA,
+  DEFAULT_METAMASK_USERDATA,
+  launch,
+  setupBootstrappedMetaMask,
+  setupMetaMask,
+} from "../src";
 import { getTemporaryUserDataDir } from "../src/setup/utils/getTemporaryUserDataDir";
 import {
   LOCAL_PREFUNDED_MNEMONIC,
@@ -132,7 +137,7 @@ describe("userData", function () {
         automation,
         browser: "chrome",
         metaMaskFlask: false,
-        userDataDir: path.resolve("./userData/chrome-mm"),
+        userDataDir: DEFAULT_METAMASK_USERDATA,
       });
 
       const metaMask = await setupBootstrappedMetaMask(
@@ -155,7 +160,7 @@ describe("userData", function () {
         automation,
         browser: "chrome",
         metaMaskFlask: true,
-        userDataDir: path.resolve("./userData/chrome-flask"),
+        userDataDir: DEFAULT_FLASK_USERDATA,
       });
 
       const metaMask = await setupBootstrappedMetaMask(

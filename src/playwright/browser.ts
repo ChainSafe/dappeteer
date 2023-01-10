@@ -49,6 +49,10 @@ export class DPlaywrightBrowser
     return this.flask;
   }
 
+  getUserDataDirPath(): string {
+    return this.userDataDir;
+  }
+
   storeUserData(destination: string): boolean {
     const location = path.resolve(destination);
     try {

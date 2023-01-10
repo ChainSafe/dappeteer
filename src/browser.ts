@@ -15,5 +15,7 @@ export interface DappeteerBrowser<Browser = unknown, Page = unknown>
 
   wsEndpoint(): string;
 
+  getUserDataDirPath(): string;
+
   storeUserData(destination: string): boolean;
 }

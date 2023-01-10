@@ -1,3 +1,5 @@
+import path from "path";
+
 export async function retry<R>(
   fn: () => Promise<R>,
   count: number
@@ -11,4 +13,12 @@ export async function retry<R>(
     }
   }
   throw error;
+}
+
+export function getDappateerPath(): string {
+  try {
+    return path.dirname(require.resolve("@chainsafe/dappeteer/package.json"));
+  } catch {
+    return path.resolve();
+  }
 }
