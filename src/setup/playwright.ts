@@ -23,6 +23,7 @@ export async function launchPlaywright(
         `--disable-extensions-except=${metamaskPath}`,
         `--load-extension=${metamaskPath}`,
         ...(options.playwrightOptions?.args || []),
+        `${options.puppeteerOptions?.headless ? "--headless=chrome" : ""}`,
       ],
       ...(options.playwrightOptions ?? {}),
     });

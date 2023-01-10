@@ -13,6 +13,7 @@ export async function launchPuppeteer(
       `--disable-extensions-except=${metamaskPath}`,
       `--load-extension=${metamaskPath}`,
       ...(options.puppeteerOptions?.args || []),
+      `${options.puppeteerOptions?.headless ? "--headless=chrome" : ""}`,
     ],
     ...(options.puppeteerOptions ?? {}),
   });
