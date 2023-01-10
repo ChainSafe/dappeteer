@@ -18,11 +18,12 @@ export async function launchPlaywright(
     browser = await (
       await import("playwright")
     ).chromium.launchPersistentContext(tmpdir, {
-      headless: false,
+      headless: true,
       args: [
         `--disable-extensions-except=${metamaskPath}`,
         `--load-extension=${metamaskPath}`,
         ...(options.playwrightOptions?.args || []),
+        `--headless=chrome`,
       ],
       ...(options.playwrightOptions ?? {}),
     });
