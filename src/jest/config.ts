@@ -10,6 +10,14 @@ import { DapeteerJestConfig } from "./global";
 export const DAPPETEER_DEFAULT_CONFIG: DappeteerLaunchOptions = {
   metaMaskVersion: RECOMMENDED_METAMASK_VERSION,
   browser: "chrome",
+  playwrightOptions: {
+    headless: true,
+    args: ["--headless=chrome"],
+  },
+  puppeteerOptions: {
+    headless: true,
+    args: ["--headless=chrome"],
+  },
 };
 
 export async function getDappeteerConfig(): Promise<DapeteerJestConfig> {
