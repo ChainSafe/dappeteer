@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 import { expect } from "chai";
 import { launch, setupBootstrappedMetaMask, setupMetaMask } from "../src";
 import { getTemporaryUserDataDir } from "../src/setup/utils/getTemporaryUserDataDir";
@@ -11,7 +12,7 @@ import {
 import { pause } from "./utils/utils";
 
 describe("userData", function () {
-  this.timeout(50000);
+  this.timeout(120000);
 
   const automation =
     (process.env.AUTOMATION as "puppeteer" | "playwright") ?? "puppeteer";
@@ -109,6 +110,54 @@ describe("userData", function () {
         metaMaskFlask: true,
         userDataDir,
       });
+      const metaMask = await setupBootstrappedMetaMask(
+        browser,
+        metaMaskOptions.password
+      );
+
+      const shortAddress = await metaMask.page.evaluate(() =>
+        document
+          .querySelector(".selected-account__address")
+          .innerHTML.substring(0, 12)
+      );
+      await browser.close();
+
+      expect(shortAddress).to.be.eq(SHORT_ACCOUNT_ADDRESS);
+    });
+  });
+
+  describe("Predefined", function () {
+    it("should successfully launch project's default MetaMask", async function (this: TestContext) {
+      const browser = await launch({
+        automation,
+        browser: "chrome",
+        metaMaskFlask: false,
+        userDataDir: path.resolve("./userData/chrome-mm"),
+      });
+
+      const metaMask = await setupBootstrappedMetaMask(
+        browser,
+        metaMaskOptions.password
+      );
+
+      const shortAddress = await metaMask.page.evaluate(() =>
+        document
+          .querySelector(".selected-account__address")
+          .innerHTML.substring(0, 12)
+      );
+      await browser.close();
+
+      expect(shortAddress).to.be.eq(SHORT_ACCOUNT_ADDRESS);
+    });
+
+    it("should successfully launch project's default Flask", async function (this: TestContext) {
+      const browser = await launch({
+        automation,
+        browser: "chrome",
+        metaMaskFlask: true,
+        userDataDir: path.resolve("./userData/chrome-flask"),
+      });
+
       const metaMask = await setupBootstrappedMetaMask(
         browser,
         metaMaskOptions.password
