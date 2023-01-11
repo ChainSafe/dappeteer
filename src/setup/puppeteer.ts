@@ -8,11 +8,12 @@ export async function launchPuppeteer(
   const pBrowser = await (
     await import("puppeteer")
   ).default.launch({
-    headless: false,
+    headless: options.puppeteerOptions?.headless,
     args: [
       `--disable-extensions-except=${metamaskPath}`,
       `--load-extension=${metamaskPath}`,
       ...(options.puppeteerOptions?.args || []),
+      `${options.puppeteerOptions?.headless ? "--headless=chrome" : ""}`,
     ],
     ...(options.puppeteerOptions ?? {}),
   });

@@ -29,6 +29,12 @@ export const mochaHooks = {
       browser: "chrome",
       metaMaskVersion:
         process.env.METAMASK_VERSION || dappeteer.RECOMMENDED_METAMASK_VERSION,
+      playwrightOptions: {
+        headless: true,
+      },
+      puppeteerOptions: {
+        headless: true,
+      },
     });
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
