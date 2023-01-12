@@ -18,7 +18,15 @@ export const bootstrap = async ({
   browser: DappeteerBrowser;
   metaMaskPage: DappeteerPage;
 }> => {
-  const browser = await launch(launchOptions);
+  const browser = await launch({
+    puppeteerOptions: {
+      headless: true,
+    },
+    playwrightOptions: {
+      headless: true,
+    },
+    ...launchOptions,
+  });
   const metaMask = await setupMetaMask(browser, {
     seed,
     password,
@@ -43,6 +51,12 @@ export const initSnapEnv = async (
   snapId: string;
 }> => {
   const browser = await launch({
+    puppeteerOptions: {
+      headless: true,
+    },
+    playwrightOptions: {
+      headless: true,
+    },
     ...opts,
     metaMaskFlask: true,
   });

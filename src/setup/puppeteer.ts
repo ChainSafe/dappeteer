@@ -9,7 +9,7 @@ export async function launchPuppeteer(
     await import("puppeteer")
   ).default.launch({
     ...(options.puppeteerOptions ?? {}),
-    headless: options.puppeteerOptions?.headless,
+    headless: options.puppeteerOptions?.headless ?? true,
     args: [
       `--disable-extensions-except=${metamaskPath}`,
       `--load-extension=${metamaskPath}`,

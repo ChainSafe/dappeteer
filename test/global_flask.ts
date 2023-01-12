@@ -27,12 +27,6 @@ export const mochaHooks = {
       metaMaskVersion:
         process.env.METAMASK_VERSION || dappeteer.RECOMMENDED_METAMASK_VERSION,
       metaMaskFlask: true,
-      playwrightOptions: {
-        headless: true,
-      },
-      puppeteerOptions: {
-        headless: true,
-      },
     });
 
     const snapServers = await buildSnaps();
