@@ -9,13 +9,13 @@ export async function launchPuppeteer(
     await import("puppeteer")
   ).default.launch({
     headless: options.puppeteerOptions?.headless,
+    ...(options.puppeteerOptions ?? {}),
     args: [
       `--disable-extensions-except=${metamaskPath}`,
       `--load-extension=${metamaskPath}`,
       ...(options.puppeteerOptions?.args || []),
       `${options.puppeteerOptions?.headless ? "--headless=chrome" : ""}`,
-    ],
-    ...(options.puppeteerOptions ?? {}),
+    ].filter((el) => el !== ""),
   });
   const { DPuppeteerBrowser } = await import("../puppeteer");
   return new DPuppeteerBrowser(pBrowser, options.metaMaskFlask);
