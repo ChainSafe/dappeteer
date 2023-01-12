@@ -14,8 +14,8 @@ export async function launchPuppeteer(
       `--disable-extensions-except=${metamaskPath}`,
       `--load-extension=${metamaskPath}`,
       ...(options.puppeteerOptions?.args || []),
-      `${options.puppeteerOptions?.headless ? "--headless=chrome" : ""}`,
-    ].filter((el) => el !== ""),
+      ...(options.puppeteerOptions?.headless ? ["--headless=chrome"] : []),
+    ],
   });
   const { DPuppeteerBrowser } = await import("../puppeteer");
   return new DPuppeteerBrowser(pBrowser, options.metaMaskFlask);
