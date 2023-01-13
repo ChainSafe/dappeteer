@@ -20,6 +20,12 @@ export const bootstrap = async ({
 }> => {
   const browser = await launch({
     headless: true,
+    playwrightOptions: {
+      args: ["--accept-lang=en"],
+    },
+    puppeteerOptions: {
+      args: ["--accept-lang=en"],
+    },
     ...launchOptions,
   });
   const metaMask = await setupMetaMask(browser, {
@@ -47,6 +53,12 @@ export const initSnapEnv = async (
 }> => {
   const browser = await launch({
     headless: true,
+    playwrightOptions: {
+      args: ["--accept-lang=en"],
+    },
+    puppeteerOptions: {
+      args: ["--accept-lang=en"],
+    },
     ...opts,
     metaMaskFlask: true,
   });
