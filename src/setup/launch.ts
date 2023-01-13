@@ -40,12 +40,7 @@ export async function launch(
         `
         Running tests on MetaMask version ${metaMaskVersion} 
         Flask version: ${String(options.metaMaskFlask ?? false)}, 
-        Puppeteer  headless: ${String(
-          options.puppeteerOptions.headless ?? true
-        )}
-        Playwright headless: ${String(
-          options.playwrightOptions.headless ?? true
-        )}
+        Headless: ${String(options.headless)}
         `
       );
 
