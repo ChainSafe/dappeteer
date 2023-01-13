@@ -37,9 +37,11 @@ export async function launch(
       );
     else
       console.log(
-        `Running tests on MetaMask version ${metaMaskVersion} (flask: ${String(
-          options.metaMaskFlask ?? false
-        )})`
+        `
+        Running tests on MetaMask version ${metaMaskVersion} 
+        Flask version: ${String(options.metaMaskFlask ?? false)}, 
+        Headless: ${String(options.headless)}
+        `
       );
 
     console.warn(); // new line
