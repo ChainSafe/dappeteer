@@ -11,6 +11,7 @@ export async function launchPuppeteer(
     ...(options.puppeteerOptions ?? {}),
     headless: options.headless,
     args: [
+      "--accept-lang=en",
       `--disable-extensions-except=${metamaskPath}`,
       `--load-extension=${metamaskPath}`,
       ...(options.puppeteerOptions?.args || []),
