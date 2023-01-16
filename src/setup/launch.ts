@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 import { copySync } from "fs-extra";
 import { RECOMMENDED_METAMASK_VERSION } from "..";
 import { DappeteerBrowser } from "../browser";
@@ -61,7 +62,7 @@ export async function launch(
   addKeyToMetaMaskManifest(metamaskPath, options.key);
   const userDataDir = getTemporaryUserDataDir();
   if (options.userDataDir)
-    copySync(options.userDataDir, userDataDir, {
+    copySync(path.resolve(options.userDataDir), userDataDir, {
       overwrite: true,
       recursive: true,
     });
