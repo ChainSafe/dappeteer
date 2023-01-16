@@ -1,5 +1,25 @@
 # Changelog
 
+## [4.1.0](https://github.com/ChainSafe/dappeteer/compare/v4.0.2...v4.1.0) (2023-01-16)
+
+
+### Features
+
+* set default headless mode ([#239](https://github.com/ChainSafe/dappeteer/issues/239)) ([9fcb540](https://github.com/ChainSafe/dappeteer/commit/9fcb54055cc73d9e7d31954d58332b2719819815))
+
+
+### Bug Fixes
+
+* args overwrite ([#240](https://github.com/ChainSafe/dappeteer/issues/240)) ([0a8d442](https://github.com/ChainSafe/dappeteer/commit/0a8d44237a06d86f5e7f76473ad75dda6aeb224f))
+* explicitly set the default metamask interface language [#212](https://github.com/ChainSafe/dappeteer/issues/212) ([#241](https://github.com/ChainSafe/dappeteer/issues/241)) ([c148a5c](https://github.com/ChainSafe/dappeteer/commit/c148a5c8e753d5741d89a6cfdd1750aa082a9b45))
+* increase timeout ([#235](https://github.com/ChainSafe/dappeteer/issues/235)) ([34852cb](https://github.com/ChainSafe/dappeteer/commit/34852cbec1c5ec0415e4071e5d7f508d09b656cf))
+
+
+### Miscellaneous
+
+* refactor to remove braking change ([#242](https://github.com/ChainSafe/dappeteer/issues/242)) ([6434c83](https://github.com/ChainSafe/dappeteer/commit/6434c8304d390e591a27692b5a84061115781111))
+* test headless version ([#237](https://github.com/ChainSafe/dappeteer/issues/237)) ([18c8232](https://github.com/ChainSafe/dappeteer/commit/18c823210e19f2dacbae0d75a02bc383bab89643))
+
 ## [4.0.2](https://github.com/ChainSafe/dappeteer/compare/v4.0.1...v4.0.2) (2022-12-15)
 
 
