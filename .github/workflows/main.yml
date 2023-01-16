@@ -23,6 +23,8 @@ jobs:
         run: yarn --prefer-offline --frozen-lockfile
       - name: Build
         run: yarn build
+      - name: Download metamask
+        run: yarn run download:metamask
       - uses: actions/cache/save@v3
         with:
           path: .metamask
