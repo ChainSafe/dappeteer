@@ -44,7 +44,7 @@ export async function launch(
         `
       );
 
-    console.warn(); // new line
+    console.log(); // new line
 
     metamaskPath = await downloader(metaMaskVersion, {
       location: metaMaskLocation,

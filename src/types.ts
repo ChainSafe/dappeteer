@@ -21,7 +21,7 @@ export type DappeteerLaunchOptions = {
   //fallbacks to installed dependency and prefers playwright if both are installed
   automation?: "puppeteer" | "playwright";
   browser: "chrome";
-  headless?: boolean; // default true
+  headless?: boolean; // default false
   puppeteerOptions?: Parameters<typeof puppeteerLaunch>[0];
   playwrightOptions?: PlaywrightLaunchOptions;
 };

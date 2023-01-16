@@ -21,6 +21,7 @@ export async function launchPlaywright(
       ...(options.playwrightOptions ?? {}),
       headless: options.headless,
       args: [
+        "--accept-lang=en",
         `--disable-extensions-except=${metamaskPath}`,
         `--load-extension=${metamaskPath}`,
         ...(options.playwrightOptions?.args || []),
