@@ -8,6 +8,9 @@ import { setupMetaMask } from "./setupMetaMask";
 export * from "./launch";
 export * from "./setupMetaMask";
 
+/**
+ * Launches browser and installs required metamask version along with setting up initial account
+ */
 export const bootstrap = async ({
   seed,
   password,
@@ -32,6 +35,9 @@ export const bootstrap = async ({
   };
 };
 
+/**
+ * Used to quickly bootstrap dappeteer testing environment with installed snap
+ */
 export const initSnapEnv = async (
   opts: DappeteerLaunchOptions &
     MetaMaskOptions &

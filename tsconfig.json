@@ -14,7 +14,8 @@
     "declaration": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "removeComments": false
   },
   "files": [
     "./node_modules/@metamask/snap-types/global.d.ts"
