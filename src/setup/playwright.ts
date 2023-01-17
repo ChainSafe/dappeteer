@@ -25,7 +25,7 @@ export async function launchPlaywright(
         `--disable-extensions-except=${metamaskPath}`,
         `--load-extension=${metamaskPath}`,
         ...(options.playwrightOptions?.args || []),
-        ...(options.headless ? ["--headless=chrome"] : []),
+        ...(options.headless ? ["--headless=new"] : []),
       ],
     });
   }
