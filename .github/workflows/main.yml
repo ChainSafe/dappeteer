@@ -33,23 +33,23 @@ jobs:
         with:
           name: debug_screenshots
           path: ./*.png
-    tests-user-data:
-      name: Tests UserData
-      runs-on: ubuntu-latest
-      strategy:
-        fail-fast: false
-        matrix:
-          automation: [ playwright, puppeteer ]
-      steps:
-        - uses: actions/checkout@v3
-        - uses: actions/setup-node@v3
-          with:
-            node-version: "16"
-            cache: 'yarn'
-        - name: Install
-          run: yarn --prefer-offline --frozen-lockfile
-        - name: Tests UserData
-          run: 'yarn run test:${{matrix.automation}}:userData --timeout 240000'
+  tests-user-data:
+    name: Tests UserData
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        automation: [ playwright, puppeteer ]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: 'yarn'
+      - name: Install
+        run: yarn --prefer-offline --frozen-lockfile
+      - name: Tests UserData
+        run: 'yarn run test:${{matrix.automation}}:userData --timeout 240000'
   lint:
     name: Lint
     runs-on: ubuntu-latest
