@@ -2,9 +2,9 @@ import { EventEmitter } from "events";
 import fs from "fs";
 import path from "path";
 import { Browser, Page } from "puppeteer";
-import { copySync } from "fs-extra";
 import { DappeteerBrowser } from "../browser";
 import { DappeteerPage } from "../page";
+import { copyUserDataFiles } from "../helpers/utils";
 import { DPupeteerPage } from "./page";
 
 export class DPuppeteerBrowser
@@ -59,10 +59,7 @@ export class DPuppeteerBrowser
   storeUserData(destination: string): boolean {
     const location = path.resolve(destination);
     try {
-      copySync(this.userDataDir, location, {
-        overwrite: true,
-        recursive: true,
-      });
+      copyUserDataFiles(this.userDataDir, location);
       return true;
     } catch (error) {
       console.error(error);

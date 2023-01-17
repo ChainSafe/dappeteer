@@ -27,14 +27,14 @@ jobs:
       - name: Install
         run: yarn --prefer-offline --frozen-lockfile
       - name: Tests
-        run: 'yarn run test:${{matrix.automation}}:${{ matrix.mm-version }} --timeout 50000'
+        run: 'yarn run test:${{matrix.automation}}:${{matrix.mm-version}} --timeout 50000'
       - uses: actions/upload-artifact@v3
         if: always()
         with:
           name: debug_screenshots
           path: ./*.png
       - name: Tests UserData
-        run: 'xvfb-run --auto-servernum --server-args="-screen 0, 1920x1080x24" yarn run test:${{matrix.automation}}:userData --timeout 240000'
+        run: 'yarn run test:${{matrix.automation}}:userData --timeout 240000'
   lint:
     name: Lint
     runs-on: ubuntu-latest

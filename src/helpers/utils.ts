@@ -1,4 +1,5 @@
 import path from "path";
+import { copySync } from "fs-extra";
 
 export async function retry<R>(
   fn: () => Promise<R>,
@@ -21,4 +22,15 @@ export function getDappateerPath(): string {
   } catch {
     return path.resolve();
   }
+}
+
+// blacklisted words for copy
+const copyUserDataFilesExclude = ["LOCK", "Cache", "SingletonLock"];
+export function copyUserDataFiles(from: string, to: string): void {
+  copySync(path.resolve(from), to, {
+    overwrite: true,
+    recursive: true,
+    filter: (src) =>
+      !copyUserDataFilesExclude.some((word) => src.includes(word)),
+  });
 }

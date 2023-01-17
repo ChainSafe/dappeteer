@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
-import { copySync } from "fs-extra";
 import { RECOMMENDED_METAMASK_VERSION } from "..";
 import { DappeteerBrowser } from "../browser";
 import { DappeteerLaunchOptions } from "../types";
+import { copyUserDataFiles } from "../helpers/utils";
 import { launchPlaywright } from "./playwright";
 import { launchPuppeteer } from "./puppeteer";
 import { isNewerVersion } from "./utils/isNewerVersion";
@@ -64,10 +64,7 @@ export async function launch(
   addKeyToMetaMaskManifest(metamaskPath, options.key);
   const userDataDir = getTemporaryUserDataDir();
   if (options.userDataDir)
-    copySync(path.resolve(options.userDataDir), userDataDir, {
-      overwrite: true,
-      recursive: true,
-    });
+    copyUserDataFiles(path.resolve(options.userDataDir), userDataDir);
 
   if (options.automation) {
     switch (options.automation) {
