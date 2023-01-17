@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.1](https://github.com/ChainSafe/dappeteer/compare/v4.1.0...v4.1.1) (2023-01-17)
+
+
+### Bug Fixes
+
+* new headless flag for playwright ([#247](https://github.com/ChainSafe/dappeteer/issues/247)) ([39b7e00](https://github.com/ChainSafe/dappeteer/commit/39b7e00253164e6e33ef4505941af23443026b38))
+
 ## [4.1.0](https://github.com/ChainSafe/dappeteer/compare/v4.0.2...v4.1.0) (2023-01-16)
 
 
