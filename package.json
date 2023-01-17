@@ -63,7 +63,7 @@
     "ganache": "^7.4.3",
     "jest-environment-node": "^27.1.1",
     "mocha": "^10.0.0",
-    "playwright": "^1.27.1",
+    "playwright": "^1.29.2",
     "prettier": "^2.2.1",
     "puppeteer": "14.0.0",
     "solc": "0.5.2",
