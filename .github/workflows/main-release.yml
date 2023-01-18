@@ -1,0 +1,30 @@
+name: "Main Branch Beta Release"
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          cache: 'yarn'
+          node-version: 16
+          registry-url: 'https://registry.npmjs.org'
+      - run: yarn --prefer-offline --frozen-lockfile
+      - run: yarn build
+      - name: "Retrieving package version"
+        uses: martinbeentjes/npm-get-version-action@main
+        id: version
+      - name: "Retrieving commit hash"
+        id: commit
+        uses: pr-mpt/actions-commit-hash@v2
+      - run: yarn publish --access public --tag beta --new-version ${{steps.version.outputs.current-version}}-${{steps.commit.outputs.short}}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
