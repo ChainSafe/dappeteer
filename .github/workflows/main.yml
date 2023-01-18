@@ -10,42 +10,6 @@ on:
       - '**'
 
 jobs:
-  tests:
-    name: Tests
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        mm-version: [mm, flask]
-        automation: [playwright, puppeteer]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-          cache: 'yarn'
-      - name: Install
-        run: yarn --prefer-offline --frozen-lockfile
-      - name: Tests
-        run: 'yarn run test:${{matrix.automation}}:${{ matrix.mm-version }} --timeout 50000'
-      - uses: actions/upload-artifact@v3
-        if: always()
-        with:
-          name: debug_screenshots
-          path: ./*.png
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-          cache: 'yarn'
-      - name: Install deps
-        run: yarn --prefer-offline --frozen-lockfile
-      - name: Lint
-        run: yarn run lint
   build:
     name: Build
     runs-on: ubuntu-latest
@@ -59,6 +23,54 @@ jobs:
         run: yarn --prefer-offline --frozen-lockfile
       - name: Build
         run: yarn build
+      - name: Download metamask
+        run: yarn run download:metamask
+      - uses: actions/cache/save@v3
+        with:
+          path: .metamask
+          key: metamask-extension
+  lint:
+    needs: build
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: 'yarn'
+      - name: Install deps
+        run: yarn --prefer-offline --frozen-lockfile
+      - name: Lint
+        run: yarn run lint
+  tests:
+    needs: build
+    name: Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        mm-version: [mm, flask]
+        automation: [playwright, puppeteer]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: 'yarn'
+      - uses: actions/cache/restore@v3
+        with:
+          path: .metamask
+          key: metamask-extension
+      - name: Install
+        run: yarn --prefer-offline --frozen-lockfile
+      - name: Tests
+        run: 'yarn run test:${{matrix.automation}}:${{ matrix.mm-version }} --timeout 50000'
+      - uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: debug_screenshots
+          path: ./*.png
 
   maybe-release:
     name: release

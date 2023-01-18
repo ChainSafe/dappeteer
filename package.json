@@ -21,7 +21,8 @@
     "test:puppeteer:mm": "AUTOMATION=puppeteer yarn run test:mm",
     "test:puppeteer:flask": "AUTOMATION=puppeteer yarn run test:flask",
     "test:playwright:mm": "AUTOMATION=playwright yarn run test:mm",
-    "test:playwright:flask": "AUTOMATION=playwright yarn run test:flask"
+    "test:playwright:flask": "AUTOMATION=playwright yarn run test:flask",
+    "download:metamask": "node -r ts-node/register ./scripts/download_metamask.ts"
   },
   "repository": {
     "type": "git",
