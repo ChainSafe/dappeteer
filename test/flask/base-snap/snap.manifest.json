@@ -12,6 +12,8 @@
       }
     }
   },
-  "initialPermissions": {},
+  "initialPermissions": {
+    "snap_confirm": {}
+  },
   "manifestVersion": "0.1"
 }
