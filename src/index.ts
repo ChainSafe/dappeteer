@@ -1,10 +1,15 @@
 // re-export
 export { getMetaMask, getMetaMaskWindow } from "./metamask";
-export * from "./types";
-export * from "./browser";
-export * from "./page";
-export * from "./element";
-export * from "./setup";
+export {
+  Dappeteer,
+  DappeteerLaunchOptions,
+  MetaMaskOptions,
+  TransactionOptions,
+} from "./types";
+export { DappeteerBrowser } from "./browser";
+export { DappeteerPage } from "./page";
+export { DappeteerElementHandle } from "./element";
+export { bootstrap, initSnapEnv, launch, setupMetaMask } from "./setup";
 export { DapeteerJestConfig } from "./jest/global";
 
 // default constants

@@ -10,7 +10,41 @@ on:
       - '**'
 
 jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: 'yarn'
+      - name: Install deps
+        run: yarn --prefer-offline --frozen-lockfile
+      - name: Build
+        run: yarn build
+      - name: Download metamask
+        run: yarn run download:metamask
+      - uses: actions/cache/save@v3
+        with:
+          path: .metamask
+          key: metamask-extension
+  lint:
+    needs: build
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+          cache: 'yarn'
+      - name: Install deps
+        run: yarn --prefer-offline --frozen-lockfile
+      - name: Lint
+        run: yarn run lint
   tests:
+    needs: build
     name: Tests
     runs-on: ubuntu-latest
     strategy:
@@ -24,10 +58,14 @@ jobs:
         with:
           node-version: "16"
           cache: 'yarn'
+      - uses: actions/cache/restore@v3
+        with:
+          path: .metamask
+          key: metamask-extension
       - name: Install
         run: yarn --prefer-offline --frozen-lockfile
       - name: Tests
-        run: 'yarn run test:${{matrix.automation}}:${{matrix.mm-version}} --timeout 50000'
+        run: 'yarn run test:${{matrix.automation}}:${{ matrix.mm-version }} --timeout 50000'
       - uses: actions/upload-artifact@v3
         if: always()
         with:
@@ -36,7 +74,7 @@ jobs:
   tests-user-data:
     name: Tests UserData
     runs-on: ubuntu-latest
-    needs: [tests]
+    needs: tests
     strategy:
       fail-fast: false
       matrix:
@@ -51,33 +89,6 @@ jobs:
         run: yarn --prefer-offline --frozen-lockfile
       - name: Tests UserData
         run: 'yarn run test:${{matrix.automation}}:userData --timeout 240000'
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-          cache: 'yarn'
-      - name: Install deps
-        run: yarn --prefer-offline --frozen-lockfile
-      - name: Lint
-        run: yarn run lint
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    needs: [lint]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-          cache: 'yarn'
-      - name: Install deps
-        run: yarn --prefer-offline --frozen-lockfile
-      - name: Build
-        run: yarn build
 
   maybe-release:
     name: release
