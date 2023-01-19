@@ -10,6 +10,7 @@ import { ContractInfo } from "./contract/contractInfo";
 import { TestContract } from "./deploy";
 
 import { requestAccounts, sendTx } from "./testPageFunctions";
+import { isUserDataTest } from "./utils/utils";
 
 describe("contract interactions", function () {
   let contract: TestContract;
@@ -17,7 +18,7 @@ describe("contract interactions", function () {
   let metamask: Dappeteer;
 
   before(async function (this: TestContext) {
-    if (Boolean(process.env.USER_DATA_TEST) === true) {
+    if (isUserDataTest()) {
       this.skip();
     }
 

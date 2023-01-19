@@ -14,7 +14,7 @@ import {
   SHORT_ACCOUNT_ADDRESS,
   TestContext,
 } from "./constant";
-import { pause } from "./utils/utils";
+import { isUserDataTest, pause } from "./utils/utils";
 
 describe("userData", function () {
   this.timeout(120000);
@@ -28,7 +28,7 @@ describe("userData", function () {
   const headless = true;
 
   beforeEach(function (this: TestContext) {
-    if (Boolean(process.env.USER_DATA_TEST) === false) {
+    if (!isUserDataTest()) {
       this.skip();
     }
   });
@@ -54,9 +54,10 @@ describe("userData", function () {
       // give some pause to store state into files
       await pause(1);
 
-      browser.storeUserData(userDataDir);
+      const isSuccess = browser.storeUserData(userDataDir);
       await browser.close();
 
+      expect(isSuccess).to.be.true;
       expect(isEmpty(userDataDir)).to.be.false;
     });
 
@@ -105,9 +106,10 @@ describe("userData", function () {
       // give some pause to store state into files
       await pause(1);
 
-      browser.storeUserData(userDataDir);
+      const isSuccess = browser.storeUserData(userDataDir);
       await browser.close();
 
+      expect(isSuccess).to.be.true;
       expect(isEmpty(userDataDir)).to.be.false;
     });
 

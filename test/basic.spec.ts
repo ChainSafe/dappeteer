@@ -22,6 +22,7 @@ import {
   signLongTypedData,
   signShortTypedData,
 } from "./testPageFunctions";
+import { isUserDataTest } from "./utils/utils";
 
 use(chaiAsPromised);
 
@@ -31,7 +32,7 @@ describe("basic interactions", function () {
   let metaMaskPage: DappeteerPage;
 
   before(async function (this: TestContext) {
-    if (Boolean(process.env.USER_DATA_TEST) === true) {
+    if (isUserDataTest()) {
       this.skip();
     }
 
