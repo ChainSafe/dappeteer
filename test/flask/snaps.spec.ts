@@ -142,8 +142,10 @@ describe("should run dappeteer using initSnapEnv method", function () {
     await connectedPage.goto(installationSnapUrl);
   });
 
-  after(async () => {
-    await browser.close();
+  after(async function (this: TestContext) {
+    if (this.browser.isMetaMaskFlask()) {
+      await browser.close();
+    }
   });
 
   it("should accept dialog from Base snap", async function (this: TestContext) {
