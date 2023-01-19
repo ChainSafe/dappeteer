@@ -127,6 +127,9 @@ describe("should run dappeteer using initSnapEnv method", function () {
   let snapId: string;
 
   before(async function (this: TestContext) {
+    if (!this.browser.isMetaMaskFlask()) {
+      this.skip();
+    }
     const installationSnapUrl = "https://google.com";
     ({ metaMask, snapId, browser } = await initSnapEnv({
       automation: "playwright",
