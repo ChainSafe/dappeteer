@@ -9,8 +9,18 @@ export {
 export { DappeteerBrowser } from "./browser";
 export { DappeteerPage } from "./page";
 export { DappeteerElementHandle } from "./element";
-export { bootstrap, initSnapEnv, launch, setupMetaMask } from "./setup";
+export {
+  bootstrap,
+  initSnapEnv,
+  launch,
+  setupMetaMask,
+  setupBootstrappedMetaMask,
+} from "./setup";
 export { DapeteerJestConfig } from "./jest/global";
 
 // default constants
-export const RECOMMENDED_METAMASK_VERSION = "v10.23.0";
+export {
+  RECOMMENDED_METAMASK_VERSION,
+  DEFAULT_METAMASK_USERDATA,
+  DEFAULT_FLASK_USERDATA,
+} from "./constants";

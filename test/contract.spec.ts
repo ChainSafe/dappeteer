@@ -10,6 +10,7 @@ import { ContractInfo } from "./contract/contractInfo";
 import { TestContract } from "./deploy";
 
 import { requestAccounts, sendTx } from "./testPageFunctions";
+import { isUserDataTest } from "./utils/utils";
 
 describe("contract interactions", function () {
   let contract: TestContract;
@@ -17,6 +18,10 @@ describe("contract interactions", function () {
   let metamask: Dappeteer;
 
   before(async function (this: TestContext) {
+    if (isUserDataTest()) {
+      this.skip();
+    }
+
     testPage = await this.browser.newPage();
     await testPage.goto(EXAMPLE_WEBSITE, { waitUntil: "networkidle" });
     metamask = this.metaMask;
@@ -33,7 +38,7 @@ describe("contract interactions", function () {
   });
 
   after(async function (this: TestContext) {
-    await testPage.close();
+    if (testPage) await testPage.close();
   });
 
   it("should have increased count", async () => {

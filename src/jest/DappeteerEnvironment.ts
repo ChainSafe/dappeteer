@@ -4,6 +4,7 @@ import puppeteer from "puppeteer";
 
 import { getMetaMaskWindow } from "../index";
 import { DPuppeteerBrowser } from "../puppeteer";
+import { getTemporaryUserDataDir } from "../setup/utils/getTemporaryUserDataDir";
 
 class DappeteerEnvironment extends NodeEnvironment {
   constructor(config: Config.ProjectConfig) {
@@ -14,10 +15,12 @@ class DappeteerEnvironment extends NodeEnvironment {
     await super.setup();
 
     // get the wsEndpoint
-    const wsEndpoint = process.env.PUPPETEER_WS_ENDPOINT;
+    const wsEndpoint = process.env.DAPPETEER_WS_ENDPOINT;
     if (!wsEndpoint) {
       throw new Error("wsEndpoint not found");
     }
+    const userData =
+      process.env.DAPPETEER_USER_DATA_PATH || getTemporaryUserDataDir();
 
     // connect to puppeteer
     const browser = await puppeteer.connect({
@@ -25,7 +28,7 @@ class DappeteerEnvironment extends NodeEnvironment {
     });
     this.global.browser = browser;
     this.global.metamask = await getMetaMaskWindow(
-      new DPuppeteerBrowser(browser, false)
+      new DPuppeteerBrowser(browser, userData, false)
     );
     this.global.page = await browser.newPage();
   }

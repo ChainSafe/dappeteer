@@ -22,6 +22,7 @@ import {
   signLongTypedData,
   signShortTypedData,
 } from "./testPageFunctions";
+import { isUserDataTest } from "./utils/utils";
 
 use(chaiAsPromised);
 
@@ -31,6 +32,10 @@ describe("basic interactions", function () {
   let metaMaskPage: DappeteerPage;
 
   before(async function (this: TestContext) {
+    if (isUserDataTest()) {
+      this.skip();
+    }
+
     testPage = await this.browser.newPage();
     await testPage.goto(EXAMPLE_WEBSITE, {
       waitUntil: "networkidle",
@@ -47,7 +52,7 @@ describe("basic interactions", function () {
   });
 
   after(async function () {
-    await testPage.close();
+    if (testPage) await testPage.close();
   });
 
   it("should be able to sign", async () => {
