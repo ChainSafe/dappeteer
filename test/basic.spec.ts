@@ -5,14 +5,14 @@ import { profileDropdownClick } from "../src/helpers";
 import { DappeteerPage } from "../src/page";
 
 import {
+  ACCOUNT_ADDRESS,
+  EXAMPLE_WEBSITE,
+  EXPECTED_LONG_TYPED_DATA_SIGNATURE,
+  EXPECTED_MESSAGE_SIGNATURE,
+  EXPECTED_SHORT_TYPED_DATA_SIGNATURE,
+  MESSAGE_TO_SIGN,
   PASSWORD,
   TestContext,
-  EXPECTED_MESSAGE_SIGNATURE,
-  ACCOUNT_ADDRESS,
-  MESSAGE_TO_SIGN,
-  EXPECTED_LONG_TYPED_DATA_SIGNATURE,
-  EXPECTED_SHORT_TYPED_DATA_SIGNATURE,
-  EXAMPLE_WEBSITE,
 } from "./constant";
 import {
   addNetwork,
@@ -173,5 +173,33 @@ describe("basic interactions", function () {
       }
     );
     expect(accountSwitcher).to.not.be.undefined;
+  });
+
+  it("should create an account", async () => {
+    await metaMask.createAccount("account 2");
+
+    await profileDropdownClick(metaMask.page);
+    expect((await metaMask.page.$$(".account-menu__account")).length).to.eq(2);
+  });
+
+  it("should switch account", async () => {
+    await metaMask.createAccount("account 2");
+    await metaMask.switchAccount(1);
+    await profileDropdownClick(metaMask.page);
+    await metaMask.page.waitForSelector(".account-menu__check-mark svg");
+
+    const firstAccountChecked = await metaMask.page.evaluate(() => {
+      return !!document.querySelector(
+        ".account-menu__accounts .account-menu__account:nth-child(1) .account-menu__check-mark svg"
+      );
+    });
+    const secondAccountChecked = await metaMask.page.evaluate(() => {
+      return !!document.querySelector(
+        ".account-menu__accounts .account-menu__account:nth-child(2) .account-menu__check-mark svg"
+      );
+    });
+
+    expect(firstAccountChecked).to.be.true;
+    expect(secondAccountChecked).to.be.false;
   });
 });

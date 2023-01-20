@@ -85,6 +85,12 @@ export interface DappeteerPage<P = unknown> {
     name: string,
     callback: Function | { default: Function }
   ): Promise<void>;
+
+  type(
+    selector: string,
+    text: string,
+    options?: { delay: number }
+  ): Promise<void>;
 }
 
 export type Unboxed<Arg> = Arg extends DappeteerElementHandle<any, infer T>

@@ -17,6 +17,7 @@ import { switchAccount } from "./switchAccount";
 import { switchNetwork } from "./switchNetwork";
 import { unlock } from "./unlock";
 import { acceptAddToken, rejectAddToken } from "./addToken";
+import { createAccount } from "./createAccount";
 
 export type SetSignedIn = (state: boolean) => Promise<void>;
 export type GetSingedIn = () => Promise<boolean>;
@@ -53,6 +54,7 @@ export const getMetaMask = (page: DappeteerPage): Promise<Dappeteer> => {
       unlock: unlock(page, setSignedIn, getSingedIn),
       acceptAddToken: acceptAddToken(page),
       rejectAddToken: rejectAddToken(page),
+      createAccount: createAccount(page),
       helpers: {
         getTokenBalance: getTokenBalance(page),
         deleteAccount: deleteAccount(page),

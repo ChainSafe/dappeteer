@@ -139,4 +139,12 @@ export class DPlaywrightPage implements DappeteerPage<Page> {
   ): Promise<void> {
     return this.page.exposeFunction(name, <Function>callback);
   }
+
+  type(
+    selector: string,
+    text: string,
+    options?: { delay: number }
+  ): Promise<void> {
+    return this.page.type(selector, text, options);
+  }
 }
