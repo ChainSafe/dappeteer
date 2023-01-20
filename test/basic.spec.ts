@@ -1,8 +1,8 @@
 import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
 import * as dappeteer from "../src";
-import { profileDropdownClick } from "../src/helpers";
-import { DappeteerPage } from "../src/page";
+import { clickOnLogo, profileDropdownClick } from "../src/helpers";
+import { DappeteerPage } from "../src";
 
 import {
   ACCOUNT_ADDRESS,
@@ -183,26 +183,27 @@ describe("basic interactions", function () {
   it("should create an account", async () => {
     await metaMask.createAccount("account 2");
 
-    await profileDropdownClick(metaMask.page);
-    expect((await metaMask.page.$$(".account-menu__account")).length).to.eq(2);
+    await profileDropdownClick(metaMaskPage);
+    expect((await metaMaskPage.$$(".account-menu__account")).length).to.eq(2);
   });
 
   it("should switch account", async () => {
     await metaMask.createAccount("account 2");
     await metaMask.switchAccount(1);
-    await profileDropdownClick(metaMask.page);
+    await profileDropdownClick(metaMaskPage);
     await metaMask.page.waitForSelector(".account-menu__check-mark svg");
 
-    const firstAccountChecked = await metaMask.page.evaluate(() => {
+    const firstAccountChecked = await metaMaskPage.evaluate(() => {
       return !!document.querySelector(
         ".account-menu__accounts .account-menu__account:nth-child(1) .account-menu__check-mark svg"
       );
     });
-    const secondAccountChecked = await metaMask.page.evaluate(() => {
+    const secondAccountChecked = await metaMaskPage.evaluate(() => {
       return !!document.querySelector(
         ".account-menu__accounts .account-menu__account:nth-child(2) .account-menu__check-mark svg"
       );
     });
+    await clickOnLogo(metaMaskPage);
 
     expect(firstAccountChecked).to.be.true;
     expect(secondAccountChecked).to.be.false;
