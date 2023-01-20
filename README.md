@@ -72,7 +72,7 @@ async function main() {
   });
 
   // you need to have a webpage open to interact with MetaMask, you can also visit a dApp page
-  const dappPage = await metaMask.page.browser().newPage();
+  const dappPage = await browser.newPage();
   await dappPage.goto('http://example.org/');
 
   // invoke a method from your snap that promps users with approve/reject dialog
