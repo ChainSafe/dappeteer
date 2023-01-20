@@ -147,7 +147,10 @@ describe("should run dappeteer using initSnapEnv method", function () {
   });
 
   after(async function (this: TestContext) {
-    if (this.browser.isMetaMaskFlask()) {
+    if (
+      this.browser.isMetaMaskFlask() &&
+      Boolean(process.env.USER_DATA_TEST) === false
+    ) {
       await browser.close();
     }
   });
