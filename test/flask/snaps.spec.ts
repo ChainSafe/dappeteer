@@ -1,14 +1,21 @@
 import { expect } from "chai";
-import { DappeteerPage, Dappeteer } from "../../src";
+import { after } from "mocha";
+import {
+  Dappeteer,
+  DappeteerBrowser,
+  DappeteerPage,
+  initSnapEnv,
+} from "../../src";
 import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
+import { isUserDataTest } from "../utils/utils";
 
 describe("snaps", function () {
   let metaMask: Dappeteer;
   let metaMaskPage: DappeteerPage;
 
   before(function (this: TestContext) {
-    if (Boolean(process.env.USER_DATA_TEST) === true) {
+    if (isUserDataTest()) {
       this.skip();
     }
 
@@ -115,5 +122,51 @@ describe("snaps", function () {
       );
       await emitter.cleanup();
     });
+  });
+});
+
+describe("should run dappeteer using initSnapEnv method", function () {
+  let metaMask: Dappeteer;
+  let browser: DappeteerBrowser;
+  let connectedPage: DappeteerPage;
+  let snapId: string;
+
+  before(async function (this: TestContext) {
+    if (isUserDataTest()) {
+      this.skip();
+    }
+    if (!this.browser.isMetaMaskFlask()) {
+      this.skip();
+    }
+    const installationSnapUrl = "https://google.com";
+    ({ metaMask, snapId, browser } = await initSnapEnv({
+      automation: "playwright",
+      browser: "chrome",
+      snapIdOrLocation: this.snapServers[Snaps.BASE_SNAP],
+      installationSnapUrl,
+      headless: true,
+    }));
+    connectedPage = await metaMask.page.browser().newPage();
+    await connectedPage.goto(installationSnapUrl);
+  });
+
+  after(async function (this: TestContext) {
+    if (!isUserDataTest()) {
+      if (this.browser.isMetaMaskFlask()) {
+        await browser.close();
+      }
+    }
+  });
+
+  it("should accept dialog from Base snap", async function (this: TestContext) {
+    const invokeAction = metaMask.snaps.invokeSnap(
+      connectedPage,
+      snapId,
+      "hello"
+    );
+
+    await metaMask.snaps.acceptDialog();
+
+    expect(await invokeAction).to.equal(true);
   });
 });

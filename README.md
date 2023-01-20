@@ -63,17 +63,17 @@ async function buildSnap(): Promise<string> {
 }
 
 async function main() {
-  // you need to have a webpage open to interact with MetaMask, you can also visit a dApp page
-  const dappPage = browser.newPage();
-  await dappPage.goto('http://example.org/');
-
   // build your local snap
   const builtSnapDir = await buildSnap()
 
   // setup dappateer and install your snap
-  const { snapId, metaMask, dappPage } = await dappeteer.initSnapEnv({
+  const { metaMask, snapId, browser } = await dappeteer.initSnapEnv({
     snapIdOrLocation: builtSnapDir
   });
+
+  // you need to have a webpage open to interact with MetaMask, you can also visit a dApp page
+  const dappPage = await browser.newPage();
+  await dappPage.goto('http://example.org/');
 
   // invoke a method from your snap that promps users with approve/reject dialog
   metaMask.snaps.invokeSnap(dappPage, snapId, "my-method")
