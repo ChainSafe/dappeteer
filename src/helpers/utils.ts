@@ -1,3 +1,6 @@
+import path from "path";
+import { copySync } from "fs-extra";
+
 export async function retry<R>(
   fn: () => Promise<R>,
   count: number
@@ -11,4 +14,23 @@ export async function retry<R>(
     }
   }
   throw error;
+}
+
+export function getDappateerPath(): string {
+  try {
+    return path.dirname(require.resolve("@chainsafe/dappeteer/package.json"));
+  } catch {
+    return path.resolve();
+  }
+}
+
+// blacklisted words for copy
+const copyUserDataFilesExclude = ["LOCK", "Cache", "SingletonLock"];
+export function copyUserDataFiles(from: string, to: string): void {
+  copySync(path.resolve(from), to, {
+    overwrite: true,
+    recursive: true,
+    filter: (src) =>
+      !copyUserDataFilesExclude.some((word) => src.includes(word)),
+  });
 }

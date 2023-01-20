@@ -24,6 +24,8 @@ export type DappeteerLaunchOptions = {
   headless?: boolean; // default false
   puppeteerOptions?: Parameters<typeof puppeteerLaunch>[0];
   playwrightOptions?: PlaywrightLaunchOptions;
+  userDataDir?: string;
+  key?: string;
 };
 
 declare global {

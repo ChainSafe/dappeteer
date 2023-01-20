@@ -8,7 +8,7 @@ For additional information read root [readme](../README.md)
 - [Bootstrap dAppeteer](#bootstrap)
 - [Initialize Snap Environment](#initSnapEnv)
 - [Get MetaMask Window](#getMetaMask)
-- [metaMask methods](#methods)
+- [MetaMask methods](#methods)
   - [switchAccount](#switchAccount)
   - [importPK](#importPK)
   - [lock](#lock)
@@ -38,23 +38,26 @@ For additional information read root [readme](../README.md)
 # dAppeteer setup methods
 
 <a name="launch"></a>
-## `dappeteer.launch(puppeteerLib: typeof puppeteer, options: OfficialOptions | CustomOptions): Promise<Browser>`
+## `dappeteer.launch(options: DappeteerLaunchOptions): Promise<DappeteerBrowser>`
 ```typescript
-interface OfficialOptions {
-  metaMaskVersion: 'latest' | string;
+type DappeteerLaunchOptions = {
+  metaMaskVersion?:
+          | "latest"
+          | "local"
+          | string;
   metaMaskLocation?: Path;
+  metaMaskPath?: string;
+  metaMaskFlask?: boolean;
+  automation?: "puppeteer" | "playwright";
+  browser: "chrome";
+  puppeteerOptions?: Parameters<typeof puppeteerLaunch>[0];
+  playwrightOptions?: PlaywrightLaunchOptions;
+  userDataDir?: string;
+  key?: string;
 };
-
-type Path = string | { download: string; extract: string; };
-```
-or
-```typescript
-interface CustomOptions {
-  metaMaskPath: string;
-};
 ```
 
-returns an instance of `browser` same as `puppeteer.launch`, but it also installs the MetaMask extension. [It supports all the regular `puppeteer.launch` options](https://github.com/puppeteer/puppeteer/blob/v5.5.0/docs/api.md#puppeteerlaunchoptions)
+returns an instance of `DappeteerBrowser` for more information visit [browser page](docs/BROWSER.md)
 
 <a name="setup"></a>
 ## `dappeteer.setupMetaMask(browser: Browser, options: MetaMaskOptions = {}, steps: Step[]): Promise<Dappeteer>`
@@ -91,6 +94,8 @@ type DappeteerLaunchOptions = {
   browser: "chrome";
   puppeteerOptions?: Omit<Parameters<typeof puppeteerLaunch>[0], "headless">;
   playwrightOptions?: Omit<PlaywrightLaunchOptions, "headless">;
+  userDataDir?: string;
+  key?: string;
 };
 
 type MetaMaskOptions = {
@@ -139,7 +144,7 @@ it runs `dappeteer.launch` and `dappeteer.setupMetamask` and `snaps.installSnap`
 ## `dappeteer.getMetaMaskWindow(browser: Browser, version?: string): Promise<Dappeteer>`
 
 <a name="methods"></a>
-# metaMask methods
+# MetaMask methods
 `metaMask` is used as placeholder for dAppeteer returned by [`setupMetaMask`](setup) or [`getMetaMaskWindow`](getMetaMask)
 
 <a name="switchAccount"></a>

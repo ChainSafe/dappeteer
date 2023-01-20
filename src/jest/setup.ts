@@ -14,5 +14,6 @@ export default async function (): Promise<void> {
     console.log(error);
     throw error;
   }
-  process.env.PUPPETEER_WS_ENDPOINT = browser.wsEndpoint();
+  process.env.DAPPETEER_WS_ENDPOINT = browser.wsEndpoint();
+  process.env.DAPPETEER_USER_DATA_PATH = browser.getUserDataDirPath();
 }

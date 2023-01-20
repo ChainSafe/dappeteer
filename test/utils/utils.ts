@@ -13,3 +13,7 @@ export async function clickElement(
   const element = await page.$(selector);
   await element.click();
 }
+
+export function isUserDataTest(): boolean {
+  return Boolean(process.env.USER_DATA_TEST);
+}
