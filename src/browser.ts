@@ -14,4 +14,8 @@ export interface DappeteerBrowser<Browser = unknown, Page = unknown>
   close(): Promise<void>;
 
   wsEndpoint(): string;
+
+  getUserDataDirPath(): string;
+
+  storeUserData(destination: string): boolean;
 }

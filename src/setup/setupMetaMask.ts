@@ -3,6 +3,7 @@ import { getMetaMask } from "../metamask";
 import { DappeteerPage } from "../page";
 import { Dappeteer, MetaMaskOptions } from "../types";
 
+import { clickOnButton, retry, waitForOverlay } from "../helpers";
 import {
   acceptTheRisks,
   closePortfolioTooltip,
@@ -57,6 +58,27 @@ export async function setupMetaMask<Options = MetaMaskOptions>(
   }
 
   return getMetaMask(page);
+}
+
+export async function setupBootstrappedMetaMask(
+  browser: DappeteerBrowser,
+  password: string
+): Promise<Dappeteer> {
+  const page = await getMetaMaskPage(browser);
+  const metaMask = await getMetaMask(page);
+
+  await metaMask.page.evaluate(() => {
+    (window as unknown as { signedIn: boolean }).signedIn = false;
+  });
+  await page.waitForTimeout(100);
+  await waitForOverlay(page);
+  if (browser.isMetaMaskFlask()) await waitForOverlay(page);
+  await retry(() => metaMask.unlock(password), 3);
+
+  if (browser.isMetaMaskFlask()) await clickOnButton(page, "No");
+
+  await waitForOverlay(page);
+  return metaMask;
 }
 
 async function getMetaMaskPage(

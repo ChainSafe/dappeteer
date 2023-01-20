@@ -3,6 +3,7 @@ import { DappeteerLaunchOptions } from "../types";
 
 export async function launchPuppeteer(
   metamaskPath: string,
+  userDataDir: string,
   options: DappeteerLaunchOptions
 ): Promise<DappeteerBrowser> {
   const pBrowser = await (
@@ -10,6 +11,7 @@ export async function launchPuppeteer(
   ).default.launch({
     ...(options.puppeteerOptions ?? {}),
     headless: options.headless,
+    userDataDir,
     args: [
       "--accept-lang=en",
       `--disable-extensions-except=${metamaskPath}`,
@@ -19,5 +21,5 @@ export async function launchPuppeteer(
     ],
   });
   const { DPuppeteerBrowser } = await import("../puppeteer");
-  return new DPuppeteerBrowser(pBrowser, options.metaMaskFlask);
+  return new DPuppeteerBrowser(pBrowser, userDataDir, options.metaMaskFlask);
 }
