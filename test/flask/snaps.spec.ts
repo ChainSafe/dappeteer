@@ -8,13 +8,14 @@ import {
 } from "../../src";
 import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
+import { isUserDataTest } from "../utils/utils";
 
 describe("snaps", function () {
   let metaMask: Dappeteer;
   let metaMaskPage: DappeteerPage;
 
   before(function (this: TestContext) {
-    if (Boolean(process.env.USER_DATA_TEST) === true) {
+    if (isUserDataTest()) {
       this.skip();
     }
 
@@ -131,6 +132,9 @@ describe("should run dappeteer using initSnapEnv method", function () {
   let snapId: string;
 
   before(async function (this: TestContext) {
+    if (isUserDataTest()) {
+      this.skip();
+    }
     if (!this.browser.isMetaMaskFlask()) {
       this.skip();
     }
@@ -147,11 +151,10 @@ describe("should run dappeteer using initSnapEnv method", function () {
   });
 
   after(async function (this: TestContext) {
-    if (
-      this.browser.isMetaMaskFlask() &&
-      Boolean(process.env.USER_DATA_TEST) === false
-    ) {
-      await browser.close();
+    if (!isUserDataTest()) {
+      if (this.browser.isMetaMaskFlask()) {
+        await browser.close();
+      }
     }
   });
 
