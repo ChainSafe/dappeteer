@@ -184,7 +184,7 @@ describe("basic interactions", function () {
     await metaMask.createAccount("Account 2");
     await metaMask.switchAccount(1);
     await profileDropdownClick(metaMaskPage);
-    await metaMask.page.waitForSelector(".account-menu__check-mark svg");
+    await metaMaskPage.waitForSelector(".account-menu__check-mark svg");
 
     const firstAccountSelected = await metaMaskPage.evaluate(() => {
       return !!document.querySelector(
