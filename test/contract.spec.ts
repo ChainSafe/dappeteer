@@ -2,8 +2,7 @@ import { expect } from "chai";
 
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
-import { Dappeteer } from "../src";
-import { DappeteerPage } from "../src/page";
+import { Dappeteer, DappeteerPage } from "../src";
 
 import { ACCOUNT_ADDRESS, EXAMPLE_WEBSITE, TestContext } from "./constant";
 import { ContractInfo } from "./contract/contractInfo";

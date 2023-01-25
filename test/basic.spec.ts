@@ -180,32 +180,25 @@ describe("basic interactions", function () {
     expect(accountSwitcher).to.not.be.undefined;
   });
 
-  it("should create an account", async () => {
-    await metaMask.createAccount("account 2");
-
-    await profileDropdownClick(metaMaskPage);
-    expect((await metaMaskPage.$$(".account-menu__account")).length).to.eq(2);
-  });
-
-  it("should switch account", async () => {
-    await metaMask.createAccount("account 2");
+  it("should create an account and switch back to the default", async () => {
+    await metaMask.createAccount("Account 2");
     await metaMask.switchAccount(1);
     await profileDropdownClick(metaMaskPage);
     await metaMask.page.waitForSelector(".account-menu__check-mark svg");
 
-    const firstAccountChecked = await metaMaskPage.evaluate(() => {
+    const firstAccountSelected = await metaMaskPage.evaluate(() => {
       return !!document.querySelector(
         ".account-menu__accounts .account-menu__account:nth-child(1) .account-menu__check-mark svg"
       );
     });
-    const secondAccountChecked = await metaMaskPage.evaluate(() => {
+    const secondAccountSelected = await metaMaskPage.evaluate(() => {
       return !!document.querySelector(
         ".account-menu__accounts .account-menu__account:nth-child(2) .account-menu__check-mark svg"
       );
     });
+    expect((await metaMaskPage.$$(".account-menu__account")).length).to.eq(2);
+    expect(firstAccountSelected).to.be.true;
+    expect(secondAccountSelected).to.be.false;
     await clickOnLogo(metaMaskPage);
-
-    expect(firstAccountChecked).to.be.true;
-    expect(secondAccountChecked).to.be.false;
   });
 });
