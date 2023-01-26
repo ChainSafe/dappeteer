@@ -3,6 +3,7 @@ import {
   clickOnElement,
   clickOnLogo,
   clickOnSettingsSwitch,
+  getElementByTestId,
   openNetworkDropdown,
   typeOnInputField,
 } from "../helpers";
@@ -58,6 +59,70 @@ export async function importAccount(
 
   await clickOnButton(metaMaskPage, "Import");
   await clickOnButton(metaMaskPage, "All done");
+}
+
+export async function importAccount1(
+  metaMaskPage: DappeteerPage,
+  {
+    seed = "already turtle birth enroll since owner keep patch skirt drift any dinner",
+    password = "password1234",
+  }: MetaMaskOptions
+): Promise<void> {
+  await clickOnButton(metaMaskPage, "Import an existing wallet");
+  await clickOnButton(metaMaskPage, "I agree");
+
+  for (const [index, seedPart] of seed.split(" ").entries())
+    await typeOnInputField(metaMaskPage, `${index + 1}.`, seedPart);
+  await clickOnButton(metaMaskPage, "Confirm Secret");
+
+  await typeOnInputField(metaMaskPage, "New password", password);
+  await typeOnInputField(metaMaskPage, "Confirm password", password);
+
+  // select checkbox "I have read and agree to the"
+  const acceptTerms = await getElementByTestId(
+    metaMaskPage,
+    "create-password-terms"
+  );
+  await acceptTerms.click();
+
+  const importWalletButton = await getElementByTestId(
+    metaMaskPage,
+    "create-password-import"
+  );
+
+  await Promise.all([
+    metaMaskPage.waitForNavigation(),
+    importWalletButton.click(),
+  ]);
+
+  await metaMaskPage.waitForSelector(".creation-successful", {
+    visible: true,
+  });
+
+  const doneButton = await getElementByTestId(
+    metaMaskPage,
+    "onboarding-complete-done"
+  );
+
+  await Promise.all([metaMaskPage.waitForNavigation(), doneButton.click()]);
+
+  await metaMaskPage.waitForSelector(".onboarding-pin-extension", {
+    visible: true,
+  });
+
+  const nextButton = await getElementByTestId(
+    metaMaskPage,
+    "pin-extension-next"
+  );
+  await nextButton.click();
+
+  const extensionDoneButton = await getElementByTestId(
+    metaMaskPage,
+    "pin-extension-done"
+  );
+
+  await extensionDoneButton.click();
+  await metaMaskPage.waitForTimeout(1000000);
 }
 
 export const closePopup = async (page: DappeteerPage): Promise<void> => {

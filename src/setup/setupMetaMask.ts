@@ -11,6 +11,7 @@ import {
   confirmWelcomeScreen,
   declineAnalytics,
   importAccount,
+  importAccount1,
   showTestNets,
 } from "./setupActions";
 
@@ -21,6 +22,7 @@ type Step<Options> = (
   page: DappeteerPage,
   options?: Options
 ) => void | Promise<void>;
+
 const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [
   confirmWelcomeScreen,
   declineAnalytics,
@@ -39,6 +41,8 @@ const flaskMetaMaskSteps: Step<MetaMaskOptions>[] = [
   closeWhatsNewModal,
 ];
 
+const newMatamaskV24: Step<MetaMaskOptions>[] = [importAccount1];
+
 const MM_HOME_REGEX = "chrome-extension://[a-z]+/home.html";
 
 export async function setupMetaMask<Options = MetaMaskOptions>(
@@ -47,7 +51,7 @@ export async function setupMetaMask<Options = MetaMaskOptions>(
   steps?: Step<Options>[]
 ): Promise<Dappeteer> {
   const page = await getMetaMaskPage(browser);
-  steps = steps ?? defaultMetaMaskSteps;
+  steps = steps ?? newMatamaskV24;
   if (browser.isMetaMaskFlask()) {
     steps = flaskMetaMaskSteps;
   }

@@ -14,6 +14,11 @@ export const getElementByContent = (
     ...options,
   });
 
+export const getElementByTestId = (
+  page: DappeteerPage,
+  testId: string
+): Promise<DappeteerElementHandle | null> => page.$(`[data-testid=${testId}]`);
+
 export const getInputByLabel = (
   page: DappeteerPage,
   text: string,
