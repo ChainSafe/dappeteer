@@ -1,5 +1,18 @@
 # Changelog
 
+## [4.2.0](https://github.com/ChainSafe/dappeteer/compare/v4.1.1...v4.2.0) (2023-01-26)
+
+
+### Features
+
+* add test for initSnapEnv method ([#252](https://github.com/ChainSafe/dappeteer/issues/252)) ([970854d](https://github.com/ChainSafe/dappeteer/commit/970854d812806e50df7edc2ef529ab20fd13f782))
+* speedup initializing MetaMask ([#238](https://github.com/ChainSafe/dappeteer/issues/238)) ([e32457f](https://github.com/ChainSafe/dappeteer/commit/e32457f3017a5ab053ecea83685a291a5bf25bfd))
+
+
+### Bug Fixes
+
+* preserve comments in compiled files ([#246](https://github.com/ChainSafe/dappeteer/issues/246)) ([440112a](https://github.com/ChainSafe/dappeteer/commit/440112a7ab987c7c73fe94d14678fb406c8d2ea9))
+
 ## [4.1.1](https://github.com/ChainSafe/dappeteer/compare/v4.1.0...v4.1.1) (2023-01-17)
 
 
