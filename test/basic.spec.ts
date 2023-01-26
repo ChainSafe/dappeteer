@@ -1,18 +1,18 @@
 import { expect, use } from "chai";
 import chaiAsPromised from "chai-as-promised";
 import * as dappeteer from "../src";
-import { profileDropdownClick } from "../src/helpers";
-import { DappeteerPage } from "../src/page";
+import { clickOnLogo, profileDropdownClick } from "../src/helpers";
+import { DappeteerPage } from "../src";
 
 import {
+  ACCOUNT_ADDRESS,
+  EXAMPLE_WEBSITE,
+  EXPECTED_LONG_TYPED_DATA_SIGNATURE,
+  EXPECTED_MESSAGE_SIGNATURE,
+  EXPECTED_SHORT_TYPED_DATA_SIGNATURE,
+  MESSAGE_TO_SIGN,
   PASSWORD,
   TestContext,
-  EXPECTED_MESSAGE_SIGNATURE,
-  ACCOUNT_ADDRESS,
-  MESSAGE_TO_SIGN,
-  EXPECTED_LONG_TYPED_DATA_SIGNATURE,
-  EXPECTED_SHORT_TYPED_DATA_SIGNATURE,
-  EXAMPLE_WEBSITE,
 } from "./constant";
 import {
   addNetwork,
@@ -178,5 +178,27 @@ describe("basic interactions", function () {
       }
     );
     expect(accountSwitcher).to.not.be.undefined;
+  });
+
+  it("should create an account and switch back to the default", async () => {
+    await metaMask.createAccount("Account 2");
+    await metaMask.switchAccount(1);
+    await profileDropdownClick(metaMaskPage);
+    await metaMaskPage.waitForSelector(".account-menu__check-mark svg");
+
+    const firstAccountSelected = await metaMaskPage.evaluate(() => {
+      return !!document.querySelector(
+        ".account-menu__accounts .account-menu__account:nth-child(1) .account-menu__check-mark svg"
+      );
+    });
+    const secondAccountSelected = await metaMaskPage.evaluate(() => {
+      return !!document.querySelector(
+        ".account-menu__accounts .account-menu__account:nth-child(2) .account-menu__check-mark svg"
+      );
+    });
+    expect((await metaMaskPage.$$(".account-menu__account")).length).to.eq(2);
+    expect(firstAccountSelected).to.be.true;
+    expect(secondAccountSelected).to.be.false;
+    await clickOnLogo(metaMaskPage);
   });
 });

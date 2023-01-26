@@ -61,6 +61,7 @@ export type Dappeteer = {
   sign: () => Promise<void>;
   signTypedData: () => Promise<void>;
   approve: () => Promise<void>;
+  createAccount: (accountName: string) => Promise<void>;
   helpers: {
     getTokenBalance: (tokenSymbol: string) => Promise<number>;
     deleteAccount: (accountNumber: number) => Promise<void>;

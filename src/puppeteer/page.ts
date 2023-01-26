@@ -154,4 +154,12 @@ export class DPupeteerPage implements DappeteerPage<Page> {
   exposeFunction(name: string, callback: Function): Promise<void> {
     return this.page.exposeFunction(name, callback);
   }
+
+  type(
+    selector: string,
+    text: string,
+    options?: { delay: number }
+  ): Promise<void> {
+    return this.page.type(selector, text, options);
+  }
 }
