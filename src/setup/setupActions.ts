@@ -2,10 +2,11 @@ import {
   clickOnButton,
   clickOnElement,
   clickOnLogo,
+  clickOnNavigationButton,
   clickOnSettingsSwitch,
-  getElementByTestId,
   openNetworkDropdown,
   typeOnInputField,
+  waitForOverlay,
 } from "../helpers";
 import { DappeteerPage } from "../page";
 import { MetaMaskOptions } from "../types";
@@ -61,7 +62,7 @@ export async function importAccount(
   await clickOnButton(metaMaskPage, "All done");
 }
 
-export async function importAccount1(
+export async function importAccountNewUI(
   metaMaskPage: DappeteerPage,
   {
     seed = "already turtle birth enroll since owner keep patch skirt drift any dinner",
@@ -78,51 +79,23 @@ export async function importAccount1(
   await typeOnInputField(metaMaskPage, "New password", password);
   await typeOnInputField(metaMaskPage, "Confirm password", password);
 
-  // select checkbox "I have read and agree to the"
-  const acceptTerms = await getElementByTestId(
-    metaMaskPage,
-    "create-password-terms"
-  );
-  await acceptTerms.click();
+  // onboarding/create-password URL
+  await clickOnButton(metaMaskPage, "create-password-terms", {
+    findByTestId: true,
+  });
+  await clickOnNavigationButton(metaMaskPage, "create-password-import");
+  await waitForOverlay(metaMaskPage);
 
-  const importWalletButton = await getElementByTestId(
-    metaMaskPage,
-    "create-password-import"
-  );
+  // onboarding/completion URL
+  await clickOnNavigationButton(metaMaskPage, "onboarding-complete-done");
 
-  await Promise.all([
-    metaMaskPage.waitForNavigation(),
-    importWalletButton.click(),
-  ]);
-
-  await metaMaskPage.waitForSelector(".creation-successful", {
-    visible: true,
+  // onboarding/pin-extension tab 1 URL
+  await clickOnButton(metaMaskPage, "pin-extension-next", {
+    findByTestId: true,
   });
 
-  const doneButton = await getElementByTestId(
-    metaMaskPage,
-    "onboarding-complete-done"
-  );
-
-  await Promise.all([metaMaskPage.waitForNavigation(), doneButton.click()]);
-
-  await metaMaskPage.waitForSelector(".onboarding-pin-extension", {
-    visible: true,
-  });
-
-  const nextButton = await getElementByTestId(
-    metaMaskPage,
-    "pin-extension-next"
-  );
-  await nextButton.click();
-
-  const extensionDoneButton = await getElementByTestId(
-    metaMaskPage,
-    "pin-extension-done"
-  );
-
-  await extensionDoneButton.click();
-  await metaMaskPage.waitForTimeout(1000000);
+  // onboarding/pin-extension tab 2 URL
+  await clickOnNavigationButton(metaMaskPage, "pin-extension-done");
 }
 
 export const closePopup = async (page: DappeteerPage): Promise<void> => {
@@ -151,4 +124,11 @@ export const closeWhatsNewModal = async (
   await page.reload();
   await clickOnLogo(page);
   await page.waitForTimeout(333);
+};
+
+export const closeNewModal = async (page: DappeteerPage): Promise<void> => {
+  const closeButton = await page.$(
+    ".home__subheader-link--tooltip-content-header-button"
+  );
+  await closeButton.click();
 };

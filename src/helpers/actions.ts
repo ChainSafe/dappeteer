@@ -3,6 +3,7 @@ import { DappeteerPage } from "../page";
 import {
   getAccountMenuButton,
   getElementByContent,
+  getElementByTestId,
   getInputByLabel,
   getSettingsSwitch,
 } from "./selectors";
@@ -70,10 +71,29 @@ export const clickOnElement = async (
 export const clickOnButton = async (
   page: DappeteerPage,
   text: string,
-  options?: { timeout?: number; visible?: boolean }
+  options: {
+    timeout?: number;
+    visible?: boolean;
+    findByTestId?: boolean;
+  } = {
+    findByTestId: false,
+  }
 ): Promise<void> => {
-  const button = await getElementByContent(page, text, "button", options);
+  const button = options.findByTestId
+    ? await getElementByTestId(page, text)
+    : await getElementByContent(page, text, "button", options);
   await button.click();
+};
+
+export const clickOnNavigationButton = async (
+  metaMaskPage: DappeteerPage,
+  testId: string
+): Promise<void> => {
+  const navigationButton = await getElementByTestId(metaMaskPage, testId);
+  await Promise.all([
+    metaMaskPage.waitForNavigation(),
+    navigationButton.click(),
+  ]);
 };
 
 export const clickOnLogo = async (page: DappeteerPage): Promise<void> => {

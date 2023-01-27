@@ -4,16 +4,19 @@ import { DappeteerPage } from "../page";
 import { Dappeteer, MetaMaskOptions } from "../types";
 
 import { clickOnButton, retry, waitForOverlay } from "../helpers";
+import { STABLE_UI_METAMASK_VERSION } from "../constants";
 import {
   acceptTheRisks,
+  closeNewModal,
   closePortfolioTooltip,
   closeWhatsNewModal,
   confirmWelcomeScreen,
   declineAnalytics,
   importAccount,
-  importAccount1,
+  importAccountNewUI,
   showTestNets,
 } from "./setupActions";
+import { isNewerVersion } from "./utils/isNewerVersion";
 
 /**
  * Setup MetaMask with base account
@@ -32,6 +35,7 @@ const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [
   closeWhatsNewModal,
   closeWhatsNewModal,
 ];
+
 const flaskMetaMaskSteps: Step<MetaMaskOptions>[] = [
   acceptTheRisks,
   importAccount,
@@ -41,9 +45,21 @@ const flaskMetaMaskSteps: Step<MetaMaskOptions>[] = [
   closeWhatsNewModal,
 ];
 
-const newMatamaskV24: Step<MetaMaskOptions>[] = [importAccount1];
+const metaMaskV24: Step<MetaMaskOptions>[] = [
+  importAccountNewUI,
+  closeNewModal,
+  showTestNets,
+];
 
 const MM_HOME_REGEX = "chrome-extension://[a-z]+/home.html";
+
+function getDefaultSteps(metamaskVersion: string): Step<MetaMaskOptions>[] {
+  if (isNewerVersion(STABLE_UI_METAMASK_VERSION, metamaskVersion)) {
+    return metaMaskV24;
+  }
+
+  return defaultMetaMaskSteps;
+}
 
 export async function setupMetaMask<Options = MetaMaskOptions>(
   browser: DappeteerBrowser,
@@ -51,7 +67,7 @@ export async function setupMetaMask<Options = MetaMaskOptions>(
   steps?: Step<Options>[]
 ): Promise<Dappeteer> {
   const page = await getMetaMaskPage(browser);
-  steps = steps ?? newMatamaskV24;
+  steps = steps ?? getDefaultSteps(browser.metaMaskVersion);
   if (browser.isMetaMaskFlask()) {
     steps = flaskMetaMaskSteps;
   }

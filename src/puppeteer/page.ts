@@ -1,4 +1,4 @@
-import { Browser, ElementHandle, Page } from "puppeteer";
+import { Browser, ElementHandle, Page, WaitForOptions } from "puppeteer";
 import { DappeteerBrowser } from "../browser";
 import { DappeteerElementHandle } from "../element";
 import { DappeteerPage, Response, Serializable, Unboxed } from "../page";
@@ -153,6 +153,10 @@ export class DPupeteerPage implements DappeteerPage<Page> {
 
   exposeFunction(name: string, callback: Function): Promise<void> {
     return this.page.exposeFunction(name, callback);
+  }
+
+  async waitForNavigation(options: WaitForOptions): Promise<Response | null> {
+    return this.page.waitForNavigation(options);
   }
 
   type(

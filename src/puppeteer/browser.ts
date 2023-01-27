@@ -22,6 +22,8 @@ export class DPuppeteerBrowser
     );
   }
 
+  metaMaskVersion: string;
+
   wsEndpoint(): string {
     return this.browser.wsEndpoint();
   }

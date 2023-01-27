@@ -140,6 +140,12 @@ export class DPlaywrightPage implements DappeteerPage<Page> {
     return this.page.exposeFunction(name, <Function>callback);
   }
 
+  async waitForNavigation(options?: {
+    timeout: number;
+  }): Promise<Response | null> {
+    return this.page.waitForNavigation(options);
+  }
+
   type(
     selector: string,
     text: string,
