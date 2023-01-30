@@ -6,13 +6,7 @@ import * as path from "path";
 
 import StreamZip from "node-stream-zip";
 
-export const defaultDirectory = path.resolve(
-  __dirname,
-  "..",
-  "..",
-  "..",
-  ".metamask"
-);
+const defaultDirectory = path.resolve("node_modules", ".cache", ".metamask");
 
 export type Path =
   | string
