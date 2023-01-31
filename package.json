@@ -27,6 +27,9 @@
     "test:playwright:flask": "AUTOMATION=playwright yarn run test:flask",
     "download:metamask": "node -r ts-node/register ./scripts/download_metamask.ts"
   },
+  "bin": {
+    "mmd": "./bin/metamask_downloader.js"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/chainsafe/dappeteer.git"
