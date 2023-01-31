@@ -36,6 +36,12 @@ const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [
   closeWhatsNewModal,
 ];
 
+const metaMaskV24: Step<MetaMaskOptions>[] = [
+  importAccountNewUI,
+  closeNewModal,
+  showTestNets,
+];
+
 const flaskMetaMaskSteps: Step<MetaMaskOptions>[] = [
   acceptTheRisks,
   importAccount,
@@ -45,10 +51,13 @@ const flaskMetaMaskSteps: Step<MetaMaskOptions>[] = [
   closeWhatsNewModal,
 ];
 
-const metaMaskV24: Step<MetaMaskOptions>[] = [
+const flaskMetaMaskV24: Step<MetaMaskOptions>[] = [
+  acceptTheRisks,
   importAccountNewUI,
-  closeNewModal,
   showTestNets,
+  closePortfolioTooltip,
+  closeWhatsNewModal,
+  closeWhatsNewModal,
 ];
 
 const MM_HOME_REGEX = "chrome-extension://[a-z]+/home.html";
@@ -61,6 +70,14 @@ function getDefaultSteps(metamaskVersion: string): Step<MetaMaskOptions>[] {
   return defaultMetaMaskSteps;
 }
 
+function getFlaskSteps(metamaskVersion: string): Step<MetaMaskOptions>[] {
+  if (isNewerVersion(STABLE_UI_METAMASK_VERSION, metamaskVersion)) {
+    return flaskMetaMaskV24;
+  }
+
+  return flaskMetaMaskSteps;
+}
+
 export async function setupMetaMask<Options = MetaMaskOptions>(
   browser: DappeteerBrowser,
   options?: Options,
@@ -69,7 +86,7 @@ export async function setupMetaMask<Options = MetaMaskOptions>(
   const page = await getMetaMaskPage(browser);
   steps = steps ?? getDefaultSteps(browser.metaMaskVersion);
   if (browser.isMetaMaskFlask()) {
-    steps = flaskMetaMaskSteps;
+    steps = getFlaskSteps(browser.metaMaskVersion);
   }
   await page.setViewport({ height: 1080, width: 1920 });
   // goes through the installation steps required by MetaMask

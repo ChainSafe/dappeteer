@@ -1,12 +1,25 @@
 import { OnRpcRequestHandler } from "@metamask/snap-types";
 
+declare const snap: {
+  request(param: {
+    method: string;
+    params: {
+      message?: string;
+      type?: string;
+      textAreaContent?: string;
+      description?: string;
+      prompt?: string;
+    }[];
+  }): Promise<unknown>;
+};
+
 export const onRpcRequest: OnRpcRequestHandler = async ({
   origin,
   request,
 }) => {
   switch (request.method) {
     case "confirm":
-      return wallet.request({
+      return snap.request({
         method: "snap_confirm",
         params: [
           {
@@ -20,7 +33,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       });
     case "notify_inApp":
       {
-        await wallet.request({
+        await snap.request({
           method: "snap_notify",
           params: [
             {

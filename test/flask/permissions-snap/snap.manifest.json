@@ -15,7 +15,11 @@
   "initialPermissions": {
     "snap_confirm": {},
     "snap_notify": {},
-    "snap_manageState": {}
+    "snap_manageState": {},
+    "endowment:rpc": {
+      "snaps": true,
+      "dapps": true
+    }
   },
   "manifestVersion": "0.1"
 }
