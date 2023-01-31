@@ -15,7 +15,9 @@ $ yarn add @chainsafe/dappeteer
 import dappeteer from '@chainsafe/dappeteer';
 
 async function main() {
-  const { metaMask, browser } = await dappeteer.bootstrap();
+  const { metaMask, browser } = await dappeteer.bootstrap({
+      browser: "chrome",
+  });
 
   // create a new page and visit your dapp
   const dappPage = browser.newPage();
@@ -68,7 +70,8 @@ async function main() {
 
   // setup dappateer and install your snap
   const { metaMask, snapId, browser } = await dappeteer.initSnapEnv({
-    snapIdOrLocation: builtSnapDir
+    browser: "chrome",
+    snapIdOrLocation: builtSnapDir,
   });
 
   // you need to have a webpage open to interact with MetaMask, you can also visit a dApp page
