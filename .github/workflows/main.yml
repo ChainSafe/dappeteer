@@ -9,6 +9,9 @@ on:
     branches:
       - '**'
 
+env:
+  METAMASK_CACHE_PATH: 'node_modules/.cache/.metamask'
+
 jobs:
   build:
     name: Build
@@ -23,11 +26,23 @@ jobs:
         run: yarn --prefer-offline --frozen-lockfile
       - name: Build
         run: yarn build
+  download:
+    needs: build
+    name: 'Download Metamask extension'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'yarn'
+      - name: Install deps
+        run: yarn --prefer-offline --frozen-lockfile
       - name: Download metamask
         run: yarn run download:metamask
       - uses: actions/cache/save@v3
         with:
-          path: .metamask
+          path: ${{env.METAMASK_CACHE_PATH}}
           key: metamask-extension
   lint:
     needs: build
@@ -44,7 +59,7 @@ jobs:
       - name: Lint
         run: yarn run lint
   tests:
-    needs: build
+    needs: [build, download]
     name: Tests
     runs-on: ubuntu-latest
     strategy:
@@ -60,7 +75,7 @@ jobs:
           cache: 'yarn'
       - uses: actions/cache/restore@v3
         with:
-          path: .metamask
+          path: ${{env.METAMASK_CACHE_PATH}}
           key: metamask-extension
       - name: Install
         run: yarn --prefer-offline --frozen-lockfile
@@ -74,7 +89,7 @@ jobs:
   tests-user-data:
     name: Tests UserData
     runs-on: ubuntu-latest
-    needs: tests
+    needs: [tests, download]
     strategy:
       fail-fast: false
       matrix:
@@ -85,6 +100,10 @@ jobs:
         with:
           node-version: "16"
           cache: 'yarn'
+      - uses: actions/cache/restore@v3
+        with:
+          path: ${{env.METAMASK_CACHE_PATH}}
+          key: metamask-extension
       - name: Install
         run: yarn --prefer-offline --frozen-lockfile
       - name: Tests UserData
