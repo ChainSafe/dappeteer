@@ -20,7 +20,7 @@ async function main() {
   });
 
   // create a new page and visit your dapp
-  const dappPage = browser.newPage();
+  const dappPage = await browser.newPage();
   await dappPage.goto('http://my-dapp.com');
 
   // you can change the network if you want
@@ -79,7 +79,7 @@ async function main() {
   await dappPage.goto('http://example.org/');
 
   // invoke a method from your snap that promps users with approve/reject dialog
-  metaMask.snaps.invokeSnap(dappPage, snapId, "my-method")
+  await metaMask.snaps.invokeSnap(dappPage, snapId, "my-method")
 
   // instruct MetaMask to accept this request
   await metaMask.snaps.acceptDialog();
