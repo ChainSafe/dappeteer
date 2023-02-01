@@ -25,6 +25,10 @@ jobs:
       - name: "Retrieving commit hash"
         id: commit
         uses: pr-mpt/actions-commit-hash@v2
+      - name: "Set git user"
+        run: |
+          git config user.name ChainSafe
+          git config user.email info@chainsafe.io
       - run: yarn publish --access public --tag beta --new-version ${{steps.version.outputs.current-version}}-${{steps.commit.outputs.short}}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
