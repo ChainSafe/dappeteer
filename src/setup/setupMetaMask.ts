@@ -25,7 +25,6 @@ const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [
   importAccount,
   closeNewModal,
   showTestNets,
-  closePortfolioTooltip,
   closeWhatsNewModal,
   closeWhatsNewModal,
 ];

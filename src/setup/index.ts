@@ -22,7 +22,6 @@ export const bootstrap = async ({
   metaMaskPage: DappeteerPage;
 }> => {
   const browser = await launch(launchOptions);
-  browser.metaMaskVersion = launchOptions.metaMaskVersion;
   const metaMask = await (launchOptions.userDataDir
     ? setupBootstrappedMetaMask(browser, password)
     : setupMetaMask(browser, {
@@ -55,7 +54,6 @@ export const initSnapEnv = async (
     ...opts,
     metaMaskFlask: true,
   });
-  browser.metaMaskVersion = opts.metaMaskVersion;
   const { snapIdOrLocation, seed, password, showTestNets } = opts;
   const metaMask = await setupMetaMask(browser, {
     seed,

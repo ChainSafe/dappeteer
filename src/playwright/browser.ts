@@ -20,7 +20,6 @@ export class DPlaywrightBrowser
     this.browser.on("page", (page) => this.emit("targetcreated", page));
   }
 
-  metaMaskVersion: string;
   wsEndpoint(): string {
     return "";
   }

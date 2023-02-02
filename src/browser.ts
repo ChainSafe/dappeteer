@@ -18,6 +18,4 @@ export interface DappeteerBrowser<Browser = unknown, Page = unknown>
   getUserDataDirPath(): string;
 
   storeUserData(destination: string): boolean;
-
-  metaMaskVersion: string;
 }
