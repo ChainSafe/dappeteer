@@ -42,7 +42,7 @@ export const profileDropdownClick = async (
       timeout: 2000,
     });
     await accountSwitcher.click();
-    await page.waitForSelector(".account-menu__accounts", {
+    await page.waitForSelector(".account-menu", {
       hidden: expectToClose,
       timeout: 2000,
     });
@@ -101,6 +101,10 @@ export const clickOnLogo = async (page: DappeteerPage): Promise<void> => {
     visible: true,
   });
   await header.click();
+};
+
+export const goToHomePage = async (page: DappeteerPage): Promise<void> => {
+  return await clickOnButton(page, "app-header-logo", { findByTestId: true });
 };
 
 /**

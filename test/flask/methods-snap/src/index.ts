@@ -4,12 +4,17 @@ declare const snap: {
   request(param: {
     method: string;
     params: {
-      message?: string;
-      type?: string;
       textAreaContent?: string;
       description?: string;
       prompt?: string;
     }[];
+  }): Promise<unknown>;
+  request(param: {
+    method: string;
+    params: {
+      type?: string;
+      message?: string;
+    };
   }): Promise<unknown>;
 };
 
@@ -35,12 +40,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       {
         await snap.request({
           method: "snap_notify",
-          params: [
-            {
-              type: "inApp",
-              message: `Hello from methods snap in App notification`,
-            },
-          ],
+          params: {
+            type: "inApp",
+            message: `Hello from methods snap in App notification`,
+          },
         });
       }
       break;

@@ -3,7 +3,6 @@
 <head>
   <title>Hello, Snaps!</title>
 </head>
-
 <body>
 <h1>Hello, Snaps!</h1>
 <details>
@@ -23,7 +22,6 @@
   </ul>
 </details>
 <br />
-
 <button class="connect">Connect</button>
 <button class="sendHello">Send Hello</button>
 </body>
@@ -53,9 +51,10 @@
       await ethereum.request({
         method: "wallet_invokeSnap",
         params: {
-          [snapId]: {
+          request: {
             method: "hello"
-          }
+          },
+          snapId
         }
       });
     } catch (err) {

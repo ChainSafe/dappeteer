@@ -1,29 +1,37 @@
 import { OnRpcRequestHandler } from "@metamask/snap-types";
 
+declare const snap: {
+  request(param: {
+    method: string;
+    params: {
+      type?: string;
+      message?: string;
+      prompt?: string;
+      description?: string;
+      textAreaContent?: string;
+    };
+  }): Promise<unknown>;
+};
+
 export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
   switch (request.method) {
     case "hello":
-      return wallet.request({
+      return snap.request({
         method: "snap_confirm",
-        params: [
-          {
-            prompt: `Hello, ${origin}!`,
-            description:
-              "This custom confirmation is just for display purposes.",
-            textAreaContent:
-              "But you can edit the snap source code to make it do something, if you want to!",
-          },
-        ],
+        params: {
+          prompt: `Hello, ${origin}!`,
+          description: "This custom confirmation is just for display purposes.",
+          textAreaContent:
+            "But you can edit the snap source code to make it do something, if you want to!",
+        },
       });
     case "notify_inApp": {
-      return wallet.request({
+      return snap.request({
         method: "snap_notify",
-        params: [
-          {
-            type: "inApp",
-            message: `Hello from permissions snap in App notification`,
-          },
-        ],
+        params: {
+          type: "inApp",
+          message: `Hello from permissions snap in App notification`,
+        },
       });
     }
     default:

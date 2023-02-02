@@ -1,10 +1,8 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
   <title>Hello, Snaps!</title>
-  <link rel="icon" type="image/svg" href="./images/icon.svg" />
 </head>
-
 <body>
 <h1>Hello, Snaps!</h1>
 <details>
@@ -53,9 +51,12 @@
     try {
       await ethereum.request({
         method: "wallet_invokeSnap",
-        params: [snapId, {
-          method: "hello"
-        }]
+        params: {
+          request: {
+            method: "hello"
+          },
+          snapId
+        }
       });
     } catch (err) {
       console.error(err);
