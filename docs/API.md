@@ -105,7 +105,7 @@ type MetaMaskOptions = {
 };
 ```
 
-it runs it runs `dappeteer.launch` and `dappeteer.setupMetaMask` and returns an object with metaMask, metaMaskPage and browser.
+it runs `dappeteer.launch` and `dappeteer.setupMetaMask` and returns an object with metaMask, metaMaskPage and browser.
 
 <a name="initSnapEnv"></a>
 ## `dappeteer.initSnapEnv( opts: DappeteerLaunchOptions & MetaMaskOptions & InstallSnapOptions & { snapIdOrLocation: string }): Promise<{ metaMask: Dappeteer; browser: DappeteerBrowser; metaMaskPage: DappeteerPage; snapId: string;}`
@@ -153,11 +153,11 @@ it commands MetaMask to switch to a different account, by passing the index/posi
 
 <a name="importPK"></a>
 ## `metaMask.importPK(privateKey: string): Promise<void>`  
-it commands MetaMask to import an private key. It can only be used while you haven't signed in yet, otherwise it throws.
+it commands MetaMask to import a private key. It can only be used while you haven't signed in yet, otherwise it throws.
 
 <a name="lock"></a>
 ## `metaMask.lock(): Promise<void>`  
-signs out from MetaMask. It can only be used if you arelady signed it, otherwise it throws.
+signs out from MetaMask. It can only be used if you already signed it, otherwise it throws.
 
 <a name="unlock"></a>
 ## `metaMask.unlock(password: string): Promise<void>`  
@@ -170,7 +170,7 @@ it changes the current selected network. `networkName` can take the following va
 <a name="acceptAddNetwork"></a>
 ## `metaMask.acceptAddNetwork(shouldSwitch?: boolean): Promise<void>`
 
-commands MetaMask to accept a Network addition. For this to work MetaMask has to be in a Network addition state (basically prompting the user to accept/reject a Network addition). You can optionnaly tell MetaMask to switch to this network by passing the `true` parameter (default to `false`).
+commands MetaMask to accept a Network addition. For this to work MetaMask has to be in a Network addition state (basically prompting the user to accept/reject a Network addition). You can optionally tell MetaMask to switch to this network by passing the `true` parameter (default to `false`).
 
 <a name="rejectAddNetwork"></a>
 ## `metaMask.rejectAddNetwork(): Promise<void>`
