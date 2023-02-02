@@ -6,8 +6,6 @@ import {
 } from "../helpers";
 
 import { DappeteerPage } from "../page";
-import { isNewerVersion } from "../setup/utils/isNewerVersion";
-import { STABLE_UI_METAMASK_VERSION } from "../constants";
 import { GetSingedIn } from ".";
 
 export const sign =
@@ -28,12 +26,9 @@ export const sign =
 
     await clickOnButton(page, "Sign");
 
-    if (
-      isNewerVersion(STABLE_UI_METAMASK_VERSION, page.browser().metaMaskVersion)
-    ) {
-      await page.waitForSelector(".signature-request-warning__content");
-      await clickOnButton(page, "Sign");
-    }
+    await page.waitForSelector(".signature-request-warning__content");
+    await clickOnButton(page, "Sign");
+
     // wait for MM to be back in a stable state
     await page.waitForSelector(".app-header", {
       visible: true,

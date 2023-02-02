@@ -44,31 +44,6 @@ export async function importAccount(
     password = "password1234",
   }: MetaMaskOptions
 ): Promise<void> {
-  await clickOnButton(metaMaskPage, "Import wallet");
-
-  for (const [index, seedPart] of seed.split(" ").entries())
-    await typeOnInputField(metaMaskPage, `${index + 1}.`, seedPart);
-
-  await typeOnInputField(metaMaskPage, "New password", password);
-  await typeOnInputField(metaMaskPage, "Confirm password", password);
-
-  // select checkbox "I have read and agree to the"
-  const acceptTerms = await metaMaskPage.waitForSelector(
-    ".create-new-vault__terms-label"
-  );
-  await acceptTerms.click();
-
-  await clickOnButton(metaMaskPage, "Import");
-  await clickOnButton(metaMaskPage, "All done");
-}
-
-export async function importAccountNewUI(
-  metaMaskPage: DappeteerPage,
-  {
-    seed = "already turtle birth enroll since owner keep patch skirt drift any dinner",
-    password = "password1234",
-  }: MetaMaskOptions
-): Promise<void> {
   await clickOnButton(metaMaskPage, "Import an existing wallet");
   await clickOnButton(metaMaskPage, "I agree");
 

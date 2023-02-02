@@ -4,19 +4,14 @@ import { DappeteerPage } from "../page";
 import { Dappeteer, MetaMaskOptions } from "../types";
 
 import { clickOnButton, retry, waitForOverlay } from "../helpers";
-import { STABLE_UI_METAMASK_VERSION } from "../constants";
 import {
   acceptTheRisks,
   closeNewModal,
   closePortfolioTooltip,
   closeWhatsNewModal,
-  confirmWelcomeScreen,
-  declineAnalytics,
   importAccount,
-  importAccountNewUI,
   showTestNets,
 } from "./setupActions";
-import { isNewerVersion } from "./utils/isNewerVersion";
 
 /**
  * Setup MetaMask with base account
@@ -27,19 +22,12 @@ type Step<Options> = (
 ) => void | Promise<void>;
 
 const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [
-  confirmWelcomeScreen,
-  declineAnalytics,
   importAccount,
+  closeNewModal,
   showTestNets,
   closePortfolioTooltip,
   closeWhatsNewModal,
   closeWhatsNewModal,
-];
-
-const metaMaskV24: Step<MetaMaskOptions>[] = [
-  importAccountNewUI,
-  closeNewModal,
-  showTestNets,
 ];
 
 const flaskMetaMaskSteps: Step<MetaMaskOptions>[] = [
@@ -51,31 +39,14 @@ const flaskMetaMaskSteps: Step<MetaMaskOptions>[] = [
   closeWhatsNewModal,
 ];
 
-const flaskMetaMaskV24: Step<MetaMaskOptions>[] = [
-  acceptTheRisks,
-  importAccountNewUI,
-  showTestNets,
-  closePortfolioTooltip,
-  closeWhatsNewModal,
-  closeWhatsNewModal,
-];
-
 const MM_HOME_REGEX = "chrome-extension://[a-z]+/home.html";
 
-function getDefaultSteps(metamaskVersion: string): Step<MetaMaskOptions>[] {
-  if (isNewerVersion(STABLE_UI_METAMASK_VERSION, metamaskVersion)) {
-    return metaMaskV24;
+function getDefaultSteps(browser: DappeteerBrowser): Step<MetaMaskOptions>[] {
+  if (browser.isMetaMaskFlask()) {
+    return flaskMetaMaskSteps;
   }
 
   return defaultMetaMaskSteps;
-}
-
-function getFlaskSteps(metamaskVersion: string): Step<MetaMaskOptions>[] {
-  if (isNewerVersion(STABLE_UI_METAMASK_VERSION, metamaskVersion)) {
-    return flaskMetaMaskV24;
-  }
-
-  return flaskMetaMaskSteps;
 }
 
 export async function setupMetaMask<Options = MetaMaskOptions>(
@@ -84,11 +55,9 @@ export async function setupMetaMask<Options = MetaMaskOptions>(
   steps?: Step<Options>[]
 ): Promise<Dappeteer> {
   const page = await getMetaMaskPage(browser);
-  steps = steps ?? getDefaultSteps(browser.metaMaskVersion);
-  if (browser.isMetaMaskFlask()) {
-    steps = getFlaskSteps(browser.metaMaskVersion);
-  }
-  await page.setViewport({ height: 1080, width: 1920 });
+  steps = steps ?? getDefaultSteps(browser);
+
+  await page.setViewport({ width: 1920, height: 1080 });
   // goes through the installation steps required by MetaMask
   for (const step of steps) {
     await step(page, options);

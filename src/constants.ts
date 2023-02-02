@@ -4,7 +4,6 @@ import { getDappateerPath } from "./helpers/utils";
 export const EXAMPLE_WEBSITE = "http://example.org";
 
 export const RECOMMENDED_METAMASK_VERSION = "v10.24.2";
-export const STABLE_UI_METAMASK_VERSION = "v10.23.0";
 
 export const DEFAULT_METAMASK_USERDATA = path.join(
   getDappateerPath(),

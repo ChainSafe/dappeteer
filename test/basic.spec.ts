@@ -3,7 +3,6 @@ import chaiAsPromised from "chai-as-promised";
 import * as dappeteer from "../src";
 import { clickOnLogo, profileDropdownClick } from "../src/helpers";
 import { DappeteerPage } from "../src";
-
 import {
   ACCOUNT_ADDRESS,
   EXAMPLE_WEBSITE,
@@ -124,14 +123,22 @@ describe("basic interactions", function () {
     expect(res).to.equal(true);
   });
 
-  it("should not add network", async () => {
+  it("should not add network", async function (this: TestContext) {
+    if (this.browser.isMetaMaskFlask()) {
+      this.skip();
+    }
+
     const addNetworkPromise = testPage.evaluate(addNetwork);
     await metaMask.rejectAddNetwork();
     const res = await addNetworkPromise;
     expect(res).to.equal(false);
   });
 
-  it("should add network and switch", async () => {
+  it("should add network and switch", async function (this: TestContext) {
+    if (this.browser.isMetaMaskFlask()) {
+      this.skip();
+    }
+
     const addNetworkPromise = testPage.evaluate(addNetwork);
     await metaMask.acceptAddNetwork();
     const res = await addNetworkPromise;
