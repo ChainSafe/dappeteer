@@ -25,6 +25,8 @@ export const mochaHooks = {
         (process.env.AUTOMATION as "puppeteer" | "playwright") ?? "puppeteer",
       browser: "chrome",
       headless: true,
+      metaMaskVersion:
+        process.env.METAMASK_VERSION || dappeteer.RECOMMENDED_METAMASK_VERSION,
       metaMaskFlask: true,
     });
 
