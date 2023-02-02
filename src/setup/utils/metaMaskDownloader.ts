@@ -7,10 +7,8 @@ import * as path from "path";
 import StreamZip from "node-stream-zip";
 
 export const defaultDirectory = path.resolve(
-  __dirname,
-  "..",
-  "..",
-  "..",
+  "node_modules",
+  ".cache",
   ".metamask"
 );
 
@@ -35,13 +33,26 @@ export default async (
       ? location
       : location?.download || path.resolve(defaultDirectory, "download");
 
+  console.log(
+    `Getting MetaMask ${
+      options.flask ? "flask" : ""
+    } extension version: ${version}`
+  );
+  console.log(`extension stored in directory: ${metaMaskDirectory}`);
+  console.log(`downloaded files stored in: ${downloadDirectory}`, "\n");
+
   if (version !== "latest") {
     let filename = version.replace(/\./g, "_");
     if (options?.flask) {
       filename = "flask_" + filename;
     }
     const extractDestination = path.resolve(metaMaskDirectory, filename);
-    if (fs.existsSync(extractDestination)) return extractDestination;
+    if (fs.existsSync(extractDestination)) {
+      console.log(
+        "Found already available extension files - skipping download"
+      );
+      return extractDestination;
+    }
   }
   const { filename, downloadUrl, tag } = await getMetaMaskReleases(
     version,
@@ -49,7 +60,7 @@ export default async (
   );
   let destFilename = tag.replace(/\./g, "_");
   if (options?.flask) {
-    destFilename = "flask_" + filename;
+    destFilename = "flask_" + destFilename;
   }
   const extractDestination = path.resolve(metaMaskDirectory, destFilename);
   if (!fs.existsSync(extractDestination)) {
@@ -58,21 +69,23 @@ export default async (
       downloadUrl,
       downloadDirectory
     );
+    console.log("Unpacking release");
     const zip = new StreamZip.async({ file: downloadedFile });
     fs.mkdirSync(extractDestination);
     await zip.extract(null, extractDestination);
+    console.log("Unpack successful");
+  } else {
+    console.log("Found already available extension files - skipping download");
   }
   return extractDestination;
 };
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
 const request = (url: string): Promise<IncomingMessage> =>
   new Promise((resolve) => {
     const request = get(url, (response) => {
       if (response.statusCode == 302) {
         const redirectRequest = get(response.headers.location, resolve);
         redirectRequest.on("error", (error) => {
-          // eslint-disable-next-line no-console
           console.warn("request redirected error:", error.message);
           throw error;
         });
@@ -81,7 +94,6 @@ const request = (url: string): Promise<IncomingMessage> =>
       }
     });
     request.on("error", (error) => {
-      // eslint-disable-next-line no-console
       console.warn("request error:", error.message);
       throw error;
     });
@@ -97,11 +109,13 @@ const downloadMetaMaskReleases = (
     if (!fs.existsSync(location)) {
       fs.mkdirSync(location, { recursive: true });
     }
+    console.log("Downloading MetaMask release");
     const fileLocation = path.join(location, name);
     const file = fs.createWriteStream(fileLocation);
     const stream = await request(url);
     stream.pipe(file);
     stream.on("end", () => {
+      console.log("Download successful");
       resolve(fileLocation);
     });
   });
@@ -114,7 +128,7 @@ const getMetaMaskReleases = (
   flask: boolean
 ): Promise<MetaMaskReleases> =>
   new Promise((resolve, reject) => {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+    console.log("Searching for MetaMask release");
     const request = get(
       metaMaskReleasesUrl,
       { headers: { "User-Agent": "Mozilla/5.0" } },
@@ -131,17 +145,16 @@ const getMetaMaskReleases = (
             if (
               version === "latest" ||
               result.name.includes(version) ||
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-call
               result.tag_name.includes(version)
             ) {
               for (const asset of result.assets) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                 if (
                   (!flask && asset.name.includes("chrome")) ||
                   (flask &&
                     asset.name.includes("flask") &&
                     asset.name.includes("chrome"))
                 ) {
+                  console.log("Found requested MetaMask release");
                   resolve({
                     downloadUrl: asset.browser_download_url,
                     filename: asset.name,
@@ -156,7 +169,6 @@ const getMetaMaskReleases = (
       }
     );
     request.on("error", (error) => {
-      // eslint-disable-next-line no-console
       console.warn("getMetaMaskReleases error:", error.message);
       throw error;
     });
