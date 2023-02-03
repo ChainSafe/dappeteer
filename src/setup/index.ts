@@ -61,7 +61,6 @@ export const initSnapEnv = async (
     showTestNets,
   });
   const metaMaskPage = metaMask.page;
-
   const snapId = await metaMask.snaps.installSnap(snapIdOrLocation, opts);
 
   return {

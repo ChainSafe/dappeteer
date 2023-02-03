@@ -42,14 +42,12 @@ export const installSnap =
     const installAction = installPage.evaluate(
       ({ snapId, version }: { snapId: string; version?: string }) =>
         window.ethereum.request<InstallSnapResult>({
-          method: "wallet_enable",
-          params: [
-            {
-              [`wallet_snap_${snapId}`]: {
-                version: version ?? "latest",
-              },
+          method: "wallet_requestSnaps",
+          params: {
+            [snapId]: {
+              version: version ?? "latest",
             },
-          ],
+          },
         }),
       { snapId: snapIdOrLocation, version: opts?.version }
     );
@@ -65,7 +63,9 @@ export const installSnap =
     });
 
     if (isAskingForPermissions) {
-      await clickOnButton(flaskPage, "Approve & install");
+      await clickOnButton(flaskPage, "page-container-footer-next", {
+        visible: false,
+      });
 
       const isShowingWarning = await isFirstElementAppearsFirst({
         selectorOrXpath1: ".popover-wrap.snap-install-warning",
@@ -75,7 +75,7 @@ export const installSnap =
 
       if (isShowingWarning) {
         await flaskPage.waitForSelector(".checkbox-label", {
-          visible: true,
+          visible: false,
         });
         for await (const checkbox of await flaskPage.$$(".checkbox-label")) {
           await checkbox.click();
@@ -93,7 +93,7 @@ export const installSnap =
     const result = await installAction;
     await installPage.waitForTimeout(1000);
     await installPage.close({ runBeforeUnload: true });
-    if (!(snapIdOrLocation in result.snaps)) {
+    if (!(snapIdOrLocation in result)) {
       throw new Error("Failed to install snap");
     }
     snapServer.close();

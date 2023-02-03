@@ -19,6 +19,7 @@ export class DPlaywrightBrowser
     super();
     this.browser.on("page", (page) => this.emit("targetcreated", page));
   }
+
   wsEndpoint(): string {
     return "";
   }

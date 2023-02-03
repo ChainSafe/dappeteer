@@ -2,9 +2,11 @@ import {
   clickOnButton,
   clickOnElement,
   clickOnLogo,
+  clickOnNavigationButton,
   clickOnSettingsSwitch,
   openNetworkDropdown,
   typeOnInputField,
+  waitForOverlay,
 } from "../helpers";
 import { DappeteerPage } from "../page";
 import { MetaMaskOptions } from "../types";
@@ -42,22 +44,29 @@ export async function importAccount(
     password = "password1234",
   }: MetaMaskOptions
 ): Promise<void> {
-  await clickOnButton(metaMaskPage, "Import wallet");
+  await clickOnButton(metaMaskPage, "onboarding-import-wallet");
+  await clickOnButton(metaMaskPage, "metametrics-i-agree");
 
   for (const [index, seedPart] of seed.split(" ").entries())
     await typeOnInputField(metaMaskPage, `${index + 1}.`, seedPart);
+  await clickOnButton(metaMaskPage, "Confirm Secret");
 
   await typeOnInputField(metaMaskPage, "New password", password);
   await typeOnInputField(metaMaskPage, "Confirm password", password);
 
-  // select checkbox "I have read and agree to the"
-  const acceptTerms = await metaMaskPage.waitForSelector(
-    ".create-new-vault__terms-label"
-  );
-  await acceptTerms.click();
+  // onboarding/create-password URL
+  await clickOnButton(metaMaskPage, "create-password-terms");
+  await clickOnNavigationButton(metaMaskPage, "create-password-import");
+  await waitForOverlay(metaMaskPage);
 
-  await clickOnButton(metaMaskPage, "Import");
-  await clickOnButton(metaMaskPage, "All done");
+  // onboarding/completion URL
+  await clickOnNavigationButton(metaMaskPage, "onboarding-complete-done");
+
+  // onboarding/pin-extension tab 1 URL
+  await clickOnButton(metaMaskPage, "pin-extension-next");
+
+  // onboarding/pin-extension tab 2 URL
+  await clickOnNavigationButton(metaMaskPage, "pin-extension-done");
 }
 
 export const closePopup = async (page: DappeteerPage): Promise<void> => {
@@ -86,4 +95,11 @@ export const closeWhatsNewModal = async (
   await page.reload();
   await clickOnLogo(page);
   await page.waitForTimeout(333);
+};
+
+export const closeNewModal = async (page: DappeteerPage): Promise<void> => {
+  const closeButton = await page.$(
+    ".home__subheader-link--tooltip-content-header-button"
+  );
+  await closeButton.click();
 };

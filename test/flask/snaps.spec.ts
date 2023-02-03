@@ -9,6 +9,7 @@ import {
 import { TestContext } from "../constant";
 import { Snaps } from "../deploy";
 import { isUserDataTest } from "../utils/utils";
+import { goToHomePage } from "../../src/helpers";
 
 describe("snaps", function () {
   let metaMask: Dappeteer;
@@ -77,29 +78,6 @@ describe("snaps", function () {
       return testPage;
     });
 
-    it("should invoke provided snap method and ACCEPT the dialog", async function (this: TestContext) {
-      const invokeAction = metaMask.snaps.invokeSnap(
-        testPage,
-        snapId,
-        "confirm"
-      );
-
-      await metaMask.snaps.acceptDialog();
-
-      expect(await invokeAction).to.equal(true);
-    });
-
-    it("should invoke provided snap method and REJECT the dialog", async function (this: TestContext) {
-      const invokeAction = metaMask.snaps.invokeSnap(
-        testPage,
-        snapId,
-        "confirm"
-      );
-      await metaMask.snaps.rejectDialog();
-
-      expect(await invokeAction).to.equal(false);
-    });
-
     it("should return all notifications", async function (this: TestContext) {
       const emitter = await metaMask.snaps.getNotificationEmitter();
       const notificationPromise = emitter.waitForNotification();
@@ -121,6 +99,30 @@ describe("snaps", function () {
         "Hello from methods snap in App notification"
       );
       await emitter.cleanup();
+      await goToHomePage(metaMask.page);
+    });
+
+    it("should invoke provided snap method and ACCEPT the dialog", async function (this: TestContext) {
+      const invokeAction = metaMask.snaps.invokeSnap(
+        testPage,
+        snapId,
+        "confirm"
+      );
+
+      await metaMask.snaps.acceptDialog();
+
+      expect(await invokeAction).to.equal(true);
+    });
+
+    it("should invoke provided snap method and REJECT the dialog", async function (this: TestContext) {
+      const invokeAction = metaMask.snaps.invokeSnap(
+        testPage,
+        snapId,
+        "confirm"
+      );
+      await metaMask.snaps.rejectDialog();
+
+      expect(await invokeAction).to.equal(false);
     });
   });
 });

@@ -3,7 +3,7 @@
   "description": "An example Snap written in TypeScript.",
   "proposedName": "Keys Snap\n",
   "source": {
-    "shasum": "sApNS/DJjjs8psniSQzWlOdkzJ75IsbtlpdipfKarRI=",
+    "shasum": "sqDnj6sacQPifC/D9f9pWh4Cvi2gVdZJFrxikYhDqXk=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -20,7 +20,11 @@
       {
         "coinType": 397
       }
-    ]
+    ],
+    "endowment:rpc": {
+      "snaps": true,
+      "dapps": true
+    }
   },
   "manifestVersion": "0.1"
 }

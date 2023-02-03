@@ -3,13 +3,12 @@ import { getMetaMask } from "../metamask";
 import { DappeteerPage } from "../page";
 import { Dappeteer, MetaMaskOptions } from "../types";
 
-import { clickOnButton, retry, waitForOverlay } from "../helpers";
+import { retry, waitForOverlay } from "../helpers";
 import {
   acceptTheRisks,
+  closeNewModal,
   closePortfolioTooltip,
   closeWhatsNewModal,
-  confirmWelcomeScreen,
-  declineAnalytics,
   importAccount,
   showTestNets,
 } from "./setupActions";
@@ -21,15 +20,15 @@ type Step<Options> = (
   page: DappeteerPage,
   options?: Options
 ) => void | Promise<void>;
+
 const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [
-  confirmWelcomeScreen,
-  declineAnalytics,
   importAccount,
+  closeNewModal,
   showTestNets,
-  closePortfolioTooltip,
   closeWhatsNewModal,
   closeWhatsNewModal,
 ];
+
 const flaskMetaMaskSteps: Step<MetaMaskOptions>[] = [
   acceptTheRisks,
   importAccount,
@@ -41,17 +40,23 @@ const flaskMetaMaskSteps: Step<MetaMaskOptions>[] = [
 
 const MM_HOME_REGEX = "chrome-extension://[a-z]+/home.html";
 
+function getDefaultSteps(browser: DappeteerBrowser): Step<MetaMaskOptions>[] {
+  if (browser.isMetaMaskFlask()) {
+    return flaskMetaMaskSteps;
+  }
+
+  return defaultMetaMaskSteps;
+}
+
 export async function setupMetaMask<Options = MetaMaskOptions>(
   browser: DappeteerBrowser,
   options?: Options,
   steps?: Step<Options>[]
 ): Promise<Dappeteer> {
   const page = await getMetaMaskPage(browser);
-  steps = steps ?? defaultMetaMaskSteps;
-  if (browser.isMetaMaskFlask()) {
-    steps = flaskMetaMaskSteps;
-  }
-  await page.setViewport({ height: 1080, width: 1920 });
+  steps = steps ?? getDefaultSteps(browser);
+
+  await page.setViewport({ width: 1920, height: 1080 });
   // goes through the installation steps required by MetaMask
   for (const step of steps) {
     await step(page, options);
@@ -74,8 +79,6 @@ export async function setupBootstrappedMetaMask(
   await waitForOverlay(page);
   if (browser.isMetaMaskFlask()) await waitForOverlay(page);
   await retry(() => metaMask.unlock(password), 3);
-
-  if (browser.isMetaMaskFlask()) await clickOnButton(page, "No");
 
   await waitForOverlay(page);
   return metaMask;

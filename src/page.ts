@@ -86,6 +86,8 @@ export interface DappeteerPage<P = unknown> {
     callback: Function | { default: Function }
   ): Promise<void>;
 
+  waitForNavigation(options?: { timeout: number });
+
   type(
     selector: string,
     text: string,

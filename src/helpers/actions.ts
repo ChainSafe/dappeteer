@@ -2,6 +2,7 @@ import { DappeteerElementHandle } from "../element";
 import { DappeteerPage } from "../page";
 import {
   getAccountMenuButton,
+  getButton,
   getElementByContent,
   getInputByLabel,
   getSettingsSwitch,
@@ -41,7 +42,7 @@ export const profileDropdownClick = async (
       timeout: 2000,
     });
     await accountSwitcher.click();
-    await page.waitForSelector(".account-menu__accounts", {
+    await page.waitForSelector(".account-menu", {
       hidden: expectToClose,
       timeout: 2000,
     });
@@ -70,10 +71,24 @@ export const clickOnElement = async (
 export const clickOnButton = async (
   page: DappeteerPage,
   text: string,
-  options?: { timeout?: number; visible?: boolean }
+  options?: {
+    timeout?: number;
+    visible?: boolean;
+  }
 ): Promise<void> => {
-  const button = await getElementByContent(page, text, "button", options);
+  const button = await getButton(page, text, options);
   await button.click();
+};
+
+export const clickOnNavigationButton = async (
+  metaMaskPage: DappeteerPage,
+  text: string
+): Promise<void> => {
+  const navigationButton = await getButton(metaMaskPage, text);
+  await Promise.all([
+    metaMaskPage.waitForNavigation(),
+    navigationButton.click(),
+  ]);
 };
 
 export const clickOnLogo = async (page: DappeteerPage): Promise<void> => {
@@ -81,6 +96,10 @@ export const clickOnLogo = async (page: DappeteerPage): Promise<void> => {
     visible: true,
   });
   await header.click();
+};
+
+export const goToHomePage = async (page: DappeteerPage): Promise<void> => {
+  return await clickOnButton(page, "app-header-logo");
 };
 
 /**
