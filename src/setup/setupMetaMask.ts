@@ -80,8 +80,6 @@ export async function setupBootstrappedMetaMask(
   if (browser.isMetaMaskFlask()) await waitForOverlay(page);
   await retry(() => metaMask.unlock(password), 3);
 
-  if (browser.isMetaMaskFlask()) await clickOnButton(page, "No");
-
   await waitForOverlay(page);
   return metaMask;
 }
