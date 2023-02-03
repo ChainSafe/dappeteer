@@ -78,7 +78,7 @@ async function main() {
   const dappPage = await browser.newPage();
   await dappPage.goto('http://example.org/');
 
-  // invoke a method from your snap that promps users with approve/reject dialog
+  // invoke a method from your snap that prompts users with approve/reject dialog
   await metaMask.snaps.invokeSnap(dappPage, snapId, "my-method")
 
   // instruct MetaMask to accept this request
@@ -88,7 +88,7 @@ async function main() {
   const emitter = await metaMask.snaps.getNotificationEmitter();
   const notificationPromise = emitter.waitForNotification();
 
-  // do something that prompts you snap to emit notifications
+  // do something that prompts your snap to emit notifications
   await metaMask.snaps.invokeSnap(dappPage, snapId, "notify");
 
   // Make sure the notification promise has resolved

@@ -111,7 +111,7 @@ async function store() {
   // but at first we need to give a bit of time to metamask to store state
   await dappPage.waitForTimeout(1000);
   
-  // now we can store on desiered location
+  // now we can store on desired location
   browser.storeUserData("./location-path");
   
   // done!

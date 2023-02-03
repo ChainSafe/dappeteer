@@ -6,7 +6,9 @@
   "typings": "dist/index.d.ts",
   "files": [
     "jest-preset.js",
-    "dist"
+    "dist",
+    "userData",
+    "bin"
   ],
   "engines": {
     "node": ">=16"
