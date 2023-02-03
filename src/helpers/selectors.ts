@@ -81,3 +81,17 @@ export const getAccountMenuButton = (
   page.waitForXPath(`//button[contains(@title,'Account options')]`, {
     visible: true,
   });
+
+export const getButton = async (
+  page: DappeteerPage,
+  text: string,
+  options?: {
+    timeout?: number;
+    visible?: boolean;
+  }
+): Promise<DappeteerElementHandle> => {
+  return await Promise.race([
+    getElementByTestId(page, text),
+    getElementByContent(page, text, "button", options),
+  ]);
+};

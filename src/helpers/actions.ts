@@ -2,8 +2,8 @@ import { DappeteerElementHandle } from "../element";
 import { DappeteerPage } from "../page";
 import {
   getAccountMenuButton,
+  getButton,
   getElementByContent,
-  getElementByTestId,
   getInputByLabel,
   getSettingsSwitch,
 } from "./selectors";
@@ -66,20 +66,6 @@ export const clickOnElement = async (
 ): Promise<void> => {
   const element = await getElementByContent(page, text, type);
   await element.click();
-};
-
-export const getButton = async (
-  page: DappeteerPage,
-  text: string,
-  options?: {
-    timeout?: number;
-    visible?: boolean;
-  }
-): Promise<DappeteerElementHandle> => {
-  return await Promise.race([
-    getElementByTestId(page, text),
-    getElementByContent(page, text, "button", options),
-  ]);
 };
 
 export const clickOnButton = async (
