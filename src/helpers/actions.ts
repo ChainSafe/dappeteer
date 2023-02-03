@@ -68,28 +68,37 @@ export const clickOnElement = async (
   await element.click();
 };
 
+export const getButton = async (
+  page: DappeteerPage,
+  text: string,
+  options?: {
+    timeout?: number;
+    visible?: boolean;
+  }
+): Promise<DappeteerElementHandle> => {
+  return await Promise.race([
+    getElementByTestId(page, text),
+    getElementByContent(page, text, "button", options),
+  ]);
+};
+
 export const clickOnButton = async (
   page: DappeteerPage,
   text: string,
-  options: {
+  options?: {
     timeout?: number;
     visible?: boolean;
-    findByTestId?: boolean;
-  } = {
-    findByTestId: false,
   }
 ): Promise<void> => {
-  const button = options.findByTestId
-    ? await getElementByTestId(page, text)
-    : await getElementByContent(page, text, "button", options);
+  const button = await getButton(page, text, options);
   await button.click();
 };
 
 export const clickOnNavigationButton = async (
   metaMaskPage: DappeteerPage,
-  testId: string
+  text: string
 ): Promise<void> => {
-  const navigationButton = await getElementByTestId(metaMaskPage, testId);
+  const navigationButton = await getButton(metaMaskPage, text);
   await Promise.all([
     metaMaskPage.waitForNavigation(),
     navigationButton.click(),
@@ -104,7 +113,7 @@ export const clickOnLogo = async (page: DappeteerPage): Promise<void> => {
 };
 
 export const goToHomePage = async (page: DappeteerPage): Promise<void> => {
-  return await clickOnButton(page, "app-header-logo", { findByTestId: true });
+  return await clickOnButton(page, "app-header-logo");
 };
 
 /**

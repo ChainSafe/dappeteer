@@ -64,7 +64,6 @@ export const installSnap =
 
     if (isAskingForPermissions) {
       await clickOnButton(flaskPage, "page-container-footer-next", {
-        findByTestId: true,
         visible: false,
       });
 

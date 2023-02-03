@@ -17,7 +17,8 @@ export const getElementByContent = (
 export const getElementByTestId = (
   page: DappeteerPage,
   testId: string
-): Promise<DappeteerElementHandle | null> => page.$(`[data-testid=${testId}]`);
+): Promise<DappeteerElementHandle | null> =>
+  page.waitForSelector(`[data-testid="${testId}"]`);
 
 export const getInputByLabel = (
   page: DappeteerPage,

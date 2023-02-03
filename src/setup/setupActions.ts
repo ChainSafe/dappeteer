@@ -44,8 +44,8 @@ export async function importAccount(
     password = "password1234",
   }: MetaMaskOptions
 ): Promise<void> {
-  await clickOnButton(metaMaskPage, "Import an existing wallet");
-  await clickOnButton(metaMaskPage, "I agree");
+  await clickOnButton(metaMaskPage, "onboarding-import-wallet");
+  await clickOnButton(metaMaskPage, "metametrics-i-agree");
 
   for (const [index, seedPart] of seed.split(" ").entries())
     await typeOnInputField(metaMaskPage, `${index + 1}.`, seedPart);
@@ -55,9 +55,7 @@ export async function importAccount(
   await typeOnInputField(metaMaskPage, "Confirm password", password);
 
   // onboarding/create-password URL
-  await clickOnButton(metaMaskPage, "create-password-terms", {
-    findByTestId: true,
-  });
+  await clickOnButton(metaMaskPage, "create-password-terms");
   await clickOnNavigationButton(metaMaskPage, "create-password-import");
   await waitForOverlay(metaMaskPage);
 
@@ -65,9 +63,7 @@ export async function importAccount(
   await clickOnNavigationButton(metaMaskPage, "onboarding-complete-done");
 
   // onboarding/pin-extension tab 1 URL
-  await clickOnButton(metaMaskPage, "pin-extension-next", {
-    findByTestId: true,
-  });
+  await clickOnButton(metaMaskPage, "pin-extension-next");
 
   // onboarding/pin-extension tab 2 URL
   await clickOnNavigationButton(metaMaskPage, "pin-extension-done");
