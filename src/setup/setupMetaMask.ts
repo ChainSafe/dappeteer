@@ -3,7 +3,7 @@ import { getMetaMask } from "../metamask";
 import { DappeteerPage } from "../page";
 import { Dappeteer, MetaMaskOptions } from "../types";
 
-import { clickOnButton, retry, waitForOverlay } from "../helpers";
+import { retry, waitForOverlay } from "../helpers";
 import {
   acceptTheRisks,
   closeNewModal,
