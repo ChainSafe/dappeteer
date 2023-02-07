@@ -34,6 +34,8 @@ If applicable, add screenshots to help explain your problem.
 - dAppeteer version [e.g. 2.2.0]
 - testing framework [e.g jest]
 - testing framework version [e.g 26.0]
+- puppeteer version [e.g 15.0.0]
+- playwright version [e.g 1.29.2]
 
 
 **Additional context**
