@@ -119,7 +119,7 @@ export class DPlaywrightPage implements DappeteerPage<Page> {
   }
 
   evaluate<Params, Result>(
-    evaluateFn: (params?: Unboxed<Params>) => Result | Promise<Result>,
+    evaluateFn: (params?: Params) => Result | string,
     params?: Params
   ): Promise<Result> {
     //@ts-expect-error

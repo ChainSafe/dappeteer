@@ -69,8 +69,8 @@ export interface DappeteerPage<P = unknown> {
 
   waitForTimeout(timeout: number): Promise<void>;
 
-  evaluate<Params extends Serializable, Result>(
-    evaluateFn: (params: Unboxed<Params>) => Result,
+  evaluate<Params, Result>(
+    evaluateFn: (params: Params) => Result | string,
     params?: Params
   ): Promise<Result>;
 

@@ -13,7 +13,7 @@ export async function invokeSnap<
   flaskOnly(page);
 
   const result = await page.evaluate(
-    async (opts: { snapId: string; method: string; params: Unboxed<P> }) => {
+    async (opts: { snapId: string; method: string; params: P }) => {
       try {
         return await window.ethereum.request<R>({
           method: "wallet_invokeSnap",
