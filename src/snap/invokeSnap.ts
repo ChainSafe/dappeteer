@@ -1,4 +1,4 @@
-import { DappeteerPage, Serializable, Unboxed } from "../page";
+import { DappeteerPage, Serializable } from "../page";
 import { flaskOnly, isMetaMaskErrorObject } from "./utils";
 
 export async function invokeSnap<
