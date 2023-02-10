@@ -975,10 +975,10 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@chainsafe/eslint-config@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@chainsafe/eslint-config/-/eslint-config-1.0.0.tgz#ba6c9c640f1b0aa6892d2b10ecf03480a2183851"
-  integrity sha512-fGIN3gS9FLQI8PefYxm+hgvv3831IQ6LRHlklzYjwgz9TPusPM7kfwH1qB/tcdqkqqjmuz3hnqJfMiG2x9h6nA==
+"@chainsafe/eslint-config@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@chainsafe/eslint-config/-/eslint-config-1.1.0.tgz#78aa36b435e583ee8f0ab3752cd3aca54494d575"
+  integrity sha512-oWt8ur/LoHuJsMWnXivqYaWJ5fGZVpfjpIZbRAPxu8bFaVW/jdkuA5qcNHoMYJeXnCCAo/qpfn6cPGY0g/SNrA==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.30.0"
     "@typescript-eslint/parser" "^5.30.0"
