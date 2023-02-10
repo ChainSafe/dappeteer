@@ -33,8 +33,8 @@ For additional information read root [readme](../README.md)
     - [getNotificationEmitter](#getNotificationEmitter)
     - [getAllNotifications](#getAllNotifications)
     - [dialog](#snapDialog)
-      - [positive](#acceptDialog)
-      - [negative](#rejectDialog)
+      - [accept](#acceptDialog)
+      - [reject](#rejectDialog)
       - [type](#typeDialog)
 
 # dAppeteer setup methods
@@ -251,12 +251,12 @@ returns emitter to listen for notifications appearance in notification page
 Returns all notifications in MetaMask notifications page
 
 <a name="snapDialog"></a>
-<a name="positiveDialog"></a>
-## `metaMask.snaps.dialog.positive(): Promise<void>`
+<a name="acceptDialog"></a>
+## `metaMask.snaps.dialog.accept(): Promise<void>`
 accepts a snap_dialog dialog
 
-<a name="negativeDialog"></a>
-## `metaMask.snaps.dialog.negative(): Promise<void>`
+<a name="rejectDialog"></a>
+## `metaMask.snaps.dialog.reject(): Promise<void>`
 rejects snap_dialog dialog
 
 <a name="typeDialog"></a>

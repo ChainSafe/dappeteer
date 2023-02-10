@@ -112,12 +112,12 @@ export type Dappeteer = {
       /**
        * Accepts snap_dialog dialog
        */
-      positive: () => Promise<void>;
+      accept: () => Promise<void>;
 
       /**
        * Rejects snap_dialog dialog
        */
-      negative: () => Promise<void>;
+      reject: () => Promise<void>;
 
       /**
        * type in snap_dialog dialog input field

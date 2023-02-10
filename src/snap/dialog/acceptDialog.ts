@@ -1,7 +1,7 @@
 import { clickOnButton, retry, waitForOverlay } from "../../helpers";
 import { DappeteerPage } from "../../page";
 
-export const positiveDialog =
+export const acceptDialog =
   (page: DappeteerPage) => async (): Promise<void> => {
     await retry(async () => {
       await page.bringToFront();
