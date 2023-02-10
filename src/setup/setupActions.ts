@@ -5,6 +5,7 @@ import {
   clickOnNavigationButton,
   clickOnSettingsSwitch,
   openNetworkDropdown,
+  openSettingsScreen,
   typeOnInputField,
   waitForOverlay,
 } from "../helpers";
@@ -16,6 +17,14 @@ export async function showTestNets(metaMaskPage: DappeteerPage): Promise<void> {
 
   await clickOnElement(metaMaskPage, "Show/hide");
   await clickOnSettingsSwitch(metaMaskPage, "Show test networks");
+  await clickOnLogo(metaMaskPage);
+}
+
+export async function enableEthSign(
+  metaMaskPage: DappeteerPage
+): Promise<void> {
+  await openSettingsScreen(metaMaskPage, "Advanced");
+  await clickOnSettingsSwitch(metaMaskPage, "Toggle eth_sign requests");
   await clickOnLogo(metaMaskPage);
 }
 
