@@ -10,10 +10,7 @@ declare const snap: {
   }): Promise<unknown>;
 };
 
-export const onRpcRequest: OnRpcRequestHandler = async ({
-  origin,
-  request,
-}) => {
+export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
   switch (request.method) {
     case "notify_inApp":
       {
@@ -21,7 +18,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
           method: "snap_notify",
           params: {
             type: "inApp",
-            message: `Hello snap in App notification from ${origin}`,
+            message: "Hello from permissions snap in App notification",
           },
         });
       }

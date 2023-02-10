@@ -109,7 +109,7 @@ describe("snaps", function () {
         "confirm"
       );
 
-      await metaMask.snaps.dialog.positive();
+      await metaMask.snaps.dialog.accept();
 
       expect(await invokeAction).to.equal(true);
     });
@@ -120,14 +120,14 @@ describe("snaps", function () {
         snapId,
         "confirm"
       );
-      await metaMask.snaps.dialog.negative();
+      await metaMask.snaps.dialog.reject();
 
       expect(await invokeAction).to.equal(false);
     });
 
     it("should invoke Alert snap_dialog method and ACCEPT the dialog", async function (this: TestContext) {
       const invokeAction = metaMask.snaps.invokeSnap(testPage, snapId, "alert");
-      await metaMask.snaps.dialog.positive();
+      await metaMask.snaps.dialog.accept();
 
       expect(await invokeAction).to.equal(null);
     });
@@ -142,7 +142,7 @@ describe("snaps", function () {
       const message = "Some Message";
 
       await metaMask.snaps.dialog.type(message);
-      await metaMask.snaps.dialog.positive();
+      await metaMask.snaps.dialog.accept();
 
       expect(await invokeAction).to.equal(message);
     });
@@ -153,7 +153,7 @@ describe("snaps", function () {
         snapId,
         "prompt"
       );
-      await metaMask.snaps.dialog.positive();
+      await metaMask.snaps.dialog.accept();
 
       expect(await invokeAction).to.equal(null);
     });
@@ -164,7 +164,7 @@ describe("snaps", function () {
         snapId,
         "prompt"
       );
-      await metaMask.snaps.dialog.negative();
+      await metaMask.snaps.dialog.reject();
 
       expect(await invokeAction).to.equal(null);
     });
@@ -184,6 +184,7 @@ describe("should run dappeteer using initSnapEnv method", function () {
     if (!this.browser.isMetaMaskFlask()) {
       this.skip();
     }
+
     const installationSnapUrl = EXAMPLE_WEBSITE;
     ({ metaMask, snapId, browser } = await initSnapEnv({
       automation: "playwright",
@@ -211,7 +212,7 @@ describe("should run dappeteer using initSnapEnv method", function () {
       "hello"
     );
 
-    await metaMask.snaps.dialog.positive();
+    await metaMask.snaps.dialog.accept();
 
     expect(await invokeAction).to.equal(true);
   });
