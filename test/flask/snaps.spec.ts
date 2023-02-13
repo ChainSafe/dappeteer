@@ -143,7 +143,6 @@ describe("should run dappeteer using initSnapEnv method", function () {
     const installationSnapUrl = "https://google.com";
     ({ metaMask, snapId, browser } = await initSnapEnv({
       automation: "playwright",
-      browser: "chrome",
       snapIdOrLocation: this.snapServers[Snaps.BASE_SNAP],
       installationSnapUrl,
       headless: true,
