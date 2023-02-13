@@ -15,9 +15,7 @@ $ yarn add @chainsafe/dappeteer
 import dappeteer from '@chainsafe/dappeteer';
 
 async function main() {
-  const { metaMask, browser } = await dappeteer.bootstrap({
-      browser: "chrome",
-  });
+  const { metaMask, browser } = await dappeteer.bootstrap();
 
   // create a new page and visit your dapp
   const dappPage = await browser.newPage();
@@ -70,7 +68,6 @@ async function main() {
 
   // setup dappateer and install your snap
   const { metaMask, snapId, browser } = await dappeteer.initSnapEnv({
-    browser: "chrome",
     snapIdOrLocation: builtSnapDir,
   });
 

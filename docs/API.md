@@ -49,7 +49,6 @@ type DappeteerLaunchOptions = {
   metaMaskPath?: string;
   metaMaskFlask?: boolean;
   automation?: "puppeteer" | "playwright";
-  browser: "chrome";
   puppeteerOptions?: Parameters<typeof puppeteerLaunch>[0];
   playwrightOptions?: PlaywrightLaunchOptions;
   userDataDir?: string;
@@ -91,7 +90,6 @@ type DappeteerLaunchOptions = {
   metaMaskPath?: string;
   metaMaskFlask?: boolean;
   automation?: "puppeteer" | "playwright";
-  browser: "chrome";
   puppeteerOptions?: Omit<Parameters<typeof puppeteerLaunch>[0], "headless">;
   playwrightOptions?: Omit<PlaywrightLaunchOptions, "headless">;
   userDataDir?: string;

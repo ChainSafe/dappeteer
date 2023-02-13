@@ -45,7 +45,7 @@ export async function launch(
         `
         Running tests on MetaMask version ${metaMaskVersion} 
         Flask version: ${String(options.metaMaskFlask ?? false)}, 
-        Headless: ${String(options.headless)}
+        Headless: ${String(options.headless || true)}
         `
       );
 
