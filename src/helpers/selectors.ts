@@ -16,9 +16,19 @@ export const getElementByContent = (
 
 export const getElementByTestId = (
   page: DappeteerPage,
-  testId: string
+  testId: string,
+  options: {
+    visible?: boolean;
+    detached?: boolean;
+    hidden?: boolean;
+    timeout?: number;
+  } = {}
 ): Promise<DappeteerElementHandle | null> =>
-  page.waitForSelector(`[data-testid="${testId}"]`);
+  page.waitForSelector(`[data-testid="${testId}"]`, {
+    timeout: 20000,
+    visible: true,
+    ...options,
+  });
 
 export const getInputByLabel = (
   page: DappeteerPage,
@@ -91,7 +101,7 @@ export const getButton = async (
   }
 ): Promise<DappeteerElementHandle> => {
   return await Promise.race([
-    getElementByTestId(page, text),
+    getElementByTestId(page, text, options),
     getElementByContent(page, text, "button", options),
   ]);
 };

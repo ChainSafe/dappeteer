@@ -1,7 +1,7 @@
 import { TransactionOptions } from "..";
 import {
   clickOnButton,
-  getElementByContent,
+  getElementByTestId,
   retry,
   typeOnInputField,
   waitForOverlay,
@@ -9,8 +9,6 @@ import {
 import { DappeteerPage } from "../page";
 
 import { GetSingedIn } from "./index";
-
-const MIN_GAS = 21000;
 
 export const confirmTransaction =
   (page: DappeteerPage, getSingedIn: GetSingedIn) =>
@@ -25,41 +23,44 @@ export const confirmTransaction =
       await page.bringToFront();
       await page.reload();
       await waitForOverlay(page);
-      await getElementByContent(page, "Edit", "button", {
+      await getElementByTestId(page, "edit-gas-fee-button", {
         timeout: 500,
-        visible: false,
       });
     }, 15);
 
     if (options) {
-      await clickOnButton(page, "Edit");
-      await clickOnButton(page, "Edit suggested gas fee");
+      await clickOnButton(page, "edit-gas-fee-button");
+      await clickOnButton(page, "edit-gas-fee-item-custom");
       //non EIP1559 networks don't have priority fee. TODO: run separate Ganache with older hardfork to test this
-      let priority = false;
-      if (options.priority) {
-        priority = await typeOnInputField(
+      if (options.priority)
+        await typeOnInputField(
           page,
-          "Max priority fee",
+          "Priority Fee", // priority-fee-input
+          String(options.priority),
+          true,
+          true,
+          true
+        );
+      if (options.gas)
+        await typeOnInputField(
+          page,
+          "Max base fee", // base-fee-input
+          String(options.priority),
+          true,
+          true,
+          true
+        );
+      if (options.gasLimit) {
+        await clickOnButton(page, "advanced-gas-fee-edit");
+        await typeOnInputField(
+          page,
+          "Gas limit", // gas-limit-input
           String(options.priority),
           true,
           true,
           true
         );
       }
-      if (options.gasLimit && options.gasLimit >= MIN_GAS)
-        await typeOnInputField(
-          page,
-          "Gas Limit",
-          String(options.gasLimit),
-          true
-        );
-      if (options.gas && options.gasLimit >= MIN_GAS)
-        await typeOnInputField(
-          page,
-          priority ? "Max fee" : "Gas Limit",
-          String(options.gasLimit),
-          true
-        );
 
       await clickOnButton(page, "Save");
     }
