@@ -6,7 +6,7 @@ import {
   DappeteerPage,
   initSnapEnv,
 } from "../../src";
-import { TestContext } from "../constant";
+import { EXAMPLE_WEBSITE, TestContext } from "../constant";
 import { Snaps } from "../deploy";
 import { isUserDataTest } from "../utils/utils";
 import { goToHomePage } from "../../src/helpers";
@@ -48,7 +48,7 @@ describe("snaps", function () {
   });
 
   describe("should test snap methods", function () {
-    const installationSnapUrl = "https://google.com/";
+    const installationSnapUrl = EXAMPLE_WEBSITE;
     let testPage: DappeteerPage;
     let snapId: string;
     let permissionSnapId: string;
@@ -102,27 +102,71 @@ describe("snaps", function () {
       await goToHomePage(metaMask.page);
     });
 
-    it("should invoke provided snap method and ACCEPT the dialog", async function (this: TestContext) {
+    it("should invoke Confirmation snap_dialog method and ACCEPT the dialog", async function (this: TestContext) {
       const invokeAction = metaMask.snaps.invokeSnap(
         testPage,
         snapId,
         "confirm"
       );
 
-      await metaMask.snaps.acceptDialog();
+      await metaMask.snaps.dialog.accept();
 
       expect(await invokeAction).to.equal(true);
     });
 
-    it("should invoke provided snap method and REJECT the dialog", async function (this: TestContext) {
+    it("should invoke Confirmation snap_dialog method and REJECT the dialog", async function (this: TestContext) {
       const invokeAction = metaMask.snaps.invokeSnap(
         testPage,
         snapId,
         "confirm"
       );
-      await metaMask.snaps.rejectDialog();
+      await metaMask.snaps.dialog.reject();
 
       expect(await invokeAction).to.equal(false);
+    });
+
+    it("should invoke Alert snap_dialog method and ACCEPT the dialog", async function (this: TestContext) {
+      const invokeAction = metaMask.snaps.invokeSnap(testPage, snapId, "alert");
+      await metaMask.snaps.dialog.accept();
+
+      expect(await invokeAction).to.equal(null);
+    });
+
+    it("should invoke Prompt snap_dialog method type and ACCEPT the dialog", async function (this: TestContext) {
+      const invokeAction = metaMask.snaps.invokeSnap(
+        testPage,
+        snapId,
+        "prompt"
+      );
+
+      const message = "Some Message";
+
+      await metaMask.snaps.dialog.type(message);
+      await metaMask.snaps.dialog.accept();
+
+      expect(await invokeAction).to.equal(message);
+    });
+
+    it("should invoke Prompt snap_dialog method not to type and ACCEPT the dialog", async function (this: TestContext) {
+      const invokeAction = metaMask.snaps.invokeSnap(
+        testPage,
+        snapId,
+        "prompt"
+      );
+      await metaMask.snaps.dialog.accept();
+
+      expect(await invokeAction).to.equal(null);
+    });
+
+    it("should invoke Prompt snap_dialog method and REJECT the dialog", async function (this: TestContext) {
+      const invokeAction = metaMask.snaps.invokeSnap(
+        testPage,
+        snapId,
+        "prompt"
+      );
+      await metaMask.snaps.dialog.reject();
+
+      expect(await invokeAction).to.equal(null);
     });
   });
 });
@@ -140,9 +184,11 @@ describe("should run dappeteer using initSnapEnv method", function () {
     if (!this.browser.isMetaMaskFlask()) {
       this.skip();
     }
-    const installationSnapUrl = "https://google.com";
+
+    const installationSnapUrl = EXAMPLE_WEBSITE;
     ({ metaMask, snapId, browser } = await initSnapEnv({
-      automation: "playwright",
+      automation:
+        (process.env.AUTOMATION as "puppeteer" | "playwright") ?? "puppeteer",
       browser: "chrome",
       snapIdOrLocation: this.snapServers[Snaps.BASE_SNAP],
       installationSnapUrl,
@@ -167,7 +213,7 @@ describe("should run dappeteer using initSnapEnv method", function () {
       "hello"
     );
 
-    await metaMask.snaps.acceptDialog();
+    await metaMask.snaps.dialog.accept();
 
     expect(await invokeAction).to.equal(true);
   });

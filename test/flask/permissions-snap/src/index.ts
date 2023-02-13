@@ -6,34 +6,23 @@ declare const snap: {
     params: {
       type?: string;
       message?: string;
-      prompt?: string;
-      description?: string;
-      textAreaContent?: string;
     };
   }): Promise<unknown>;
 };
 
-export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
+export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
   switch (request.method) {
-    case "hello":
-      return snap.request({
-        method: "snap_confirm",
-        params: {
-          prompt: `Hello, ${origin}!`,
-          description: "This custom confirmation is just for display purposes.",
-          textAreaContent:
-            "But you can edit the snap source code to make it do something, if you want to!",
-        },
-      });
-    case "notify_inApp": {
-      return snap.request({
-        method: "snap_notify",
-        params: {
-          type: "inApp",
-          message: `Hello from permissions snap in App notification`,
-        },
-      });
-    }
+    case "notify_inApp":
+      {
+        await snap.request({
+          method: "snap_notify",
+          params: {
+            type: "inApp",
+            message: "Hello from permissions snap in App notification",
+          },
+        });
+      }
+      break;
     default:
       throw new Error("Method not found.");
   }

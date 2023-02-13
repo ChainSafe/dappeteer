@@ -3,7 +3,7 @@
   "description": "An example Snap written in TypeScript.",
   "proposedName": "Keys Snap\n",
   "source": {
-    "shasum": "sqDnj6sacQPifC/D9f9pWh4Cvi2gVdZJFrxikYhDqXk=",
+    "shasum": "c3zJOCrroWks4m/x7cGUufmC/hlHwBtw8Pg52fvSVHA=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -13,6 +13,7 @@
     }
   },
   "initialPermissions": {
+    "snap_dialog": {},
     "snap_getBip44Entropy": [
       {
         "coinType": 1
