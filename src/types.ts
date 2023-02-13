@@ -107,14 +107,23 @@ export type Dappeteer = {
         installationSnapUrl?: string;
       }
     ) => Promise<string>;
-    /**
-     * Accepts snap_confirm dialog
-     */
-    acceptDialog: () => Promise<void>;
 
-    /**
-     * Rejects snap_confirm dialog
-     */
-    rejectDialog: () => Promise<void>;
+    dialog: {
+      /**
+       * Accepts snap_dialog dialog
+       */
+      accept: () => Promise<void>;
+
+      /**
+       * Rejects snap_dialog dialog
+       */
+      reject: () => Promise<void>;
+
+      /**
+       * type in snap_dialog dialog input field
+       * @param value {string} value that will be typed in field
+       */
+      type: (value: string) => Promise<void>;
+    };
   };
 };

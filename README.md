@@ -82,7 +82,7 @@ async function main() {
   await metaMask.snaps.invokeSnap(dappPage, snapId, "my-method")
 
   // instruct MetaMask to accept this request
-  await metaMask.snaps.acceptDialog();
+  await metaMask.snaps.dialog.positive();
 
   // get the notification emitter and the promise that will receive the notifications
   const emitter = await metaMask.snaps.getNotificationEmitter();

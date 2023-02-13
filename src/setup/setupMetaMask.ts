@@ -9,6 +9,7 @@ import {
   closeNewModal,
   closePortfolioTooltip,
   closeWhatsNewModal,
+  enableEthSign,
   importAccount,
   showTestNets,
 } from "./setupActions";
@@ -25,6 +26,7 @@ const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [
   importAccount,
   closeNewModal,
   showTestNets,
+  enableEthSign,
   closeWhatsNewModal,
   closeWhatsNewModal,
 ];
@@ -33,6 +35,7 @@ const flaskMetaMaskSteps: Step<MetaMaskOptions>[] = [
   acceptTheRisks,
   importAccount,
   showTestNets,
+  enableEthSign,
   closePortfolioTooltip,
   closeWhatsNewModal,
   closeWhatsNewModal,

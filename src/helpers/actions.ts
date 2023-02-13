@@ -17,6 +17,25 @@ export const clickOnSettingsSwitch = async (
   await button.click();
 };
 
+type Section =
+  | "General"
+  | "Advanced"
+  | "Contacts"
+  | "Snaps"
+  | "Security & privacy"
+  | "Alerts"
+  | "Networks"
+  | "Experimental"
+  | "About";
+export const openSettingsScreen = async (
+  page: DappeteerPage,
+  section: Section = "General"
+): Promise<void> => {
+  await profileDropdownClick(page);
+  await clickOnElement(page, "Settings");
+  await clickOnElement(page, section);
+};
+
 export const openNetworkDropdown = async (
   page: DappeteerPage
 ): Promise<void> => {

@@ -3,7 +3,7 @@
   "description": "An example Snap written in TypeScript.",
   "proposedName": "Methods Snap\n",
   "source": {
-    "shasum": "01KcaLPkcFwYC7sCyO7cAUWzB3GBAa4t/UXclc/mM5c=",
+    "shasum": "OUsE/g0W1apXjYs+eNKwbP56eQb/BPazbIsTsdNB/CA=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -13,7 +13,7 @@
     }
   },
   "initialPermissions": {
-    "snap_confirm": {},
+    "snap_dialog": {},
     "snap_notify": {},
     "endowment:rpc": {
       "snaps": true,

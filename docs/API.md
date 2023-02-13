@@ -30,10 +30,12 @@ For additional information read root [readme](../README.md)
   - [snaps methods](#snaps-methods)
     - [installSnap](#installSnap)
     - [invokeSnap](#invokeSnap)
-    - [acceptDialog](#acceptDialog)
-    - [rejectDialog](#rejectDialog)
     - [getNotificationEmitter](#getNotificationEmitter)
     - [getAllNotifications](#getAllNotifications)
+    - [dialog](#snapDialog)
+      - [accept](#acceptDialog)
+      - [reject](#rejectDialog)
+      - [type](#typeDialog)
 
 # dAppeteer setup methods
 
@@ -240,14 +242,6 @@ installs the snap. The `snapIdOrLocation` param is either the snapId or the full
 ## `metaMask.snaps.invokeSnap<Result = unknown, Params extends Serializable = Serializable>(page: DappeteerPage,snapId: string,method: string,params?: Params): Promise<Partial<Result>>`
 invokes a MetaMask snap method. The snapId is the id of your installed snap (result of invoking `installSnap` method). This function will throw if there is an error while invoking snap.
 
-<a name="acceptDialog"></a>
-## `metaMask.snaps.acceptDialog(): Promise<void>`
-accepts a snap_confirm dialog
-
-<a name="rejectDialog"></a>
-## `metaMask.snaps.rejectDialog(): Promise<void>`
-rejects snap_confirm dialog
-
 <a name="getNotificationEmitter"></a>
 ## `metaMask.snaps.getNotificationEmitter(): Promise<NotificationsEmitter>`
 returns emitter to listen for notifications appearance in notification page
@@ -255,3 +249,16 @@ returns emitter to listen for notifications appearance in notification page
 <a name="getAllNotifications"></a>
 ## `metaMask.snaps.getAllNotifications(): Promise<NotificationList>`
 Returns all notifications in MetaMask notifications page
+
+<a name="snapDialog"></a>
+<a name="acceptDialog"></a>
+## `metaMask.snaps.dialog.accept(): Promise<void>`
+accepts a snap_dialog dialog
+
+<a name="rejectDialog"></a>
+## `metaMask.snaps.dialog.reject(): Promise<void>`
+rejects snap_dialog dialog
+
+<a name="typeDialog"></a>
+## `metaMask.snaps.dialog.type(value: string): Promise<void>`
+type value in snap_dialog dialog
