@@ -20,6 +20,9 @@ export async function launch(
   if (!options.metaMaskVersion && !options.metaMaskPath) {
     options.metaMaskVersion = RECOMMENDED_METAMASK_VERSION;
   }
+  if (options.headless === undefined) {
+    options.headless = true;
+  }
   let metamaskPath: string;
   if (options.metaMaskVersion) {
     const { metaMaskVersion, metaMaskLocation } = options;
