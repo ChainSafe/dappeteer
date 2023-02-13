@@ -1,7 +1,14 @@
-import { Browser, ElementHandle, Page, WaitForOptions } from "puppeteer";
+import {
+  Browser,
+  ElementHandle,
+  EvaluateFunc,
+  NodeFor,
+  Page,
+  WaitForOptions,
+} from "puppeteer";
 import { DappeteerBrowser } from "../browser";
 import { DappeteerElementHandle } from "../element";
-import { DappeteerPage, Response, Serializable, Unboxed } from "../page";
+import { DappeteerPage, Response, Serializable } from "../page";
 import { DPuppeteerElementHandle } from "./elements";
 
 export class DPupeteerPage implements DappeteerPage<Page> {
@@ -21,11 +28,15 @@ export class DPupeteerPage implements DappeteerPage<Page> {
     return new DPuppeteerElementHandle(await this.page.$(selector));
   }
 
-  $eval<T>(
-    selector: string,
-    evalFn: (e: HTMLElement) => T | Promise<T>
-  ): Promise<T> {
-    return this.page.$eval<T>(selector, evalFn) as Promise<T>;
+  $eval<
+    Selector extends string,
+    Params extends unknown[],
+    Func extends EvaluateFunc<[ElementHandle<NodeFor<Selector>>, ...Params]>
+  >(selector: Selector, evalFn: Func): Promise<any> {
+    return this.page.$eval<Selector, unknown[], Func>(
+      selector,
+      evalFn
+    ) as Promise<Func>;
   }
 
   $$eval<T>(
@@ -102,12 +113,9 @@ export class DPupeteerPage implements DappeteerPage<Page> {
   async waitForSelector(
     selector: string,
     opts?: Partial<{ visible: boolean; timeout: number; hidden: boolean }>
-  ): Promise<DappeteerElementHandle<ElementHandle<HTMLElement>>> {
+  ): Promise<DappeteerElementHandle<ElementHandle<Element>>> {
     return new DPuppeteerElementHandle(
-      (await this.page.waitForSelector(
-        selector,
-        opts
-      )) as ElementHandle<HTMLElement>
+      await this.page.waitForSelector(selector, opts)
     );
   }
 
@@ -124,9 +132,9 @@ export class DPupeteerPage implements DappeteerPage<Page> {
   async waitForXPath(
     xpath: string,
     opts?: Partial<{ visible: boolean; timeout: number }>
-  ): Promise<DappeteerElementHandle<ElementHandle>> {
+  ): Promise<DappeteerElementHandle<ElementHandle<Node>>> {
     return new DPuppeteerElementHandle(
-      await this.page.waitForXPath(xpath, opts)
+      (await this.page.waitForXPath(xpath, opts)) as ElementHandle<HTMLElement>
     );
   }
 
@@ -134,18 +142,15 @@ export class DPupeteerPage implements DappeteerPage<Page> {
     return this.page.waitForTimeout(timeout);
   }
 
-  evaluate<Params extends Serializable, Result>(
-    evaluateFn: (params?: Unboxed<Params>) => Result | Promise<Result>,
+  evaluate<Params, Result>(
+    evaluateFn: (params?: Params) => Result | string,
     params?: Params
   ): Promise<Result> {
-    return this.page.evaluate<typeof evaluateFn>(
-      evaluateFn,
-      params
-    ) as Promise<Result>;
+    return this.page.evaluate(evaluateFn, params) as Promise<Result>;
   }
 
   async waitForFunction<Params extends Serializable>(
-    pageFunction: (params?: Unboxed<Params>) => void | string,
+    pageFunction: () => {} | string,
     params?: Params
   ): Promise<void> {
     await this.page.waitForFunction(pageFunction, {}, params);

@@ -2,13 +2,11 @@ import { ElementHandle } from "puppeteer";
 import { DappeteerElementHandle } from "../element";
 
 export class DPuppeteerElementHandle
-  implements DappeteerElementHandle<ElementHandle<HTMLElement>>
+  implements DappeteerElementHandle<ElementHandle<Element>>
 {
-  constructor(protected element: ElementHandle<HTMLElement>) {}
+  constructor(protected element: ElementHandle<Element>) {}
 
-  async $$(
-    selector: string
-  ): Promise<DappeteerElementHandle<unknown, HTMLElement>[]> {
+  async $$(selector: string): Promise<DappeteerElementHandle[]> {
     return (await this.element.$$(selector)).map(
       (e) => new DPuppeteerElementHandle(e as ElementHandle<HTMLElement>)
     );
@@ -19,10 +17,10 @@ export class DPuppeteerElementHandle
   }
 
   evaluate(fn: (e: HTMLElement) => void | Promise<void>): Promise<void> {
-    return this.element.evaluate(async (e) => await fn(e));
+    return this.element.evaluate(async (e) => await fn(e as HTMLElement));
   }
   getSource(): ElementHandle<HTMLElement> {
-    return this.element;
+    return this.element as ElementHandle<HTMLElement>;
   }
 
   async type(value: string): Promise<void> {

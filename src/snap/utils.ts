@@ -40,7 +40,7 @@ function getWaitingPromise(
   page: DappeteerPage,
   selectorOrXpath: string,
   timeout: number
-): Promise<DappeteerElementHandle<unknown, HTMLElement>> {
+): Promise<DappeteerElementHandle> {
   if (selectorOrXpath.startsWith("//")) {
     return page.waitForXPath(selectorOrXpath, { timeout });
   } else {
