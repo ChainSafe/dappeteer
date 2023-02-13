@@ -1,6 +1,6 @@
 export interface DappeteerElementHandle<
   Source = unknown,
-  Element = HTMLElement
+  Element extends Node = HTMLElement
 > {
   $$(selector: string): Promise<DappeteerElementHandle[]>;
   evaluate(fn: (e: Element) => void | Promise<void>): Promise<void>;
