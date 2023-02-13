@@ -15,7 +15,7 @@ import { addKeyToMetaMaskManifest } from "./utils/addKeyToMetaMaskManifest";
  * Launch Puppeteer chromium instance with MetaMask plugin installed
  * */
 export async function launch(
-  options: DappeteerLaunchOptions
+  options: DappeteerLaunchOptions = {}
 ): Promise<DappeteerBrowser> {
   if (!options.metaMaskVersion && !options.metaMaskPath) {
     options.metaMaskVersion = RECOMMENDED_METAMASK_VERSION;
@@ -45,7 +45,7 @@ export async function launch(
         `
         Running tests on MetaMask version ${metaMaskVersion} 
         Flask version: ${String(options.metaMaskFlask ?? false)}, 
-        Headless: ${String(options.headless || true)}
+        Headless: ${String(options.headless)}
         `
       );
 
