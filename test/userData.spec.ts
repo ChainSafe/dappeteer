@@ -48,7 +48,7 @@ describe("userData", function () {
     });
 
     it("should successfully store user data", async function (this: TestContext) {
-      const browser = await launch({ automation, browser: "chrome", headless });
+      const browser = await launch({ automation, headless });
       await setupMetaMask(browser, metaMaskOptions);
 
       // give some pause to store state into files
@@ -64,7 +64,6 @@ describe("userData", function () {
     it("should successfully launch from custom user folder", async function (this: TestContext) {
       const browser = await launch({
         automation,
-        browser: "chrome",
         userDataDir,
         headless,
       });
@@ -98,7 +97,6 @@ describe("userData", function () {
       const browser = await launch({
         automation,
         headless,
-        browser: "chrome",
         metaMaskFlask: true,
       });
       await setupMetaMask(browser, metaMaskOptions);
@@ -117,7 +115,6 @@ describe("userData", function () {
       const browser = await launch({
         automation,
         headless,
-        browser: "chrome",
         metaMaskFlask: true,
         userDataDir,
       });
@@ -142,7 +139,6 @@ describe("userData", function () {
       const browser = await launch({
         automation,
         headless,
-        browser: "chrome",
         metaMaskFlask: false,
         userDataDir: DEFAULT_METAMASK_USERDATA,
       });
@@ -166,7 +162,6 @@ describe("userData", function () {
       const browser = await launch({
         automation,
         headless,
-        browser: "chrome",
         metaMaskFlask: true,
         userDataDir: DEFAULT_FLASK_USERDATA,
       });
