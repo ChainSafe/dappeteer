@@ -20,7 +20,6 @@ describe("contract interactions", function () {
     if (isUserDataTest()) {
       this.skip();
     }
-    this.timeout(100000);
 
     testPage = await this.browser.newPage();
     await testPage.goto(EXAMPLE_WEBSITE, { waitUntil: "networkidle" });
