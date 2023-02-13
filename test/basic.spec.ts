@@ -124,10 +124,6 @@ describe("basic interactions", function () {
   });
 
   it("should not add network", async function (this: TestContext) {
-    if (this.browser.isMetaMaskFlask()) {
-      this.skip();
-    }
-
     const addNetworkPromise = testPage.evaluate(addNetwork);
     await metaMask.rejectAddNetwork();
     const res = await addNetworkPromise;
@@ -135,10 +131,6 @@ describe("basic interactions", function () {
   });
 
   it("should add network and switch", async function (this: TestContext) {
-    if (this.browser.isMetaMaskFlask()) {
-      this.skip();
-    }
-
     const addNetworkPromise = testPage.evaluate(addNetwork);
     await metaMask.acceptAddNetwork();
     const res = await addNetworkPromise;

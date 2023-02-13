@@ -3,11 +3,7 @@ import { OnRpcRequestHandler } from "@metamask/snap-types";
 declare const snap: {
   request(param: {
     method: string;
-    params: {
-      textAreaContent?: string;
-      description?: string;
-      prompt?: string;
-    }[];
+    params: { type: "Confirmation" | "Alert" | "Prompt"; content: Object };
   }): Promise<unknown>;
   request(param: {
     method: string;
@@ -25,16 +21,45 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
   switch (request.method) {
     case "confirm":
       return snap.request({
-        method: "snap_confirm",
-        params: [
-          {
-            prompt: `Hello, ${origin}!`,
-            description:
-              "This custom confirmation is just for display purposes.",
-            textAreaContent:
-              "But you can edit the snap source code to make it do something, if you want to!",
+        method: "snap_dialog",
+        params: {
+          type: "Confirmation",
+          content: {
+            type: "panel",
+            children: [
+              { type: "heading", value: `Confirmation ${origin}` },
+              { type: "text", value: "Text here" },
+            ],
           },
-        ],
+        },
+      });
+    case "alert":
+      return snap.request({
+        method: "snap_dialog",
+        params: {
+          type: "Alert",
+          content: {
+            type: "panel",
+            children: [
+              { type: "heading", value: `Confirmation ${origin}` },
+              { type: "text", value: "Text here" },
+            ],
+          },
+        },
+      });
+    case "prompt":
+      return snap.request({
+        method: "snap_dialog",
+        params: {
+          type: "Prompt",
+          content: {
+            type: "panel",
+            children: [
+              { type: "heading", value: `Confirmation ${origin}` },
+              { type: "text", value: "Text here" },
+            ],
+          },
+        },
       });
     case "notify_inApp":
       {
@@ -42,7 +67,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
           method: "snap_notify",
           params: {
             type: "inApp",
-            message: `Hello from methods snap in App notification`,
+            message: "Hello from methods snap in App notification",
           },
         });
       }
