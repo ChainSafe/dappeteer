@@ -1,5 +1,38 @@
 # Changelog
 
+## [5.0.0](https://github.com/ChainSafe/dappeteer/compare/v4.2.0...v5.0.0) (2023-02-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* deprecate `browser` param ([#282](https://github.com/ChainSafe/dappeteer/issues/282))
+* change default `headless` from `false` to `true` ([#283](https://github.com/ChainSafe/dappeteer/issues/283))
+* Deprecate `snap_confirm` and implement `snap_dialog` ([#277](https://github.com/ChainSafe/dappeteer/issues/277))
+* update puppeteer to version 19 ([#276](https://github.com/ChainSafe/dappeteer/issues/276))
+
+### Features
+
+* create account method ([#253](https://github.com/ChainSafe/dappeteer/issues/253)) ([ec7e492](https://github.com/ChainSafe/dappeteer/commit/ec7e4925ea53cee2b78d8709eacee0439bfc60ba))
+* Deprecate `snap_confirm` and implement `snap_dialog` ([#277](https://github.com/ChainSafe/dappeteer/issues/277)) ([23a0121](https://github.com/ChainSafe/dappeteer/commit/23a0121143172a3789dcca7e651d5375c81695a3))
+* improved DX ([#258](https://github.com/ChainSafe/dappeteer/issues/258)) ([a20d0e1](https://github.com/ChainSafe/dappeteer/commit/a20d0e15b56b74cdfc6c5e24aa4f522663f00f1f))
+* support MetamaMask v10.25.X ([#281](https://github.com/ChainSafe/dappeteer/issues/281)) ([27156f7](https://github.com/ChainSafe/dappeteer/commit/27156f731e4f4ef170f03a3f50e984ab0a715a1c))
+* upgrade metamask version to 24 ([#264](https://github.com/ChainSafe/dappeteer/issues/264)) ([ee4a513](https://github.com/ChainSafe/dappeteer/commit/ee4a5136250a4b64d8045233227b9926cb203e75))
+
+
+### Bug Fixes
+
+* `peerDependenciesMeta` typo ([#271](https://github.com/ChainSafe/dappeteer/issues/271)) ([61978c2](https://github.com/ChainSafe/dappeteer/commit/61978c2c4d2c76af3041fc6d1aec36e47f96b4df))
+* bootstrap launching with `userDataDir` ([#259](https://github.com/ChainSafe/dappeteer/issues/259)) ([5ea28fe](https://github.com/ChainSafe/dappeteer/commit/5ea28fefc21e609b9f64d3303702b2ff42da025f))
+* change default `headless` from `false` to `true` ([#283](https://github.com/ChainSafe/dappeteer/issues/283)) ([1fb43bd](https://github.com/ChainSafe/dappeteer/commit/1fb43bd14109d8c00bb9214f67811a5374192616))
+* missing files in released package ([#265](https://github.com/ChainSafe/dappeteer/issues/265)) ([58d01f2](https://github.com/ChainSafe/dappeteer/commit/58d01f2869bbff1f3842a5295a44320144e3cbb5))
+* typos ([0f365a2](https://github.com/ChainSafe/dappeteer/commit/0f365a29224db27de974d81a64f4e27ff55ca107))
+
+
+### Miscellaneous
+
+* deprecate `browser` param ([#282](https://github.com/ChainSafe/dappeteer/issues/282)) ([a11e1ac](https://github.com/ChainSafe/dappeteer/commit/a11e1ac9048ad3b2647e6ab341fe83f03cd5423e))
+* update puppeteer to version 19 ([#276](https://github.com/ChainSafe/dappeteer/issues/276)) ([2d66fba](https://github.com/ChainSafe/dappeteer/commit/2d66fbaa1a17a39ceef82feed684ab70e278bd72))
+
 ## [4.2.0](https://github.com/ChainSafe/dappeteer/compare/v4.1.1...v4.2.0) (2023-01-26)
 
 
