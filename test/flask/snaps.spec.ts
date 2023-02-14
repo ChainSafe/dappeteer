@@ -189,7 +189,6 @@ describe("should run dappeteer using initSnapEnv method", function () {
     ({ metaMask, snapId, browser } = await initSnapEnv({
       automation:
         (process.env.AUTOMATION as "puppeteer" | "playwright") ?? "puppeteer",
-      browser: "chrome",
       snapIdOrLocation: this.snapServers[Snaps.BASE_SNAP],
       installationSnapUrl,
     }));
