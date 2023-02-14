@@ -192,7 +192,6 @@ describe("should run dappeteer using initSnapEnv method", function () {
       browser: "chrome",
       snapIdOrLocation: this.snapServers[Snaps.BASE_SNAP],
       installationSnapUrl,
-      headless: true,
     }));
     connectedPage = await metaMask.page.browser().newPage();
     await connectedPage.goto(installationSnapUrl);
