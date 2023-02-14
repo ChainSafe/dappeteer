@@ -25,7 +25,6 @@ describe("userData", function () {
     seed: LOCAL_PREFUNDED_MNEMONIC,
     password: PASSWORD,
   };
-  const headless = true;
 
   beforeEach(function (this: TestContext) {
     if (!isUserDataTest()) {
@@ -48,7 +47,7 @@ describe("userData", function () {
     });
 
     it("should successfully store user data", async function (this: TestContext) {
-      const browser = await launch({ automation, headless });
+      const browser = await launch({ automation });
       await setupMetaMask(browser, metaMaskOptions);
 
       // give some pause to store state into files
@@ -65,7 +64,6 @@ describe("userData", function () {
       const browser = await launch({
         automation,
         userDataDir,
-        headless,
       });
       const metaMask = await setupBootstrappedMetaMask(
         browser,
@@ -96,7 +94,6 @@ describe("userData", function () {
     it("should successfully store user data", async function (this: TestContext) {
       const browser = await launch({
         automation,
-        headless,
         metaMaskFlask: true,
       });
       await setupMetaMask(browser, metaMaskOptions);
@@ -114,7 +111,6 @@ describe("userData", function () {
     it("should successfully launch from custom user folder", async function (this: TestContext) {
       const browser = await launch({
         automation,
-        headless,
         metaMaskFlask: true,
         userDataDir,
       });
@@ -138,7 +134,6 @@ describe("userData", function () {
     it("should successfully launch project's default MetaMask", async function (this: TestContext) {
       const browser = await launch({
         automation,
-        headless,
         metaMaskFlask: false,
         userDataDir: DEFAULT_METAMASK_USERDATA,
       });
@@ -161,7 +156,6 @@ describe("userData", function () {
     it("should successfully launch project's default Flask", async function (this: TestContext) {
       const browser = await launch({
         automation,
-        headless,
         metaMaskFlask: true,
         userDataDir: DEFAULT_FLASK_USERDATA,
       });

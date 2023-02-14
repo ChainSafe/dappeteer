@@ -9,12 +9,6 @@ import { DapeteerJestConfig } from "./global";
 
 export const DAPPETEER_DEFAULT_CONFIG: DappeteerLaunchOptions = {
   metaMaskVersion: RECOMMENDED_METAMASK_VERSION,
-  playwrightOptions: {
-    headless: true,
-  },
-  puppeteerOptions: {
-    headless: true,
-  },
 };
 
 export async function getDappeteerConfig(): Promise<DapeteerJestConfig> {

@@ -191,7 +191,6 @@ describe("should run dappeteer using initSnapEnv method", function () {
         (process.env.AUTOMATION as "puppeteer" | "playwright") ?? "puppeteer",
       snapIdOrLocation: this.snapServers[Snaps.BASE_SNAP],
       installationSnapUrl,
-      headless: true,
     }));
     connectedPage = await metaMask.page.browser().newPage();
     await connectedPage.goto(installationSnapUrl);
