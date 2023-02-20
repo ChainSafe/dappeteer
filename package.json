@@ -85,7 +85,7 @@
   },
   "peerDependencies": {
     "playwright": ">=1",
-    "puppeteer": ">19"
+    "puppeteer": ">=19"
   },
   "peerDependenciesMeta": {
     "puppeteer": {
