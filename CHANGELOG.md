@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.1](https://github.com/ChainSafe/dappeteer/compare/v5.0.0...v5.0.1) (2023-02-22)
+
+
+### Bug Fixes
+
+* `peerDependencies` for `puppeteer` ([#288](https://github.com/ChainSafe/dappeteer/issues/288)) ([a5acd5c](https://github.com/ChainSafe/dappeteer/commit/a5acd5cfb8cd1b98bb93c50a102b3d3d00645bde))
+
 ## [5.0.0](https://github.com/ChainSafe/dappeteer/compare/v4.2.0...v5.0.0) (2023-02-14)
 
 
