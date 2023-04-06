@@ -24,7 +24,7 @@ jobs:
           cache: 'yarn'
       - run: corepack enable
       - name: Install deps
-        run: yarn --prefer-offline --frozen-lockfile
+        run: yarn --immutable
       - name: Build
         run: yarn build
   download:
@@ -39,7 +39,7 @@ jobs:
           cache: 'yarn'
       - run: corepack enable
       - name: Install deps
-        run: yarn --prefer-offline --frozen-lockfile
+        run: yarn --immutable
       - name: Download metamask
         run: yarn run download:metamask
       - uses: actions/cache/save@v3
@@ -58,7 +58,7 @@ jobs:
           cache: 'yarn'
       - run: corepack enable
       - name: Install deps
-        run: yarn --prefer-offline --frozen-lockfile
+        run: yarn --immutable
       - name: Lint
         run: yarn run lint
   tests:
@@ -82,7 +82,7 @@ jobs:
           key: metamask-extension
       - run: corepack enable
       - name: Install
-        run: yarn --prefer-offline --frozen-lockfile
+        run: yarn --immutable
       - name: Tests
         run: 'yarn run test:${{matrix.automation}}:${{ matrix.mm-version }} --timeout 50000'
       - uses: actions/upload-artifact@v3
@@ -110,7 +110,7 @@ jobs:
           key: metamask-extension
       - run: corepack enable
       - name: Install
-        run: yarn --prefer-offline --frozen-lockfile
+        run: yarn --immutable
       - name: Tests UserData
         run: 'yarn run test:${{matrix.automation}}:userData --timeout 240000'
 
@@ -136,8 +136,9 @@ jobs:
           node-version: 16
           registry-url: 'https://registry.npmjs.org'
         if: ${{ steps.release.outputs.release_created }}
-      
-      - run: yarn --prefer-offline --frozen-lockfile
+
+      - run: corepack enable
+      - run: yarn --immutable
         if: ${{ steps.release.outputs.release_created }}
       
       - run: yarn build
