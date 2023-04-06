@@ -22,6 +22,7 @@ jobs:
         with:
           node-version: "16"
           cache: 'yarn'
+      - run: corepack enable
       - name: Install deps
         run: yarn --prefer-offline --frozen-lockfile
       - name: Build
@@ -36,6 +37,7 @@ jobs:
         with:
           node-version: 16
           cache: 'yarn'
+      - run: corepack enable
       - name: Install deps
         run: yarn --prefer-offline --frozen-lockfile
       - name: Download metamask
@@ -54,6 +56,7 @@ jobs:
         with:
           node-version: "16"
           cache: 'yarn'
+      - run: corepack enable
       - name: Install deps
         run: yarn --prefer-offline --frozen-lockfile
       - name: Lint
@@ -77,6 +80,7 @@ jobs:
         with:
           path: ${{env.METAMASK_CACHE_PATH}}
           key: metamask-extension
+      - run: corepack enable
       - name: Install
         run: yarn --prefer-offline --frozen-lockfile
       - name: Tests
@@ -104,6 +108,7 @@ jobs:
         with:
           path: ${{env.METAMASK_CACHE_PATH}}
           key: metamask-extension
+      - run: corepack enable
       - name: Install
         run: yarn --prefer-offline --frozen-lockfile
       - name: Tests UserData
