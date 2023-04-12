@@ -11,8 +11,9 @@
     "bin"
   ],
   "engines": {
-    "node": ">=16"
+    "node": ">=16.10"
   },
+  "packageManager": "yarn@3.5.0",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc -p tsconfig.build.json",
@@ -88,10 +89,10 @@
     "puppeteer": ">=19"
   },
   "peerDependenciesMeta": {
-    "puppeteer": {
+    "playwright": {
       "optional": true
     },
-    "playwright": {
+    "puppeteer": {
       "optional": true
     }
   }
