@@ -9,6 +9,7 @@ export {
 export { DappeteerBrowser } from "./browser";
 export { DappeteerPage } from "./page";
 export { DappeteerElementHandle } from "./element";
+export { DPuppeteerBrowser } from "./puppeteer";
 export {
   bootstrap,
   initSnapEnv,
