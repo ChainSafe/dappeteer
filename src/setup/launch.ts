@@ -9,7 +9,7 @@ import { launchPuppeteer } from "./puppeteer";
 import { isNewerVersion } from "./utils/isNewerVersion";
 import downloader from "./utils/metaMaskDownloader";
 import { getTemporaryUserDataDir } from "./utils/getTemporaryUserDataDir";
-import { addKeyToMetaMaskManifest } from "./utils/addKeyToMetaMaskManifest";
+import { patchMetaMask } from "./utils/patch";
 
 /**
  * Launch Puppeteer chromium instance with MetaMask plugin installed
@@ -64,7 +64,7 @@ export async function launch(
     metamaskPath = options.metaMaskPath;
   }
 
-  addKeyToMetaMaskManifest(metamaskPath, options.key);
+  patchMetaMask(metamaskPath, { key: options.key });
   const userDataDir = getTemporaryUserDataDir();
   if (options.userDataDir)
     copyUserDataFiles(path.resolve(options.userDataDir), userDataDir);
