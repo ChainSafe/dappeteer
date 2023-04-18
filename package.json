@@ -85,7 +85,7 @@
     "web3-eth-contract": "4.0.1-alpha.2"
   },
   "peerDependencies": {
-    "playwright": ">=1",
+    "playwright": ">=1.29",
     "puppeteer": ">=19"
   },
   "peerDependenciesMeta": {
