@@ -1,14 +1,4 @@
-import { OnRpcRequestHandler } from "@metamask/snap-types";
-
-declare const snap: {
-  request(param: {
-    method: string;
-    params: {
-      type?: string;
-      message?: string;
-    };
-  }): Promise<unknown>;
-};
+import { OnRpcRequestHandler } from "@metamask/snaps-types";
 
 export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
   switch (request.method) {

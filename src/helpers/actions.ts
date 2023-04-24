@@ -2,7 +2,8 @@ import { DappeteerElementHandle } from "../element";
 import { DappeteerPage } from "../page";
 import {
   getButton,
-  getElementByContent, getElementByTestId,
+  getElementByContent,
+  getElementByTestId,
   getInputByLabel,
   getSettingsSwitch,
 } from "./selectors";

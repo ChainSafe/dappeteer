@@ -1,11 +1,5 @@
-import { OnRpcRequestHandler } from "@metamask/snap-types";
-
-declare const snap: {
-  request(param: {
-    method: string;
-    params: { type: "Confirmation"; content: Object };
-  }): Promise<unknown>;
-};
+import { OnRpcRequestHandler } from "@metamask/snaps-types";
+import { heading, panel, text } from "@metamask/snaps-ui";
 
 export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
   switch (request.method) {
@@ -13,14 +7,11 @@ export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
       return snap.request({
         method: "snap_dialog",
         params: {
-          type: "Confirmation",
-          content: {
-            type: "panel",
-            children: [
-              { type: "heading", value: `Confirmation ${origin}` },
-              { type: "text", value: "Text here" },
-            ],
-          },
+          type: "confirmation",
+          content: panel([
+            heading(`Confirmation ${origin}`),
+            text("Text here"),
+          ]),
         },
       });
     default:
