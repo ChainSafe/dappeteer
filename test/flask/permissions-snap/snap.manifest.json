@@ -3,7 +3,7 @@
   "description": "An example Snap written in TypeScript.",
   "proposedName": "Permissions Snap\n",
   "source": {
-    "shasum": "11yd71cflGvr3G7PciuYOZ56IJ+/PnQU49Q6lUHKgAo=",
+    "shasum": "elro3K3Ms4e++sYEigUUqK6lJUOMIg1hyB8fsilPU0o=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

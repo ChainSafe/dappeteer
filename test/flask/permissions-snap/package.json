@@ -8,7 +8,7 @@
     "fix": "mm-snap manifest --fix"
   },
   "devDependencies": {
-    "@metamask/snaps-cli": "^0.22.0"
+    "@metamask/snaps-cli": "^0.30.0"
   },
   "author": "",
   "license": "ISC",
