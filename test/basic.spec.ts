@@ -85,23 +85,6 @@ describe("basic interactions", function () {
     expect(sig).to.be.equal(EXPECTED_SHORT_TYPED_DATA_SIGNATURE);
   });
 
-  it("should switch network", async () => {
-    await metaMask.switchNetwork("localhost");
-
-    const selectedNetwork = await metaMaskPage.evaluate(
-      () =>
-        document.querySelector(".network-display > span:nth-child(2)").innerHTML
-    );
-    expect(selectedNetwork).to.be.equal("Localhost 8545");
-  });
-
-  it("should return eth balance", async () => {
-    await metaMask.switchNetwork("localhost");
-    const tokenBalance: number = await metaMask.helpers.getTokenBalance("ETH");
-    expect(tokenBalance).to.be.greaterThan(0);
-    await metaMask.switchNetwork("mainnet");
-  });
-
   it("should return 0 token balance when token not found", async () => {
     const tokenBalance: number = await metaMask.helpers.getTokenBalance(
       "FARTBUCKS"
@@ -135,6 +118,23 @@ describe("basic interactions", function () {
     await metaMask.acceptAddNetwork();
     const res = await addNetworkPromise;
     expect(res).to.equal(true);
+  });
+
+  it("should switch network", async () => {
+    await metaMask.switchNetwork("localhost");
+
+    const selectedNetwork = await metaMaskPage.evaluate(
+      () =>
+        document.querySelector(".network-display > span:nth-child(2)").innerHTML
+    );
+    expect(selectedNetwork).to.be.equal("Localhost 8545");
+  });
+
+  it("should return eth balance", async () => {
+    await metaMask.switchNetwork("localhost");
+    const tokenBalance: number = await metaMask.helpers.getTokenBalance("ETH");
+    expect(tokenBalance).to.be.greaterThan(0);
+    await metaMask.switchNetwork("mainnet");
   });
 
   it("should import private key", async () => {
@@ -182,17 +182,18 @@ describe("basic interactions", function () {
   it("should create an account and switch back to the default", async () => {
     await metaMask.createAccount("Account 2");
     await metaMask.switchAccount(1);
+
     await profileDropdownClick(metaMaskPage);
-    await metaMaskPage.waitForSelector(".account-menu__check-mark svg");
+    await metaMaskPage.waitForSelector(".account-menu__check-mark span");
 
     const firstAccountSelected = await metaMaskPage.evaluate(() => {
       return !!document.querySelector(
-        ".account-menu__accounts .account-menu__account:nth-child(1) .account-menu__check-mark svg"
+        ".account-menu__accounts .account-menu__account:nth-child(1) .account-menu__check-mark span"
       );
     });
     const secondAccountSelected = await metaMaskPage.evaluate(() => {
       return !!document.querySelector(
-        ".account-menu__accounts .account-menu__account:nth-child(2) .account-menu__check-mark svg"
+        ".account-menu__accounts .account-menu__account:nth-child(2) .account-menu__check-mark span"
       );
     });
     expect((await metaMaskPage.$$(".account-menu__account")).length).to.eq(2);
