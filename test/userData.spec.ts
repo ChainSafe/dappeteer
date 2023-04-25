@@ -51,7 +51,7 @@ describe("userData", function () {
       await setupMetaMask(browser, metaMaskOptions);
 
       // give some pause to store state into files
-      await pause(1);
+      await pause(5);
 
       const isSuccess = browser.storeUserData(userDataDir);
       await browser.close();
@@ -99,7 +99,7 @@ describe("userData", function () {
       await setupMetaMask(browser, metaMaskOptions);
 
       // give some pause to store state into files
-      await pause(1);
+      await pause(5);
 
       const isSuccess = browser.storeUserData(userDataDir);
       await browser.close();
