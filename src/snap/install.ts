@@ -56,35 +56,33 @@ export const installSnap =
     await flaskPage.reload();
     await clickOnButton(flaskPage, "Connect");
 
+    await flaskPage.waitForSelector(".pulse-loader", { visible: false });
+    await flaskPage.waitForSelector(".snap-permissions-list");
+
+    await clickOnButton(flaskPage, "page-container-footer-next");
+
     const isAskingForPermissions = await isFirstElementAppearsFirst({
-      selectorOrXpath1: `//*[contains(text(), 'Approve & install')]`,
-      selectorOrXpath2: `//*[contains(text(), 'Install')]`,
+      selectorOrXpath1: `.checkbox-label`,
+      selectorOrXpath2: `.pulse-loader`,
       page: flaskPage,
     });
 
     if (isAskingForPermissions) {
-      await clickOnButton(flaskPage, "page-container-footer-next", {
+      await flaskPage.waitForSelector(".checkbox-label", {
         visible: false,
       });
-
-      const isShowingWarning = await isFirstElementAppearsFirst({
-        selectorOrXpath1: ".popover-wrap.snap-install-warning",
-        selectorOrXpath2: ".app-header__metafox-logo--icon",
-        page: flaskPage,
-      });
-
-      if (isShowingWarning) {
-        await flaskPage.waitForSelector(".checkbox-label", {
-          visible: false,
-        });
-        for await (const checkbox of await flaskPage.$$(".checkbox-label")) {
-          await checkbox.click();
-        }
-        await clickOnButton(flaskPage, "Confirm");
+      for await (const checkbox of await flaskPage.$$(".checkbox-label")) {
+        await checkbox.click();
       }
-    } else {
-      await clickOnButton(flaskPage, "Install");
+
+      await clickOnButton(flaskPage, "Confirm");
+      await flaskPage.waitForSelector(".pulse-loader", { visible: false });
     }
+
+    await flaskPage.waitForSelector(
+      '[data-testid="page-container-footer-next"]:not([disabled])'
+    );
+    await clickOnButton(flaskPage, "page-container-footer-next");
 
     for (const step of opts?.customSteps ?? []) {
       await step(flaskPage);

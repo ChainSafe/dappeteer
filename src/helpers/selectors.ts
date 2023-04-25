@@ -77,7 +77,7 @@ export const getErrorMessage = async (
       page.waitForSelector(`span.error`, options),
       page.waitForSelector(`.typography--color-error-1`, options),
       page.waitForSelector(`.typography--color-error-default`, options),
-      page.waitForSelector(`.mm-text--color-error-default`, options),
+      page.waitForSelector(`.box--color-error-default`, options),
     ]).catch(() => null);
   if (!errorElement) return false;
   return page.evaluate(
