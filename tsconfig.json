@@ -17,7 +17,7 @@
     "outDir": "dist",
     "removeComments": false
   },
-  "files": ["./node_modules/@metamask/snap-types/global.d.ts"],
+  "files": ["./node_modules/@metamask/snaps-types/dist/global.d.ts"],
   "include": [
     "src/**/*",
     "test/**/*"

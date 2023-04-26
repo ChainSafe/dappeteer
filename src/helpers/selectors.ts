@@ -77,6 +77,7 @@ export const getErrorMessage = async (
       page.waitForSelector(`span.error`, options),
       page.waitForSelector(`.typography--color-error-1`, options),
       page.waitForSelector(`.typography--color-error-default`, options),
+      page.waitForSelector(`.box--color-error-default`, options),
     ]).catch(() => null);
   if (!errorElement) return false;
   return page.evaluate(
@@ -84,13 +85,6 @@ export const getErrorMessage = async (
     errorElement.getSource()
   );
 };
-
-export const getAccountMenuButton = (
-  page: DappeteerPage
-): Promise<DappeteerElementHandle | null> =>
-  page.waitForXPath(`//button[contains(@title,'Account options')]`, {
-    visible: true,
-  });
 
 export const getButton = async (
   page: DappeteerPage,
@@ -103,5 +97,6 @@ export const getButton = async (
   return await Promise.race([
     getElementByTestId(page, text, options),
     getElementByContent(page, text, "button", options),
+    getElementByContent(page, text, "span", options),
   ]);
 };

@@ -1,18 +1,5 @@
-import { OnRpcRequestHandler } from "@metamask/snap-types";
-
-declare const snap: {
-  request(param: {
-    method: string;
-    params: { type: "Confirmation" | "Alert" | "Prompt"; content: Object };
-  }): Promise<unknown>;
-  request(param: {
-    method: string;
-    params: {
-      type?: string;
-      message?: string;
-    };
-  }): Promise<unknown>;
-};
+import { OnRpcRequestHandler } from "@metamask/snaps-types";
+import { heading, panel, text } from "@metamask/snaps-ui";
 
 export const onRpcRequest: OnRpcRequestHandler = async ({
   origin,
@@ -23,42 +10,33 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       return snap.request({
         method: "snap_dialog",
         params: {
-          type: "Confirmation",
-          content: {
-            type: "panel",
-            children: [
-              { type: "heading", value: `Confirmation ${origin}` },
-              { type: "text", value: "Text here" },
-            ],
-          },
+          type: "confirmation",
+          content: panel([
+            heading(`Confirmation ${origin}`),
+            text("Text here"),
+          ]),
         },
       });
     case "alert":
       return snap.request({
         method: "snap_dialog",
         params: {
-          type: "Alert",
-          content: {
-            type: "panel",
-            children: [
-              { type: "heading", value: `Confirmation ${origin}` },
-              { type: "text", value: "Text here" },
-            ],
-          },
+          type: "alert",
+          content: panel([
+            heading(`Confirmation ${origin}`),
+            text("Text here"),
+          ]),
         },
       });
     case "prompt":
       return snap.request({
         method: "snap_dialog",
         params: {
-          type: "Prompt",
-          content: {
-            type: "panel",
-            children: [
-              { type: "heading", value: `Confirmation ${origin}` },
-              { type: "text", value: "Text here" },
-            ],
-          },
+          type: "prompt",
+          content: panel([
+            heading(`Confirmation ${origin}`),
+            text("Text here"),
+          ]),
         },
       });
     case "notify_inApp":

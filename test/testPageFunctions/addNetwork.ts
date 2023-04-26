@@ -3,14 +3,14 @@ export const addNetwork = async (): Promise<boolean> => {
     method: "wallet_addEthereumChain",
     params: [
       {
-        chainId: "0xa",
-        chainName: "Optimism",
+        chainId: "0x539",
+        chainName: "Localhost 8545",
         nativeCurrency: {
           name: "ETH",
           symbol: "ETH", // 2-6 characters long
           decimals: 18,
         },
-        rpcUrls: ["https://mainnet.optimism.io"],
+        rpcUrls: ["http://localhost:8545"],
       },
     ],
   });

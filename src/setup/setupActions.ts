@@ -85,30 +85,8 @@ export const closePopup = async (page: DappeteerPage): Promise<void> => {
   await page.$eval(".popover-header__button", (node) => node.click());
 };
 
-export const closePortfolioTooltip = async (
-  page: DappeteerPage
-): Promise<void> => {
-  const closeButton = await page.waitForSelector(
-    `div.home__subheader-link--tooltip-content-header > button`,
-    {
-      timeout: 20000,
-    }
-  );
-  await closeButton.click();
-  await page.waitForTimeout(333);
-};
-
 export const closeWhatsNewModal = async (
   page: DappeteerPage
 ): Promise<void> => {
-  await page.reload();
-  await clickOnLogo(page);
-  await page.waitForTimeout(333);
-};
-
-export const closeNewModal = async (page: DappeteerPage): Promise<void> => {
-  const closeButton = await page.$(
-    ".home__subheader-link--tooltip-content-header-button"
-  );
-  await closeButton.click();
+  await clickOnButton(page, "popover-close");
 };

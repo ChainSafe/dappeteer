@@ -1,9 +1,9 @@
 import { DappeteerElementHandle } from "../element";
 import { DappeteerPage } from "../page";
 import {
-  getAccountMenuButton,
   getButton,
   getElementByContent,
+  getElementByTestId,
   getInputByLabel,
   getSettingsSwitch,
 } from "./selectors";
@@ -71,11 +71,8 @@ export const profileDropdownClick = async (
 export const openAccountDropdown = async (
   page: DappeteerPage
 ): Promise<void> => {
-  const accMenu = await getAccountMenuButton(page);
-  await accMenu.click();
-  await page.waitForSelector(".menu__container.account-options-menu", {
-    visible: true,
-  });
+  await clickOnButton(page, "account-options-menu-button");
+  await getElementByTestId(page, "account-options-menu", { visible: true });
 };
 
 export const clickOnElement = async (
@@ -167,7 +164,7 @@ export const clickOnLittleDownArrowIfNeeded = async (
   page: DappeteerPage
 ): Promise<void> => {
   // wait for the signature page and content to be loaded
-  await page.waitForSelector('[data-testid="signature-cancel-button"]', {
+  await page.waitForSelector('[data-testid="page-container-footer-next"]', {
     visible: true,
   });
 
@@ -175,7 +172,7 @@ export const clickOnLittleDownArrowIfNeeded = async (
   // and scroll until the bottom of the message
   // before enabling the "Sign" button
   const isSignButtonDisabled = await page.$eval(
-    '[data-testid="signature-sign-button"]',
+    '[data-testid="page-container-footer-next"]',
     (button: HTMLButtonElement) => {
       return button.disabled;
     }
