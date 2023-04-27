@@ -17,7 +17,7 @@ jobs:
           cache: 'yarn'
           node-version: 16
           registry-url: 'https://registry.npmjs.org'
-      - run: yarn --prefer-offline --frozen-lockfile
+      - run: yarn --immutable
       - run: yarn build
       - name: "Retrieving package version"
         uses: martinbeentjes/npm-get-version-action@main
