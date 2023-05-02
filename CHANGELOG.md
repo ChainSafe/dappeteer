@@ -1,5 +1,89 @@
 # Changelog
 
+## [3.0.0](https://github.com/ChainSafe/dappeteer/compare/v5.1.0...v3.0.0) (2023-05-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* deprecate `browser` param ([#282](https://github.com/ChainSafe/dappeteer/issues/282))
+* change default `headless` from `false` to `true` ([#283](https://github.com/ChainSafe/dappeteer/issues/283))
+* Deprecate `snap_confirm` and implement `snap_dialog` ([#277](https://github.com/ChainSafe/dappeteer/issues/277))
+* update puppeteer to version 19 ([#276](https://github.com/ChainSafe/dappeteer/issues/276))
+* replace outdated methods ([#189](https://github.com/ChainSafe/dappeteer/issues/189))
+* add playwright support ([#167](https://github.com/ChainSafe/dappeteer/issues/167))
+* update recommended metamask version ([#151](https://github.com/ChainSafe/dappeteer/issues/151))
+* casing of MetaMask ([#132](https://github.com/ChainSafe/dappeteer/issues/132))
+
+### Features
+
+* ability to install snap ([#154](https://github.com/ChainSafe/dappeteer/issues/154)) ([0aaad28](https://github.com/ChainSafe/dappeteer/commit/0aaad28f8cc4b2654a489f1c6c07319ee44bf4d7))
+* add ability to accept dialogs ([#138](https://github.com/ChainSafe/dappeteer/issues/138)) ([#164](https://github.com/ChainSafe/dappeteer/issues/164)) ([f777a9a](https://github.com/ChainSafe/dappeteer/commit/f777a9a0bd569cbd860770b82ff91f6e8e03152e))
+* add function to get token balance from metamask ([9a157a9](https://github.com/ChainSafe/dappeteer/commit/9a157a9ba7665c3575f0f90d44c90a93dfbef6c0))
+* Add invokeSnap method; update installSnap method parameter; ([#159](https://github.com/ChainSafe/dappeteer/issues/159)) ([17f2849](https://github.com/ChainSafe/dappeteer/commit/17f284903d216121dedd98b0168b9514b0e49b74))
+* add playwright support ([#167](https://github.com/ChainSafe/dappeteer/issues/167)) ([c4c0e5f](https://github.com/ChainSafe/dappeteer/commit/c4c0e5fc1af087230cbc5bc1c611230ebaa2c075))
+* add support for installing metamask flaask ([71cf265](https://github.com/ChainSafe/dappeteer/commit/71cf265408fe001a648b90b7eef8fe0e11c17294))
+* add support for installing metamask flask ([#153](https://github.com/ChainSafe/dappeteer/issues/153)) ([71cf265](https://github.com/ChainSafe/dappeteer/commit/71cf265408fe001a648b90b7eef8fe0e11c17294))
+* add test for initSnapEnv method ([#252](https://github.com/ChainSafe/dappeteer/issues/252)) ([970854d](https://github.com/ChainSafe/dappeteer/commit/970854d812806e50df7edc2ef529ab20fd13f782))
+* added notification snap to methods-snap [#137](https://github.com/ChainSafe/dappeteer/issues/137) ([#166](https://github.com/ChainSafe/dappeteer/issues/166)) ([ae17944](https://github.com/ChainSafe/dappeteer/commit/ae17944ed8790611b69dfdb55439946d30639013))
+* allow signing typed data ([#191](https://github.com/ChainSafe/dappeteer/issues/191)) ([086ecbd](https://github.com/ChainSafe/dappeteer/commit/086ecbdbdabdbc700c5a2e1902dd0fc811db411d))
+* complete TS version of dappeteer ([7590214](https://github.com/ChainSafe/dappeteer/commit/75902149a091afdb8509953e974c5bc90dfc2076))
+* create account method ([#253](https://github.com/ChainSafe/dappeteer/issues/253)) ([ec7e492](https://github.com/ChainSafe/dappeteer/commit/ec7e4925ea53cee2b78d8709eacee0439bfc60ba))
+* create function to add token ([37833d4](https://github.com/ChainSafe/dappeteer/commit/37833d4e611fce5c972b572ede3e2fbffdab8546))
+* Deprecate `snap_confirm` and implement `snap_dialog` ([#277](https://github.com/ChainSafe/dappeteer/issues/277)) ([23a0121](https://github.com/ChainSafe/dappeteer/commit/23a0121143172a3789dcca7e651d5375c81695a3))
+* fix the extension id via manifest key 🎺 ([81980d3](https://github.com/ChainSafe/dappeteer/commit/81980d39706c3b68ac87d7b8a8ac9b5f75e8ac40))
+* improved DX ([#258](https://github.com/ChainSafe/dappeteer/issues/258)) ([a20d0e1](https://github.com/ChainSafe/dappeteer/commit/a20d0e15b56b74cdfc6c5e24aa4f522663f00f1f))
+* method to bootstrap snap env ([#180](https://github.com/ChainSafe/dappeteer/issues/180)) ([0fb3465](https://github.com/ChainSafe/dappeteer/commit/0fb3465e879dd68014fb0f8cca8e2c6efdc4ca11))
+* replace outdated methods ([#189](https://github.com/ChainSafe/dappeteer/issues/189)) ([9fcf255](https://github.com/ChainSafe/dappeteer/commit/9fcf2551d5fb64c41f5ac0d165bc35a3ab399193))
+* set default headless mode ([#239](https://github.com/ChainSafe/dappeteer/issues/239)) ([9fcb540](https://github.com/ChainSafe/dappeteer/commit/9fcb54055cc73d9e7d31954d58332b2719819815))
+* Simplify `installSnap` and `initSnapEnv` apis ([#206](https://github.com/ChainSafe/dappeteer/issues/206)) ([d7c51f9](https://github.com/ChainSafe/dappeteer/commit/d7c51f948d01230c04603e289375af03e872289d))
+* snap notifications 137 ([#187](https://github.com/ChainSafe/dappeteer/issues/187)) ([794465c](https://github.com/ChainSafe/dappeteer/commit/794465c4f30fa2bc60f46f8c3455297dcc7aa815))
+* speedup initializing MetaMask ([#238](https://github.com/ChainSafe/dappeteer/issues/238)) ([e32457f](https://github.com/ChainSafe/dappeteer/commit/e32457f3017a5ab053ecea83685a291a5bf25bfd))
+* support MetamaMask v10.25.X ([#281](https://github.com/ChainSafe/dappeteer/issues/281)) ([27156f7](https://github.com/ChainSafe/dappeteer/commit/27156f731e4f4ef170f03a3f50e984ab0a715a1c))
+* triage issues github actions ([#301](https://github.com/ChainSafe/dappeteer/issues/301)) ([774958e](https://github.com/ChainSafe/dappeteer/commit/774958ea7dc92b77175bcbb89c736fbc72025756))
+* typescript ([ae1920f](https://github.com/ChainSafe/dappeteer/commit/ae1920f1a6be1bd049bc8e693c49092fe9b1cdb1))
+* typescript ([#11](https://github.com/ChainSafe/dappeteer/issues/11)) ([ae1920f](https://github.com/ChainSafe/dappeteer/commit/ae1920f1a6be1bd049bc8e693c49092fe9b1cdb1))
+* update MetaMask extension to v10.29.0 ([#312](https://github.com/ChainSafe/dappeteer/issues/312)) ([b79ab4c](https://github.com/ChainSafe/dappeteer/commit/b79ab4c74fab87747933d8f428624dcbffc3dd19))
+* update recommended metamask version ([#151](https://github.com/ChainSafe/dappeteer/issues/151)) ([ccb3215](https://github.com/ChainSafe/dappeteer/commit/ccb321579d6773c63b86eb8ff8f889a9c3d3bf6d))
+* upgrade metamask version to 24 ([#264](https://github.com/ChainSafe/dappeteer/issues/264)) ([ee4a513](https://github.com/ChainSafe/dappeteer/commit/ee4a5136250a4b64d8045233227b9926cb203e75))
+* WIP on TS ([dd474c7](https://github.com/ChainSafe/dappeteer/commit/dd474c70900d7e52dac78b62857d1a42dcb991a5))
+
+
+### Bug Fixes
+
+* `peerDependencies` for `puppeteer` ([#288](https://github.com/ChainSafe/dappeteer/issues/288)) ([a5acd5c](https://github.com/ChainSafe/dappeteer/commit/a5acd5cfb8cd1b98bb93c50a102b3d3d00645bde))
+* `peerDependenciesMeta` typo ([#271](https://github.com/ChainSafe/dappeteer/issues/271)) ([61978c2](https://github.com/ChainSafe/dappeteer/commit/61978c2c4d2c76af3041fc6d1aec36e47f96b4df))
+* args overwrite ([#240](https://github.com/ChainSafe/dappeteer/issues/240)) ([0a8d442](https://github.com/ChainSafe/dappeteer/commit/0a8d44237a06d86f5e7f76473ad75dda6aeb224f))
+* bootstrap launching with `userDataDir` ([#259](https://github.com/ChainSafe/dappeteer/issues/259)) ([5ea28fe](https://github.com/ChainSafe/dappeteer/commit/5ea28fefc21e609b9f64d3303702b2ff42da025f))
+* casing of MetaMask ([#132](https://github.com/ChainSafe/dappeteer/issues/132)) ([c0a41aa](https://github.com/ChainSafe/dappeteer/commit/c0a41aa5a27986e27d63f2448692affe5986a01e))
+* change default `headless` from `false` to `true` ([#283](https://github.com/ChainSafe/dappeteer/issues/283)) ([1fb43bd](https://github.com/ChainSafe/dappeteer/commit/1fb43bd14109d8c00bb9214f67811a5374192616))
+* dappeteer dependency ([#229](https://github.com/ChainSafe/dappeteer/issues/229)) ([#230](https://github.com/ChainSafe/dappeteer/issues/230)) ([2b6c213](https://github.com/ChainSafe/dappeteer/commit/2b6c2136701df55a7cb27528c7c4428553adb7a1))
+* explicitly set the default metamask interface language [#212](https://github.com/ChainSafe/dappeteer/issues/212) ([#241](https://github.com/ChainSafe/dappeteer/issues/241)) ([c148a5c](https://github.com/ChainSafe/dappeteer/commit/c148a5c8e753d5741d89a6cfdd1750aa082a9b45))
+* fix prompt clicking flakiness, fix multiple snap key permissions ([#194](https://github.com/ChainSafe/dappeteer/issues/194)) ([fe03f89](https://github.com/ChainSafe/dappeteer/commit/fe03f89a5fb494f88cd5778641c8d1d4a831a8f8))
+* import token flaky ([#149](https://github.com/ChainSafe/dappeteer/issues/149)) ([bfce149](https://github.com/ChainSafe/dappeteer/commit/bfce1498d4fc566ed1fc3f64e2c98ba0673b1e13))
+* import-token flakyness ([bfce149](https://github.com/ChainSafe/dappeteer/commit/bfce1498d4fc566ed1fc3f64e2c98ba0673b1e13))
+* improved flackyness and renamed confirmTransaction method ([3d9cedd](https://github.com/ChainSafe/dappeteer/commit/3d9ceddedb54507530d6d8187333b6a74d87cb2b))
+* inaccessible under scuttling mode ([#308](https://github.com/ChainSafe/dappeteer/issues/308)) ([a41e6dd](https://github.com/ChainSafe/dappeteer/commit/a41e6dd1c7be42273173a1dc1869819841f44c6d))
+* increase timeout ([#235](https://github.com/ChainSafe/dappeteer/issues/235)) ([34852cb](https://github.com/ChainSafe/dappeteer/commit/34852cbec1c5ec0415e4071e5d7f508d09b656cf))
+* jest config ([#131](https://github.com/ChainSafe/dappeteer/issues/131)) ([2151b67](https://github.com/ChainSafe/dappeteer/commit/2151b67eb70f729e118abea7a00f250f688a24d7))
+* missing files in released package ([#265](https://github.com/ChainSafe/dappeteer/issues/265)) ([58d01f2](https://github.com/ChainSafe/dappeteer/commit/58d01f2869bbff1f3842a5295a44320144e3cbb5))
+* new headless flag for playwright ([#247](https://github.com/ChainSafe/dappeteer/issues/247)) ([39b7e00](https://github.com/ChainSafe/dappeteer/commit/39b7e00253164e6e33ef4505941af23443026b38))
+* preserve comments in compiled files ([#246](https://github.com/ChainSafe/dappeteer/issues/246)) ([440112a](https://github.com/ChainSafe/dappeteer/commit/440112a7ab987c7c73fe94d14678fb406c8d2ea9))
+* README.md ([#122](https://github.com/ChainSafe/dappeteer/issues/122)) ([1855a8a](https://github.com/ChainSafe/dappeteer/commit/1855a8a144ed5439616c834f9188e006b658a0ff))
+* remove page param from install snap ([#188](https://github.com/ChainSafe/dappeteer/issues/188)) ([2678119](https://github.com/ChainSafe/dappeteer/commit/2678119efaffee748d33e90425b7c3370e01acdb))
+* selector issues, useless timeouts, reorganise tests ([#145](https://github.com/ChainSafe/dappeteer/issues/145)) ([babdd28](https://github.com/ChainSafe/dappeteer/commit/babdd285bcaa8f85debdd57d23514dafc22ef493))
+* snap install faster, run all tests ([#163](https://github.com/ChainSafe/dappeteer/issues/163)) ([04b8a00](https://github.com/ChainSafe/dappeteer/commit/04b8a004a7ec1994bc7b667b6bc2321e26ae826b))
+* typos ([0f365a2](https://github.com/ChainSafe/dappeteer/commit/0f365a29224db27de974d81a64f4e27ff55ca107))
+* update ganache, fix test depending on goerli ([#144](https://github.com/ChainSafe/dappeteer/issues/144)) ([#148](https://github.com/ChainSafe/dappeteer/issues/148)) ([c85a8aa](https://github.com/ChainSafe/dappeteer/commit/c85a8aaa73251323d367bcc921131caa94455ed1))
+* update minimum `playwright` peerDependencies ([#304](https://github.com/ChainSafe/dappeteer/issues/304)) ([90f45e0](https://github.com/ChainSafe/dappeteer/commit/90f45e0921ca9544197d24aa469f186417802fd8))
+* viewport size, timeouts ([#226](https://github.com/ChainSafe/dappeteer/issues/226)) ([cb6abfc](https://github.com/ChainSafe/dappeteer/commit/cb6abfc4bf751addd2e3f1746db3c4183f495c10))
+
+
+### Miscellaneous
+
+* deprecate `browser` param ([#282](https://github.com/ChainSafe/dappeteer/issues/282)) ([a11e1ac](https://github.com/ChainSafe/dappeteer/commit/a11e1ac9048ad3b2647e6ab341fe83f03cd5423e))
+* remove rc ([#125](https://github.com/ChainSafe/dappeteer/issues/125)) ([dbf00a0](https://github.com/ChainSafe/dappeteer/commit/dbf00a0ed24d428ded4f2291c4e7de31d535475b))
+* update puppeteer to version 19 ([#276](https://github.com/ChainSafe/dappeteer/issues/276)) ([2d66fba](https://github.com/ChainSafe/dappeteer/commit/2d66fbaa1a17a39ceef82feed684ab70e278bd72))
+
 ## [5.1.0](https://github.com/ChainSafe/dappeteer/compare/v5.0.1...v5.1.0) (2023-04-26)
 
 
