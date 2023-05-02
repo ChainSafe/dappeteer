@@ -144,7 +144,7 @@ jobs:
       - run: yarn build
         if: ${{ steps.release.outputs.release_created }}
 
-      - run: yarn publish --access public
+      - run: yarn npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
         if: ${{ steps.release.outputs.release_created }}
