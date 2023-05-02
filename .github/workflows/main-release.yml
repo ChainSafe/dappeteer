@@ -17,6 +17,7 @@ jobs:
           cache: 'yarn'
           node-version: 16
           registry-url: 'https://registry.npmjs.org'
+      - run: corepack enable
       - run: yarn --immutable
       - run: yarn build
       - name: "Retrieving package version"
@@ -29,6 +30,6 @@ jobs:
         run: |
           git config user.name ChainSafe
           git config user.email info@chainsafe.io
-      - run: yarn publish --access public --tag beta --new-version ${{steps.version.outputs.current-version}}-${{steps.commit.outputs.short}}
+      - run: yarn npm publish --access public --tag beta --new-version ${{steps.version.outputs.current-version}}-${{steps.commit.outputs.short}}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
