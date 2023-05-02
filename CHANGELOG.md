@@ -1,5 +1,19 @@
 # Changelog
 
+## [5.1.0](https://github.com/ChainSafe/dappeteer/compare/v5.0.1...v5.1.0) (2023-04-26)
+
+
+### Features
+
+* triage issues github actions ([#301](https://github.com/ChainSafe/dappeteer/issues/301)) ([774958e](https://github.com/ChainSafe/dappeteer/commit/774958ea7dc92b77175bcbb89c736fbc72025756))
+* update MetaMask extension to v10.29.0 ([#312](https://github.com/ChainSafe/dappeteer/issues/312)) ([b79ab4c](https://github.com/ChainSafe/dappeteer/commit/b79ab4c74fab87747933d8f428624dcbffc3dd19))
+
+
+### Bug Fixes
+
+* inaccessible under scuttling mode ([#308](https://github.com/ChainSafe/dappeteer/issues/308)) ([a41e6dd](https://github.com/ChainSafe/dappeteer/commit/a41e6dd1c7be42273173a1dc1869819841f44c6d))
+* update minimum `playwright` peerDependencies ([#304](https://github.com/ChainSafe/dappeteer/issues/304)) ([90f45e0](https://github.com/ChainSafe/dappeteer/commit/90f45e0921ca9544197d24aa469f186417802fd8))
+
 ## [5.0.1](https://github.com/ChainSafe/dappeteer/compare/v5.0.0...v5.0.1) (2023-02-22)
 
 
