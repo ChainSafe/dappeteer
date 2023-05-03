@@ -124,6 +124,8 @@ jobs:
         id: release
         with:
           release-type: node
+          last-release-sha: "f3041fef79d8c18d624c9a5a8b58d17dffcf00a8"
+          release-as: "v5.1.0"
           package-name: release-please-action
           changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"chore","section":"Miscellaneous","hidden":true}]'
       
