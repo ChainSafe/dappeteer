@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.1](https://github.com/ChainSafe/dappeteer/compare/v5.1.0...v5.1.1) (2023-05-03)
+
+
+### Bug Fixes
+
+* package publish ([#328](https://github.com/ChainSafe/dappeteer/issues/328)) ([f05f174](https://github.com/ChainSafe/dappeteer/commit/f05f1749e47db31ec05afe8cea01205f837555a3))
+
 ## [5.1.0](https://github.com/ChainSafe/dappeteer/compare/v5.1.0...v5.1.0) (2023-05-03)
 
 
