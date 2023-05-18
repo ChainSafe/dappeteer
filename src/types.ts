@@ -28,7 +28,7 @@ export type DappeteerLaunchOptions = {
   key?: string;
 };
 
-type CustomAutomation = (
+export type CustomAutomation = (
   metamaskPath: string,
   userDataDir: string,
   options: DappeteerLaunchOptions

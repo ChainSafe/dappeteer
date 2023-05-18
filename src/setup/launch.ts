@@ -77,7 +77,11 @@ export async function launch(
           fs.rmSync(userDataDir, { recursive: true, force: true });
           throw new Error("Missing customBootstrap method in options");
         }
-        return options.customAutomation(metamaskPath, userDataDir, options);
+        return await options.customAutomation(
+          metamaskPath,
+          userDataDir,
+          options
+        );
       case "playwright":
         return await launchPlaywright(metamaskPath, userDataDir, options);
       case "puppeteer":
