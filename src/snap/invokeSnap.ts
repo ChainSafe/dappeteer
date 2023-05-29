@@ -20,6 +20,7 @@ export async function invokeSnap<
           params: {
             request: {
               method: opts.method,
+              params: opts.params,
             },
             snapId: opts.snapId,
           },
