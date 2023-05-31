@@ -24,7 +24,16 @@ export async function enableEthSign(
   metaMaskPage: DappeteerPage
 ): Promise<void> {
   await openSettingsScreen(metaMaskPage, "Advanced");
-  await clickOnSettingsSwitch(metaMaskPage, "Toggle eth_sign requests");
+  await clickOnSettingsSwitch(metaMaskPage, "Eth_sign requests");
+  await clickOnElement(metaMaskPage, "eth-sign__checkbox");
+  await clickOnButton(metaMaskPage, "Continue");
+  await typeOnInputField(
+    metaMaskPage,
+    "Enter “I only sign what I understand” to continue",
+    "I only sign what I understand"
+  );
+  await clickOnButton(metaMaskPage, "Enable");
+  await metaMaskPage.waitForTimeout(333);
   await clickOnLogo(metaMaskPage);
 }
 
@@ -53,6 +62,8 @@ export async function importAccount(
     password = "password1234",
   }: MetaMaskOptions
 ): Promise<void> {
+  await waitForOverlay(metaMaskPage);
+  await clickOnElement(metaMaskPage, "onboarding-terms-checkbox");
   await clickOnButton(metaMaskPage, "onboarding-import-wallet");
   await clickOnButton(metaMaskPage, "metametrics-i-agree");
 
