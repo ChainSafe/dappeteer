@@ -1,5 +1,18 @@
 # Changelog
 
+## [5.2.0](https://github.com/ChainSafe/dappeteer/compare/v5.1.1...v5.2.0) (2023-05-31)
+
+
+### Features
+
+* custom automation ([#332](https://github.com/ChainSafe/dappeteer/issues/332)) ([e25032f](https://github.com/ChainSafe/dappeteer/commit/e25032f5d129ad7c15aff36e6aabcef39b823d0f))
+* support MetaMask v10.31.0 ([#335](https://github.com/ChainSafe/dappeteer/issues/335)) ([3ad1b56](https://github.com/ChainSafe/dappeteer/commit/3ad1b568a866c69c2b63819372bf89d1fc8e023f))
+
+
+### Bug Fixes
+
+* use params in InvokeSnap method ([#334](https://github.com/ChainSafe/dappeteer/issues/334)) ([509e22b](https://github.com/ChainSafe/dappeteer/commit/509e22bdf886e3e8b10e1754eade679d105ab4fb)), closes [#333](https://github.com/ChainSafe/dappeteer/issues/333)
+
 ## [5.1.1](https://github.com/ChainSafe/dappeteer/compare/v5.1.0...v5.1.1) (2023-05-03)
 
 
