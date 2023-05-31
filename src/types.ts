@@ -6,7 +6,7 @@ import { Path } from "./setup/utils/metaMaskDownloader";
 import { InstallStep } from "./snap/install";
 import { NotificationItem, NotificationList } from "./snap/types";
 import NotificationsEmitter from "./snap/NotificationsEmitter";
-import { RECOMMENDED_METAMASK_VERSION } from "./index";
+import { DappeteerBrowser, RECOMMENDED_METAMASK_VERSION } from "./index";
 
 export type DappeteerLaunchOptions = {
   metaMaskVersion?:
@@ -19,13 +19,20 @@ export type DappeteerLaunchOptions = {
   //install flask (canary) version of metamask.
   metaMaskFlask?: boolean;
   //fallbacks to installed dependency and prefers playwright if both are installed
-  automation?: "puppeteer" | "playwright";
+  automation?: "puppeteer" | "playwright" | "custom";
+  customAutomation?: CustomAutomation;
   headless?: boolean; // default true
   puppeteerOptions?: Parameters<typeof puppeteerLaunch>[0];
   playwrightOptions?: PlaywrightLaunchOptions;
   userDataDir?: string;
   key?: string;
 };
+
+export type CustomAutomation = (
+  metamaskPath: string,
+  userDataDir: string,
+  options: DappeteerLaunchOptions
+) => Promise<DappeteerBrowser>;
 
 declare global {
   interface Window {

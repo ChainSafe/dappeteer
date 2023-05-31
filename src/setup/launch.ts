@@ -71,6 +71,17 @@ export async function launch(
 
   if (options.automation) {
     switch (options.automation) {
+      case "custom":
+        console.warn("Custom automation in use. Proceed at own risk.");
+        if (!options.customAutomation) {
+          fs.rmSync(userDataDir, { recursive: true, force: true });
+          throw new Error("Missing customBootstrap method in options");
+        }
+        return await options.customAutomation(
+          metamaskPath,
+          userDataDir,
+          options
+        );
       case "playwright":
         return await launchPlaywright(metamaskPath, userDataDir, options);
       case "puppeteer":

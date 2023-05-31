@@ -5,6 +5,7 @@ export {
   DappeteerLaunchOptions,
   MetaMaskOptions,
   TransactionOptions,
+  CustomAutomation,
 } from "./types";
 export { DappeteerBrowser } from "./browser";
 export { DappeteerPage } from "./page";
