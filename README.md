@@ -6,6 +6,9 @@ E2E testing for dApps using Puppeteer + MetaMask
 
 ```
 $ npm install -s @chainsafe/dappeteer
+```
+or
+```
 $ yarn add @chainsafe/dappeteer
 ```
 
