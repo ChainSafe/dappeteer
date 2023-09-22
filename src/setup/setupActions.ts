@@ -8,7 +8,7 @@ import {
   openSettingsScreen,
   typeOnInputField,
   waitForOverlay,
-  evaluateElementClick
+  evaluateElementClick,
 } from "../helpers";
 import { DappeteerPage } from "../page";
 import { MetaMaskOptions } from "../types";
@@ -91,11 +91,11 @@ export async function importAccount(
 }
 
 export const closePopup = async (page: DappeteerPage): Promise<void> => {
-    await evaluateElementClick(page, ".popover-header__button");
+  await evaluateElementClick(page, ".popover-header__button");
 };
 
 export const closeWhatsNewModal = async (
-    page: DappeteerPage
+  page: DappeteerPage
 ): Promise<void> => {
-    await evaluateElementClick(page, '[data-testid="popover-close"]');
+  await evaluateElementClick(page, '[data-testid="popover-close"]');
 };
