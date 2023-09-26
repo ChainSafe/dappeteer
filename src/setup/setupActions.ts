@@ -8,6 +8,7 @@ import {
   openSettingsScreen,
   typeOnInputField,
   waitForOverlay,
+  evaluateElementClick,
 } from "../helpers";
 import { DappeteerPage } from "../page";
 import { MetaMaskOptions } from "../types";
@@ -90,14 +91,11 @@ export async function importAccount(
 }
 
 export const closePopup = async (page: DappeteerPage): Promise<void> => {
-  /* For some reason popup deletes close button and then create new one (react stuff)
-   * hacky solution can be found here => https://github.com/puppeteer/puppeteer/issues/3496 */
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  await page.$eval(".popover-header__button", (node) => node.click());
+  await evaluateElementClick(page, ".popover-header__button");
 };
 
 export const closeWhatsNewModal = async (
   page: DappeteerPage
 ): Promise<void> => {
-  await clickOnButton(page, "popover-close");
+  await evaluateElementClick(page, '[data-testid="popover-close"]');
 };
