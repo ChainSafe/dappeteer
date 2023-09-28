@@ -30,6 +30,7 @@ const defaultMetaMaskSteps: Step<MetaMaskOptions>[] = [
 const flaskMetaMaskSteps: Step<MetaMaskOptions>[] = [
   acceptTheRisks,
   importAccount,
+  closeWhatsNewModal,
   showTestNets,
   enableEthSign,
 ];

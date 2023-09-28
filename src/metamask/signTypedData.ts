@@ -14,7 +14,7 @@ export const signTypedData =
     await clickOnLittleDownArrowIfNeeded(page);
     await clickOnButton(page, "Sign");
     // wait for MM to be back in a stable state
-    await page.waitForSelector(".app-header", {
+    await page.waitForSelector(".multichain-app-header", {
       visible: true,
     });
   };

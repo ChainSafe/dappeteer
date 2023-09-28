@@ -1,4 +1,4 @@
-import { clickOnButton, profileDropdownClick } from "../helpers";
+import { accountOptionsDropdownClick, clickOnButton } from "../helpers";
 import { DappeteerPage } from "../page";
 
 import { GetSingedIn, SetSignedIn } from "./index";
@@ -11,8 +11,8 @@ export const lock =
     }
     await page.bringToFront();
 
-    await profileDropdownClick(page);
-    await clickOnButton(page, "Lock");
+    await accountOptionsDropdownClick(page);
+    await clickOnButton(page, "global-menu-lock");
 
     await setSignedIn(false);
   };

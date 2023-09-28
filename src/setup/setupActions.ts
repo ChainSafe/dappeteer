@@ -15,8 +15,11 @@ import { MetaMaskOptions } from "../types";
 export async function showTestNets(metaMaskPage: DappeteerPage): Promise<void> {
   await openNetworkDropdown(metaMaskPage);
 
-  await clickOnElement(metaMaskPage, "Show/hide");
-  await clickOnSettingsSwitch(metaMaskPage, "Show test networks");
+  const toggleSwitch = await metaMaskPage.waitForSelector(".toggle-button", {
+    visible: true,
+  });
+  await toggleSwitch.click();
+
   await clickOnLogo(metaMaskPage);
 }
 
@@ -99,5 +102,6 @@ export const closePopup = async (page: DappeteerPage): Promise<void> => {
 export const closeWhatsNewModal = async (
   page: DappeteerPage
 ): Promise<void> => {
-  await clickOnButton(page, "popover-close");
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  await page.$eval(`[data-testid="popover-close"]`, (node) => node.click());
 };

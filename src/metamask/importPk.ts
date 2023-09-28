@@ -14,9 +14,12 @@ export const importPk =
     await profileDropdownClick(page);
 
     await clickOnElement(page, "Import account");
-    await typeOnInputField(page, "your private key", privateKey);
-    await clickOnButton(page, "Import");
-
+    await typeOnInputField(
+      page,
+      "Enter your private key string here:",
+      privateKey
+    );
+    await clickOnButton(page, "import-account-confirm-button");
     const errorMessage = await getErrorMessage(page);
     if (errorMessage) throw new SyntaxError(errorMessage);
   };
