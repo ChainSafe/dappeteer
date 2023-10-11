@@ -21,7 +21,6 @@ export const deleteAccount =
 
     const targetAccountButton = optionsButtons[accountNumber - 1];
 
-    await new Promise((resolve) => setTimeout(resolve, 5000));
     await targetAccountButton.click();
 
     try {
