@@ -1,11 +1,11 @@
-import { clickOnElement, profileDropdownClick } from "../helpers";
+import { accountOptionsDropdownClick, clickOnElement } from "../helpers";
 import { DappeteerPage } from "../page";
 import { NotificationList } from "./types";
 
 export const getAllNotifications =
   (page: DappeteerPage) => async (): Promise<NotificationList> => {
     await page.bringToFront();
-    await profileDropdownClick(page);
+    await accountOptionsDropdownClick(page);
     await clickOnElement(page, "Notifications");
     await page.waitForSelector(".notifications__item__details__message");
     return await page.$$eval(

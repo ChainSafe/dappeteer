@@ -1,6 +1,6 @@
 import { StrictEventEmitter } from "strict-event-emitter";
 import { DappeteerPage } from "../page";
-import { clickOnElement, profileDropdownClick } from "../helpers";
+import { accountOptionsDropdownClick, clickOnElement } from "../helpers";
 import { NotificationItem, NotificationList } from "./types";
 
 interface EventsMap {
@@ -30,7 +30,7 @@ class NotificationsEmitter extends StrictEventEmitter<EventsMap> {
     const newPage = await this.page.browser().newPage();
     await newPage.goto(this.page.url());
 
-    await profileDropdownClick(newPage);
+    await accountOptionsDropdownClick(newPage);
     await clickOnElement(newPage, "Notifications");
 
     await newPage.waitForSelector(".notifications__container", {

@@ -102,3 +102,13 @@ export const closeWhatsNewModal = async (
 ): Promise<void> => {
   await evaluateElementClick(page, '[data-testid="popover-close"]');
 };
+
+export const closePrivacyWarningModal = async (
+  page: DappeteerPage
+): Promise<void> => {
+  await evaluateElementClick(
+    page,
+    '[data-testid="snap-privacy-warning-scroll"]'
+  );
+  await clickOnButton(page, "Accept");
+};

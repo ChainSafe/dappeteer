@@ -33,17 +33,22 @@ describe("snaps", function () {
     });
 
     it("should install base snap from local server", async function (this: TestContext) {
-      await metaMask.snaps.installSnap(this.snapServers[Snaps.BASE_SNAP]);
+      await metaMask.snaps.installSnap(this.snapServers[Snaps.BASE_SNAP], {
+        version: "1.0.0",
+      });
     });
 
     it("should install permissions snap local server", async function (this: TestContext) {
       await metaMask.snaps.installSnap(
-        this.snapServers[Snaps.PERMISSIONS_SNAP]
+        this.snapServers[Snaps.PERMISSIONS_SNAP],
+        { version: "1.0.0" }
       );
     });
 
     it("should install keys snap from local server", async function (this: TestContext) {
-      await metaMask.snaps.installSnap(this.snapServers[Snaps.KEYS_SNAP]);
+      await metaMask.snaps.installSnap(this.snapServers[Snaps.KEYS_SNAP], {
+        version: "1.0.0",
+      });
     });
   });
 
@@ -66,11 +71,11 @@ describe("snaps", function () {
       }
       snapId = await metaMask.snaps.installSnap(
         this.snapServers[Snaps.METHODS_SNAP],
-        { installationSnapUrl }
+        { installationSnapUrl, version: "1.0.0" }
       );
       permissionSnapId = await metaMask.snaps.installSnap(
         this.snapServers[Snaps.PERMISSIONS_SNAP],
-        { installationSnapUrl }
+        { installationSnapUrl, version: "1.0.0" }
       );
 
       testPage = await metaMaskPage.browser().newPage();
@@ -81,7 +86,6 @@ describe("snaps", function () {
     it("should return all notifications", async function (this: TestContext) {
       const emitter = await metaMask.snaps.getNotificationEmitter();
       const notificationPromise = emitter.waitForNotification();
-
       await metaMask.snaps.invokeSnap(testPage, snapId, "notify_inApp");
       await metaMask.snaps.invokeSnap(
         testPage,
@@ -155,7 +159,7 @@ describe("snaps", function () {
       );
       await metaMask.snaps.dialog.accept();
 
-      expect(await invokeAction).to.equal(null);
+      expect(await invokeAction).to.equal("");
     });
 
     it("should invoke Prompt snap_dialog method and REJECT the dialog", async function (this: TestContext) {
@@ -191,6 +195,7 @@ describe("should run dappeteer using initSnapEnv method", function () {
         (process.env.AUTOMATION as "puppeteer" | "playwright") ?? "puppeteer",
       snapIdOrLocation: this.snapServers[Snaps.BASE_SNAP],
       installationSnapUrl,
+      version: "1.0.0",
     }));
     connectedPage = await metaMask.page.browser().newPage();
     await connectedPage.goto(installationSnapUrl);

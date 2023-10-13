@@ -9,6 +9,7 @@ export const acceptDialog =
       await Promise.race([
         clickOnButton(page, "Approve", { timeout: 1000 }),
         clickOnButton(page, "Ok", { timeout: 1000 }),
+        clickOnButton(page, "OK", { timeout: 1000 }),
         clickOnButton(page, "Submit", { timeout: 1000 }),
       ]);
     }, 5);
