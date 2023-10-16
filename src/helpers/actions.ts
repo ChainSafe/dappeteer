@@ -55,7 +55,7 @@ export const profileDropdownClick = async (
     await clickOnButton(page, "account-menu-icon", {
       visible: true,
       timeout: 2000,
-    })
+    });
   }, 3);
 };
 
