@@ -52,14 +52,10 @@ export const profileDropdownClick = async (
   page: DappeteerPage
 ): Promise<void> => {
   await retry(async () => {
-    const accountSwitcher = await page.waitForSelector(
-      `[data-testid="account-menu-icon"]`,
-      {
-        visible: true,
-        timeout: 2000,
-      }
-    );
-    await accountSwitcher.click();
+    await clickOnButton(page, "account-menu-icon", {
+      visible: true,
+      timeout: 2000,
+    })
   }, 3);
 };
 
