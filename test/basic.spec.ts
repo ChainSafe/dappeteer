@@ -123,11 +123,13 @@ describe("basic interactions", function () {
   it("should switch network", async () => {
     await metaMask.switchNetwork("localhost");
 
-    const selectedNetwork = await metaMaskPage.evaluate(
-      () =>
-        document.querySelector(".network-display > span:nth-child(2)").innerHTML
-    );
-    expect(selectedNetwork).to.be.equal("Localhost 8545");
+    const selectedNetwork = await metaMaskPage.evaluate(() => {
+      const pickerNetwork: HTMLElement =
+        document.querySelector(".mm-picker-network");
+      return pickerNetwork.innerText;
+    });
+
+    expect(selectedNetwork).to.contain("Localhost 8545");
   });
 
   it("should return eth balance", async () => {
@@ -139,10 +141,14 @@ describe("basic interactions", function () {
 
   it("should import private key", async () => {
     const countAccounts = async (): Promise<number> => {
-      await profileDropdownClick(metaMaskPage, false);
-      const container = await metaMaskPage.$(".account-menu__accounts");
-      const count = (await container.$$(".account-menu__account")).length;
-      await profileDropdownClick(metaMaskPage, true);
+      await profileDropdownClick(metaMaskPage);
+      const container = await metaMaskPage.$(
+        ".multichain-account-menu-popover__list"
+      );
+      const count = (await container.$$(".multichain-account-list-item"))
+        .length;
+
+      await profileDropdownClick(metaMaskPage);
       return count;
     };
 
@@ -171,7 +177,7 @@ describe("basic interactions", function () {
 
     await metaMask.unlock(PASSWORD);
     const accountSwitcher = await metaMaskPage.waitForSelector(
-      ".account-menu__icon",
+      `[data-testid="account-menu-icon"]`,
       {
         visible: true,
       }
@@ -184,19 +190,23 @@ describe("basic interactions", function () {
     await metaMask.switchAccount(1);
 
     await profileDropdownClick(metaMaskPage);
-    await metaMaskPage.waitForSelector(".account-menu__check-mark span");
-
+    await metaMaskPage.waitForSelector(
+      ".multichain-account-list-item__selected-indicator",
+      { visible: true }
+    );
     const firstAccountSelected = await metaMaskPage.evaluate(() => {
       return !!document.querySelector(
-        ".account-menu__accounts .account-menu__account:nth-child(1) .account-menu__check-mark span"
+        ".multichain-account-menu-popover__list .multichain-account-list-item:nth-child(1) .multichain-account-list-item__selected-indicator"
       );
     });
     const secondAccountSelected = await metaMaskPage.evaluate(() => {
       return !!document.querySelector(
-        ".account-menu__accounts .account-menu__account:nth-child(2) .account-menu__check-mark span"
+        ".multichain-account-menu-popover__list .multichain-account-list-item:nth-child(2) .multichain-account-list-item__selected-indicator"
       );
     });
-    expect((await metaMaskPage.$$(".account-menu__account")).length).to.eq(2);
+    expect(
+      (await metaMaskPage.$$(".multichain-account-list-item")).length
+    ).to.eq(2);
     expect(firstAccountSelected).to.be.true;
     expect(secondAccountSelected).to.be.false;
     await clickOnLogo(metaMaskPage);

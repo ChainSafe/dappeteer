@@ -9,7 +9,9 @@ export const switchNetwork =
     await openNetworkDropdown(page);
 
     const networkIndex = await page.evaluate((network: string) => {
-      const elements = document.querySelectorAll(".network-name-item");
+      const elements = document.querySelectorAll(
+        ".multichain-network-list-item__network-name"
+      );
       for (let i = 0; i < elements.length; i++) {
         const element = elements[i];
         if (
@@ -24,11 +26,14 @@ export const switchNetwork =
     }, network);
 
     const networkFullName = await page.evaluate((index: number) => {
-      const elements = document.querySelectorAll(`.network-name-item`);
+      const elements = document.querySelectorAll(
+        `.multichain-network-list-item__network-name`
+      );
       return (elements[index] as HTMLLIElement).innerText;
     }, networkIndex);
-
-    const networkButton = (await page.$$(".network-name-item"))[networkIndex];
+    const networkButton = (
+      await page.$$(".multichain-network-list-item__network-name")
+    )[networkIndex];
     await networkButton.click();
     await page.waitForXPath(`//*[text() = '${networkFullName}']`);
   };

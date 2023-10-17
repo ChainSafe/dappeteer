@@ -31,8 +31,9 @@ export const openSettingsScreen = async (
   page: DappeteerPage,
   section: Section = "General"
 ): Promise<void> => {
-  await profileDropdownClick(page);
-  await clickOnElement(page, "Settings");
+  await clickOnElement(page, "account-options-menu-button");
+  await clickOnElement(page, "global-menu-settings");
+
   await clickOnElement(page, section);
 };
 
@@ -40,39 +41,42 @@ export const openNetworkDropdown = async (
   page: DappeteerPage
 ): Promise<void> => {
   await retry(async () => {
-    const networkSwitcher = await page.waitForSelector(".network-display", {
+    const networkSwitcher = await page.waitForSelector(".mm-picker-network", {
       visible: true,
     });
     await networkSwitcher.click();
-    await page.waitForSelector(".network-dropdown-list", {
-      visible: true,
-      timeout: 1000,
-    });
   }, 3);
 };
 
 export const profileDropdownClick = async (
-  page: DappeteerPage,
-  expectToClose = false
+  page: DappeteerPage
 ): Promise<void> => {
   await retry(async () => {
-    const accountSwitcher = await page.waitForSelector(".account-menu__icon", {
+    await clickOnButton(page, "account-menu-icon", {
       visible: true,
-      timeout: 2000,
-    });
-    await accountSwitcher.click();
-    await page.waitForSelector(".account-menu", {
-      hidden: expectToClose,
       timeout: 2000,
     });
   }, 3);
 };
 
-export const openAccountDropdown = async (
-  page: DappeteerPage
+export const accountOptionsDropdownClick = async (
+  page: DappeteerPage,
+  expectToClose = false
 ): Promise<void> => {
-  await clickOnButton(page, "account-options-menu-button");
-  await getElementByTestId(page, "account-options-menu", { visible: true });
+  await retry(async () => {
+    const accountOptionsButton = await page.waitForSelector(
+      `[data-testid="account-options-menu-button"]`,
+      {
+        visible: true,
+        timeout: 2000,
+      }
+    );
+    await accountOptionsButton.click();
+    await page.waitForSelector(".menu__container", {
+      hidden: expectToClose,
+      timeout: 2000,
+    });
+  }, 3);
 };
 
 export const clickOnElement = async (

@@ -9,6 +9,7 @@ import {
 } from "../helpers";
 import { DappeteerPage } from "../page";
 import { EXAMPLE_WEBSITE } from "../constants";
+import { closePrivacyWarningModal } from "../setup/setupActions";
 import { startSnapServer, toUrl } from "./install-utils";
 import { flaskOnly, isFirstElementAppearsFirst } from "./utils";
 import { InstallSnapResult } from "./types";
@@ -54,12 +55,22 @@ export const installSnap =
 
     await flaskPage.bringToFront();
     await flaskPage.reload();
+
+    try {
+      const privacyWarningModal = await flaskPage.$(
+        '[data-testid="snap-privacy-warning-scroll"]'
+      );
+      if (privacyWarningModal) await closePrivacyWarningModal(flaskPage);
+    } catch (e) {
+      //ignored if modal is not present
+    }
+
     await clickOnButton(flaskPage, "Connect");
 
     await flaskPage.waitForSelector(".pulse-loader", { visible: false });
     await flaskPage.waitForSelector(".snap-permissions-list");
 
-    await clickOnButton(flaskPage, "page-container-footer-next");
+    await clickOnButton(flaskPage, "Install");
 
     const isAskingForPermissions = await isFirstElementAppearsFirst({
       selectorOrXpath1: `.checkbox-label`,

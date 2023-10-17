@@ -1,10 +1,9 @@
 import {
   clickOnButton,
   clickOnElement,
-  openAccountDropdown,
+  profileDropdownClick,
 } from "../../helpers";
 import { DappeteerPage } from "../../page";
-import { switchAccount } from "../switchAccount";
 
 export const deleteAccount =
   (page: DappeteerPage) =>
@@ -13,10 +12,22 @@ export const deleteAccount =
 
     if (accountNumber === 1)
       throw new SyntaxError("Account 1 cannot be deleted");
-    await switchAccount(page)(accountNumber);
 
-    await openAccountDropdown(page);
-    await clickOnElement(page, "Remove account");
-    await clickOnButton(page, "Remove");
+    await profileDropdownClick(page);
+
+    const optionsButtons = await page.$$(
+      `[data-testid="account-list-item-menu-button"]`
+    );
+
+    const targetAccountButton = optionsButtons[accountNumber - 1];
+
+    await targetAccountButton.click();
+
+    try {
+      await clickOnElement(page, "Remove account");
+      await clickOnButton(page, "Remove");
+    } catch (e) {
+      throw new SyntaxError("Only imported accounts can be deleted");
+    }
     await page.reload();
   };

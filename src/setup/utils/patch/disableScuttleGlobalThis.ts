@@ -6,8 +6,8 @@ export const disableScuttleGlobalThis = (metaMaskPath: string): void => {
 
   const file = readFileSync(runtimeLavaMoatPath, "utf8");
   const patchedFile = file.replace(
-    `"scuttleGlobalThis":true`,
-    `"scuttleGlobalThis":false`
+    `"scuttleGlobalThis":{"enabled":true`,
+    `"scuttleGlobalThis":{"enabled":false`
   );
   writeFileSync(runtimeLavaMoatPath, patchedFile);
 };

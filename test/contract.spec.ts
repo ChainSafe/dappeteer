@@ -33,7 +33,7 @@ describe("contract interactions", function () {
       //ignored
     }
     await metamask.switchAccount(1);
-    await metamask.switchNetwork("local");
+    await metamask.switchNetwork("localhost");
   });
 
   after(async function (this: TestContext) {
