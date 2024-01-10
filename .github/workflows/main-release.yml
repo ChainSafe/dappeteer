@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           cache: 'yarn'
-          node-version: 16
+          node-version: "20"
           registry-url: 'https://registry.npmjs.org'
       - run: corepack enable
       - run: yarn --immutable
