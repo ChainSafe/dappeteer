@@ -21,6 +21,7 @@ jobs:
         with:
           cache: yarn
           node-version: "16"
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
