@@ -109,6 +109,6 @@ export const closePrivacyWarningModal = async (
   page: DappeteerPage
 ): Promise<void> => {
   await clickOnButton(page, "snap-privacy-warning-scroll");
-  await page.waitForTimeout(500);
+  await page.waitForTimeout(1000);
   await clickOnButton(page, "Accept");
 };
