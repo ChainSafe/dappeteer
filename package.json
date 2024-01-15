@@ -11,7 +11,7 @@
     "bin"
   ],
   "engines": {
-    "node": ">=20.10"
+    "node": ">=18.10"
   },
   "packageManager": "yarn@3.7.0",
   "scripts": {
