@@ -44,7 +44,9 @@ export async function enableEthSign(
 export async function acceptTheRisks(
   metaMaskPage: DappeteerPage
 ): Promise<void> {
-  await clickOnButton(metaMaskPage, "I accept the risks");
+  await waitForOverlay(metaMaskPage);
+  await metaMaskPage.waitForTimeout(300);
+  await clickOnElement(metaMaskPage, "I accept the risks");
 }
 
 export async function confirmWelcomeScreen(
@@ -106,9 +108,7 @@ export const closeWhatsNewModal = async (
 export const closePrivacyWarningModal = async (
   page: DappeteerPage
 ): Promise<void> => {
-  await evaluateElementClick(
-    page,
-    '[data-testid="snap-privacy-warning-scroll"]'
-  );
+  await clickOnButton(page, "snap-privacy-warning-scroll");
+  await page.waitForTimeout(1000);
   await clickOnButton(page, "Accept");
 };
