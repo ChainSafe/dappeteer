@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.2.1](https://github.com/ChainSafe/dappeteer/compare/v5.2.0...v5.2.1) (2024-01-16)
+
+
+### Bug Fixes
+
+* add evaluate element click for closeWhatsNewModal ([#346](https://github.com/ChainSafe/dappeteer/issues/346)) ([1f7c50f](https://github.com/ChainSafe/dappeteer/commit/1f7c50f40b2b121e5cd989b6e384fffeae724085))
+* update dappeter to metamask version 11.0.0 ([#349](https://github.com/ChainSafe/dappeteer/issues/349)) ([3f47ed8](https://github.com/ChainSafe/dappeteer/commit/3f47ed8faed20e0becdc76758ee375a843d21d18))
+
 ## [5.2.0](https://github.com/ChainSafe/dappeteer/compare/v5.1.1...v5.2.0) (2023-05-31)
 
 
