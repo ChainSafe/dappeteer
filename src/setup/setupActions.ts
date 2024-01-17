@@ -45,7 +45,9 @@ export async function acceptTheRisks(
   metaMaskPage: DappeteerPage
 ): Promise<void> {
   await waitForOverlay(metaMaskPage);
-  await metaMaskPage.waitForTimeout(300);
+  await metaMaskPage.waitForSelector('[data-testid="experimental-area"]', {
+    visible: true,
+  });
   await clickOnElement(metaMaskPage, "I accept the risks");
 }
 

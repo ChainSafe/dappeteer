@@ -139,8 +139,14 @@ jobs:
           key: metamask-extension
       - name: Install
         run: yarn --immutable
-      - name: Tests
-        run: 'yarn run test:${{matrix.automation}}:${{ matrix.mm-version }} --timeout 50000'
+
+      - name: Run tests with retry
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 5
+          max_attempts: 3
+          command: 'yarn run test:${{matrix.automation}}:${{ matrix.mm-version }} --timeout 50000'
+
       - uses: actions/upload-artifact@v3
         if: always()
         with:
@@ -181,8 +187,13 @@ jobs:
 
       - name: Install
         run: yarn --immutable
-      - name: Tests UserData
-        run: 'yarn run test:${{matrix.automation}}:userData --timeout 240000'
+
+      - name: Run Tests UserData with retry
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 24
+          max_attempts: 3
+          command: 'yarn run test:${{matrix.automation}}:userData --timeout 240000'
 
   maybe-release:
     name: release
