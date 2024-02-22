@@ -16,7 +16,7 @@ export function getCounterContract(): { address: string } | null {
 
 export async function startLocalEthereum(
   opts?: ServerOptions
-): Promise<Server<"ethereum">> {
+): Promise<Server<any>> {
   console.log("Starting ganache...");
   opts = opts ?? {};
   const server = ganache.server({ ...opts, logging: { quiet: true } });

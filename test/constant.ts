@@ -7,7 +7,7 @@ import { Snaps, TestContract } from "./deploy";
 
 export type InjectableContext = Readonly<{
   provider: Provider;
-  ethereum: Server<"ethereum">;
+  ethereum: Server<any>;
   snapServers?: Record<Snaps, string>;
   browser: DappeteerBrowser;
   metaMask: Dappeteer;
