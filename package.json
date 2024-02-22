@@ -23,6 +23,7 @@
     "test:puppeteer:userData": "AUTOMATION=puppeteer yarn run test:userData",
     "test:playwright:userData": "AUTOMATION=playwright yarn run test:userData",
     "test:mm": "mocha --timeout 30000 --bail --require ts-node/register --require test/global.ts",
+    "test:kp": "mocha --timeout 30000 --bail --require ts-node/register --require test/keplr.ts",
     "test:flask": "mocha --timeout 30000 --bail --require ts-node/register --require test/global_flask.ts",
     "test:puppeteer:mm": "AUTOMATION=puppeteer yarn run test:mm",
     "test:puppeteer:flask": "AUTOMATION=puppeteer yarn run test:flask",

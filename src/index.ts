@@ -16,7 +16,7 @@ export {
   launch,
   setupMetaMask,
   setupBootstrappedMetaMask,
-} from "./setup";
+} from "./setup/indexMetaMask";
 export { DapeteerJestConfig } from "./jest/global";
 
 // default constants
