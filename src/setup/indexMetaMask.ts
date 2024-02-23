@@ -2,10 +2,10 @@ import { DappeteerBrowser } from "../browser";
 import { DappeteerPage } from "../page";
 import { InstallSnapOptions } from "../snap/install";
 import { Dappeteer, DappeteerLaunchOptions, MetaMaskOptions } from "../types";
-import { launch } from "./launch";
+import { launch } from "./launchMetaMask";
 import { setupBootstrappedMetaMask, setupMetaMask } from "./setupMetaMask";
 
-export * from "./launch";
+export * from "./launchMetaMask";
 export * from "./setupMetaMask";
 
 /**
@@ -21,6 +21,7 @@ export const bootstrap = async ({
   browser: DappeteerBrowser;
   metaMaskPage: DappeteerPage;
 }> => {
+  console.log("LAUNCHHHHHHHHHHHH", launchOptions)
   const browser = await launch(launchOptions);
   const metaMask = await (launchOptions.userDataDir
     ? setupBootstrappedMetaMask(browser, password)

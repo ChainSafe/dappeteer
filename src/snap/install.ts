@@ -9,7 +9,7 @@ import {
 } from "../helpers";
 import { DappeteerPage } from "../page";
 import { EXAMPLE_WEBSITE } from "../constants";
-import { closePrivacyWarningModal } from "../setup/setupActions";
+import { closePrivacyWarningModal } from "../setup/setupActionsMetaMask";
 import { startSnapServer, toUrl } from "./install-utils";
 import { flaskOnly, isFirstElementAppearsFirst } from "./utils";
 import { InstallSnapResult } from "./types";
