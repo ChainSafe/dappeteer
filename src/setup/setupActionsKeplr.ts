@@ -1,33 +1,29 @@
-import { waitForOverlay, getElementByContent } from '../helpers';
+import {
+  keplrMnemonic,
+  keplrPassowrd,
+  keplrWalletName,
+} from '../../test/constant';
+import { getElementByContent } from '../helpers';
 import { DappeteerPage } from '../page';
 
 export async function importAccount(keplrPage: DappeteerPage): Promise<void> {
-  await waitForOverlay(keplrPage);
-
   let importWalletButton = await getElementByContent(
     keplrPage,
     'Import an existing wallet'
   );
   await importWalletButton.click();
-  await waitForOverlay(keplrPage);
 
   let recoveryPhraseButton = await getElementByContent(
     keplrPage,
     'Use recovery phrase or private key'
   );
   await recoveryPhraseButton.click();
-  await waitForOverlay(keplrPage);
-  await new Promise((resolve) => setTimeout(resolve, 2000));
 
   let mnemonicButton = await getElementByContent(keplrPage, '24 words');
   await mnemonicButton.click();
-  await waitForOverlay(keplrPage);
-
-  let mnemonic =
-    'orbit bench unit task food shock brand bracket domain regular warfare company announce wheel grape trust sphere boy doctor half guard ritual three ecology';
 
   const passwordFields = await keplrPage.$$('input[type="password"]');
-  const words = mnemonic.split(' ');
+  const words = keplrMnemonic.split(' ');
 
   let index = 0;
   for (const field of passwordFields) {
@@ -35,38 +31,29 @@ export async function importAccount(keplrPage: DappeteerPage): Promise<void> {
     index += 1;
   }
 
-  await keplrPage.evaluate(() => {
-    const button = document.querySelector(
-      'div.sc-bczRLJ.gclPdw button.sc-bZkfAO.jGdbNJ'
-    );
-    if (button) {
-      (button as HTMLButtonElement).click();
-      return true;
-    }
-    return false;
-  });
+  const importButton = await keplrPage.waitForSelector(
+    'div.sc-bczRLJ.gclPdw button.sc-bZkfAO.jGdbNJ'
+  );
+  await importButton.click();
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  const walletNameSelector =
-    'input[placeholder="e.g. Trading, NFT Vault, Investment"].sc-iAvgwm.kEpgcC';
+  const walletNameField = await keplrPage.waitForSelector(
+    'input[placeholder="e.g. Trading, NFT Vault, Investment"].sc-iAvgwm.kEpgcC'
+  );
+  await walletNameField.click();
+  await walletNameField.type(keplrWalletName);
+
   const passwordFieldSelector =
     'input[name="password"][placeholder="At least 8 characters in length"].sc-iAvgwm.kEpgcC';
   const confirmPasswordSelector =
     'input[name="confirmPassword"][placeholder="At least 8 characters in length"].sc-iAvgwm.kEpgcC';
 
-  const walletNameField = await keplrPage.$(walletNameSelector);
-  await walletNameField.click();
-  await walletNameField.type('WALLET');
-
   const passwordField = await keplrPage.$(passwordFieldSelector);
-  await passwordField.type('test1234');
+  await passwordField.type(keplrPassowrd);
 
   const confirmPasswordField = await keplrPage.$(confirmPasswordSelector);
-  await confirmPasswordField.type('test1234');
+  await confirmPasswordField.type(keplrPassowrd);
 
   let nextButton = await getElementByContent(keplrPage, 'Next');
-
-  await waitForOverlay(keplrPage);
   await nextButton.click();
   await new Promise((resolve) => setTimeout(resolve, 5000));
 
@@ -110,5 +97,5 @@ export async function importAccount(keplrPage: DappeteerPage): Promise<void> {
   let finsihButton = await getElementByContent(keplrPage, 'Finish');
   await finsihButton.click();
 
-  await new Promise((resolve) => setTimeout(resolve, 5000000));
+  await new Promise((resolve) => setTimeout(resolve, 5000));
 }

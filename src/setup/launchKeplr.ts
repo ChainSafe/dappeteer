@@ -3,7 +3,6 @@ import { DappeteerBrowser } from '../browser';
 import { DappeteerLaunchOptions } from '../types';
 import { launchPuppeteer } from './puppeteer';
 import { getTemporaryUserDataDir } from './utils/getTemporaryUserDataDir';
-import { patchMetaMask } from './utils/patch';
 import downloader from './utils/keplrDownloader';
 
 /**
@@ -20,8 +19,6 @@ export async function launch(
   keplrPath = await downloader();
 
   const userDataDir = getTemporaryUserDataDir();
-
-  // patchMetaMask(keplrPath, { key: options.key });
 
   try {
     return await launchPuppeteer(keplrPath, userDataDir, options);
