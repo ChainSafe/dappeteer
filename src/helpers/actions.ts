@@ -2,6 +2,7 @@ import { DappeteerElementHandle } from "../element";
 import { DappeteerPage } from "../page";
 import {
   getButton,
+  getELementBySelector,
   getElementByContent,
   getElementByTestId,
   getInputByLabel,
@@ -87,6 +88,7 @@ export const clickOnElement = async (
   const element = await Promise.race([
     getElementByContent(page, text, type),
     getElementByTestId(page, text),
+    getELementBySelector(page, text),
   ]);
   await element.click();
 };
@@ -159,8 +161,10 @@ export const typeOnInputField = async (
 };
 
 export async function waitForOverlay(page: DappeteerPage): Promise<void> {
-  await page.waitForSelectorIsGone(".loading-overlay", { timeout: 10000 });
-  await page.waitForSelectorIsGone(".app-loading-spinner", { timeout: 10000 });
+  await page.waitForSelectorIsGone(".loading-logo", { timeout: 20000 });
+  await page.waitForSelectorIsGone(".loading-spinner", { timeout: 20000 });
+  await page.waitForSelectorIsGone(".loading-overlay", { timeout: 20000 });
+  await page.waitForSelectorIsGone(".app-loading-spinner", { timeout: 20000 });
 }
 
 /**

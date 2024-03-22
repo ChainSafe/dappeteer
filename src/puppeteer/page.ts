@@ -1,11 +1,16 @@
 import {
+  Awaitable,
   Browser,
   ElementHandle,
   EvaluateFunc,
+  Frame,
+  Handler,
+  NewDocumentScriptEvaluation,
   NodeFor,
   Page,
   WaitForOptions,
 } from "puppeteer";
+import { SolveRecaptchasResult } from "puppeteer-extra-plugin-recaptcha/dist/types";
 import { DappeteerBrowser } from "../browser";
 import { DappeteerElementHandle } from "../element";
 import { DappeteerPage, Response, Serializable } from "../page";
@@ -91,6 +96,10 @@ export class DPupeteerPage implements DappeteerPage<Page> {
     return this.page.title();
   }
 
+  evaluateOnNewDocument(file: string): Promise<NewDocumentScriptEvaluation> {
+    return this.page.evaluateOnNewDocument(file);
+  }
+
   close(options?: { runBeforeUnload?: boolean }): Promise<void> {
     return this.page.close(options);
   }
@@ -119,6 +128,18 @@ export class DPupeteerPage implements DappeteerPage<Page> {
     );
   }
 
+  async waitForFrame(
+    urlOrPredicate: string | ((frame: Frame) => Awaitable<boolean>),
+    opts?: Partial<{ timeout: number }>
+  ): Promise<Frame> {
+    const frame = await this.page.waitForFrame(urlOrPredicate, opts);
+    return frame;
+  }
+
+  async solveRecaptchas(): Promise<SolveRecaptchasResult> {
+    return await this.page.solveRecaptchas();
+  }
+
   async waitForSelectorIsGone(
     selector: string,
     opts?: Partial<{ timeout: number }>
@@ -134,12 +155,19 @@ export class DPupeteerPage implements DappeteerPage<Page> {
     opts?: Partial<{ visible: boolean; timeout: number }>
   ): Promise<DappeteerElementHandle<ElementHandle<Node>>> {
     return new DPuppeteerElementHandle(
-      (await this.page.waitForXPath(xpath, opts)) as ElementHandle<HTMLElement>
+      (await this.page.waitForSelector(
+        "xpath/" + xpath,
+        opts
+      )) as ElementHandle<HTMLElement>
     );
   }
 
   waitForTimeout(timeout: number): Promise<void> {
-    return this.page.waitForTimeout(timeout);
+    return new Promise((resolve) =>
+      setTimeout(() => {
+        resolve();
+      }, timeout)
+    );
   }
 
   evaluate<Params, Result>(
@@ -162,6 +190,10 @@ export class DPupeteerPage implements DappeteerPage<Page> {
 
   async waitForNavigation(options: WaitForOptions): Promise<Response | null> {
     return this.page.waitForNavigation(options);
+  }
+
+  on(event: string, listener: Handler<unknown>): any {
+    return this.page.on(event, listener);
   }
 
   type(

@@ -8,8 +8,8 @@ export const getElementByContent = (
   type = "*",
   options?: { timeout?: number; visible?: boolean }
 ): Promise<DappeteerElementHandle | null> =>
-  page.waitForXPath(`//${type}[contains(text(), '${text}')]`, {
-    timeout: 20000,
+  page.waitForSelector("xpath/" + `//${type}[contains(text(), '${text}')]`, {
+    timeout: 0,
     visible: true,
     ...options,
   });
@@ -30,25 +30,42 @@ export const getElementByTestId = (
     ...options,
   });
 
+export const getELementBySelector = (
+  page: DappeteerPage,
+  selector: string,
+  options?: {
+    visible?: boolean;
+    detached?: boolean;
+    hidden?: boolean;
+    timeout?: number;
+  }
+): Promise<DappeteerElementHandle | null> =>
+  page.waitForSelector(selector, {
+    timeout: 2000,
+    visible: true,
+    ...options,
+  });
+
 export const getInputByLabel = (
   page: DappeteerPage,
   text: string,
   excludeSpan = false,
   timeout = 1000
 ): Promise<DappeteerElementHandle> =>
-  page.waitForXPath(
-    [
-      `//label[contains(.,'${text}')]/following-sibling::textarea`,
-      `//label[contains(.,'${text}')]/following-sibling::*//input`,
-      `//h6[contains(.,'${text}')]/parent::node()/parent::node()/following-sibling::input`,
-      `//h6[contains(.,'${text}')]/parent::node()/parent::node()/following-sibling::*//input`,
-      ...(!excludeSpan
-        ? [
-            `//span[contains(.,'${text}')]/parent::node()/parent::node()/following-sibling::*//input`,
-            `//span[contains(.,'${text}')]/following-sibling::*//input`,
-          ]
-        : []),
-    ].join("|"),
+  page.waitForSelector(
+    "xpath/" +
+      [
+        `//label[contains(.,'${text}')]/following-sibling::textarea`,
+        `//label[contains(.,'${text}')]/following-sibling::*//input`,
+        `//h6[contains(.,'${text}')]/parent::node()/parent::node()/following-sibling::input`,
+        `//h6[contains(.,'${text}')]/parent::node()/parent::node()/following-sibling::*//input`,
+        ...(!excludeSpan
+          ? [
+              `//span[contains(.,'${text}')]/parent::node()/parent::node()/following-sibling::*//input`,
+              `//span[contains(.,'${text}')]/following-sibling::*//input`,
+            ]
+          : []),
+      ].join("|"),
     { timeout, visible: true }
   );
 
@@ -56,12 +73,14 @@ export const getSettingsSwitch = (
   page: DappeteerPage,
   text: string
 ): Promise<DappeteerElementHandle | null> =>
-  page.waitForXPath(
-    [
-      `//span[contains(.,'${text}')]/parent::div/following-sibling::div/div/div/div`,
-      `//span[contains(.,'${text}')]/parent::div/following-sibling::div/div/label/div`,
-    ].join("|"),
-    { visible: true }
+  page.waitForSelector(
+    "xpath/" +
+      [
+        `//span[contains(.,'${text}')]/parent::div/following-sibling::div/div/div/div`,
+        `//span[contains(.,'${text}')]/parent::div/following-sibling::div/div/label/div`,
+        `//span[contains(.,'${text}')]/parent::div/following-sibling::div/label/div`,
+      ].join("|"),
+    { timeout: 0, visible: true }
   );
 
 export const getErrorMessage = async (

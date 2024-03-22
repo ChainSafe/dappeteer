@@ -29,7 +29,7 @@ export async function enableEthSign(
 ): Promise<void> {
   await openSettingsScreen(metaMaskPage, "Advanced");
   await clickOnSettingsSwitch(metaMaskPage, "Eth_sign requests");
-  await clickOnElement(metaMaskPage, "eth-sign__checkbox");
+  await clickOnElement(metaMaskPage, "#eth-sign-checkbox");
   await clickOnButton(metaMaskPage, "Continue");
   await typeOnInputField(
     metaMaskPage,
@@ -71,8 +71,9 @@ export async function importAccount(
   }: MetaMaskOptions
 ): Promise<void> {
   await waitForOverlay(metaMaskPage);
-  await clickOnElement(metaMaskPage, "onboarding-terms-checkbox");
-  await clickOnButton(metaMaskPage, "onboarding-import-wallet");
+  await clickOnElement(metaMaskPage, "#onboarding__terms-checkbox");
+  await clickOnElement(metaMaskPage, "onboarding-import-wallet");
+
   await clickOnButton(metaMaskPage, "metametrics-i-agree");
 
   for (const [index, seedPart] of seed.split(" ").entries())

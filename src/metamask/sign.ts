@@ -1,5 +1,6 @@
 import {
   clickOnButton,
+  clickOnElement,
   getElementByContent,
   retry,
   waitForOverlay,
@@ -26,13 +27,15 @@ export const sign =
 
     await clickOnButton(page, "Sign");
 
-    const warningSignButton = await page.waitForSelector(
-      ".signature-request-warning__footer__sign-button"
-    );
-    await warningSignButton.click();
+    // await clickOnElement(page, "popover-close");
 
-    // wait for MM to be back in a stable state
-    await page.waitForSelector(".multichain-app-header", {
-      visible: true,
-    });
+    // const warningSignButton = await page.waitForSelector(
+    //   ".signature-request-warning__footer__sign-button"
+    // );
+    // await warningSignButton.click();
+
+    // // wait for MM to be back in a stable state
+    // await page.waitForSelector(".multichain-app-header", {
+    //   visible: true,
+    // });
   };

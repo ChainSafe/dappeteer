@@ -6,9 +6,34 @@ export async function launchPuppeteer(
   userDataDir: string,
   options: DappeteerLaunchOptions
 ): Promise<DappeteerBrowser> {
-  const pBrowser = await (
-    await import("puppeteer")
-  ).default.launch({
+  // eslint-disable-next-line import/no-extraneous-dependencies
+  const puppeteer = (await import("puppeteer-extra")).default;
+  // eslint-disable-next-line import/no-extraneous-dependencies
+  const StealthPlugin = (await import("puppeteer-extra-plugin-stealth"))
+    .default;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, import/no-extraneous-dependencies
+  const ReCaptchaPlugin = (await import("puppeteer-extra-plugin-recaptcha"))
+    .default;
+  puppeteer.use(StealthPlugin());
+  console.log(
+    "2captcha token is",
+    options?.puppeteerOptions?.pluginConfig?.["2captchaToken"]
+  );
+  puppeteer.use(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-call
+    ReCaptchaPlugin({
+      provider: {
+        id: "2captcha",
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        token:
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          options?.puppeteerOptions?.pluginConfig?.["2captchaToken"] ?? "xxx", // REPLACE THIS WITH YOUR OWN 2CAPTCHA API KEY ⚡
+      },
+      throwOnError: true,
+      visualFeedback: true, // coloriz
+    })
+  );
+  const pBrowser = await puppeteer.launch({
     ...(options.puppeteerOptions ?? {}),
     headless: options.headless,
     userDataDir,
