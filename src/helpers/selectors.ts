@@ -60,6 +60,7 @@ export const getSettingsSwitch = (
     [
       `//span[contains(.,'${text}')]/parent::div/following-sibling::div/div/div/div`,
       `//span[contains(.,'${text}')]/parent::div/following-sibling::div/div/label/div`,
+      `//span[contains(.,'${text}')]/parent::div/following-sibling::div/label/div`,
     ].join("|"),
     { visible: true }
   );
