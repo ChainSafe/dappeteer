@@ -10,7 +10,7 @@ import {
   enableEthSign,
   importAccount,
   showTestNets,
-} from "./setupActions";
+} from "./setupActionsMetaMask";
 
 /**
  * Setup MetaMask with base account
