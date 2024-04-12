@@ -1,3 +1,16 @@
+## Deprecation Notice
+
+**Notice:** dAppeteer is deprecated and is no longer actively maintained. Due to ongoing changes in the MetaMask ecosystem and constraints in our resources, we have decided to discontinue development. This repository will remain available in a read-only, archived state.
+
+**Alternatives:**
+We encourage users to explore the following alternatives, which provide continued support and active development for dApp testing:
+- **Synpress**: A robust testing framework with strong community support. [Explore Synpress on GitHub](https://github.com/Synthetixio/synpress).
+- **Official Way to Test Snaps**: Learn the recommended methods for testing your MetaMask Snaps. [Find out how to test a snap here](https://docs.metamask.io/snaps/how-to/test-a-snap/).
+
+We thank our community for the support and contributions over the years. For any additional questions or guidance on transitioning to new tools, please feel free to reach out.
+
+Thank you for your understanding and collaboration.
+
 # dAppeteer
 
 E2E testing for dApps using Puppeteer + MetaMask
